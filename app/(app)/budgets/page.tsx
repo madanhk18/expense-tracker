@@ -3,9 +3,10 @@ import { getOverallBudget, getCategoryBudgets } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
 import { getCategories } from "@/lib/queries/categories";
 import { monthRange } from "@/lib/dates";
-import { saveOverallBudgetAction, saveCategoryBudgetAction } from "@/lib/actions/budgets";
+import { saveOverallBudgetAction, saveCategoryBudgetAction, deleteCategoryBudgetAction } from "@/lib/actions/budgets";
 import { BudgetProgress } from "@/components/budgets/budget-progress";
 import { BudgetForm } from "@/components/budgets/budget-form";
+import { BudgetDeleteButton } from "@/components/budgets/budget-delete-button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -72,6 +73,13 @@ export default async function BudgetsPage() {
                 onSave={async (paise) => {
                   "use server";
                   await saveCategoryBudgetAction(budget.category_id!, paise);
+                }}
+              />
+              <BudgetDeleteButton
+                categoryName={budget.category?.name ?? "Category"}
+                onDelete={async () => {
+                  "use server";
+                  await deleteCategoryBudgetAction(budget.id);
                 }}
               />
             </div>
