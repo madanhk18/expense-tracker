@@ -18,9 +18,10 @@ interface BudgetFormProps {
   label: string;
   currentPaise?: number;
   onSave: (amountPaise: number) => Promise<void>;
+  buttonLabel?: string;
 }
 
-export function BudgetForm({ label, currentPaise, onSave }: BudgetFormProps) {
+export function BudgetForm({ label, currentPaise, onSave, buttonLabel }: BudgetFormProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -57,7 +58,7 @@ export function BudgetForm({ label, currentPaise, onSave }: BudgetFormProps) {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           {currentPaise ? <Pencil className="mr-1.5 size-3.5" /> : <Plus className="mr-1.5 size-3.5" />}
-          {currentPaise ? "Edit" : "Set budget"}
+          {buttonLabel ?? (currentPaise ? "Edit" : "Set budget")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-sm">

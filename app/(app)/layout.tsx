@@ -4,6 +4,7 @@ import { generateDueRecurringExpenses } from "@/lib/queries/dashboard";
 import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Topbar } from "@/components/layout/topbar";
+import { IdleLogout } from "@/components/auth/idle-logout";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -22,6 +23,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-svh">
+      <IdleLogout />
       <Sidebar />
       <div className="flex flex-1 flex-col">
         <Topbar />

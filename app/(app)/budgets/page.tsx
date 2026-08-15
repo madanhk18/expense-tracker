@@ -58,12 +58,23 @@ export default async function BudgetsPage() {
             <p className="text-sm text-muted-foreground">No category budgets set yet.</p>
           )}
           {categoryBudgets.map((budget) => (
-            <BudgetProgress
-              key={budget.id}
-              label={budget.category?.name ?? "Category"}
-              spentPaise={spentByCategoryId.get(budget.category_id!) ?? 0}
-              budgetPaise={budget.amount_paise}
-            />
+            <div key={budget.id} className="flex items-start gap-3">
+              <div className="flex-1">
+                <BudgetProgress
+                  label={budget.category?.name ?? "Category"}
+                  spentPaise={spentByCategoryId.get(budget.category_id!) ?? 0}
+                  budgetPaise={budget.amount_paise}
+                />
+              </div>
+              <BudgetForm
+                label={`${budget.category?.name ?? "Category"} budget`}
+                currentPaise={budget.amount_paise}
+                onSave={async (paise) => {
+                  "use server";
+                  await saveCategoryBudgetAction(budget.category_id!, paise);
+                }}
+              />
+            </div>
           ))}
 
           {availableCategories.length > 0 && (
@@ -72,6 +83,7 @@ export default async function BudgetsPage() {
                 <BudgetForm
                   key={cat.id}
                   label={`${cat.name} budget`}
+                  buttonLabel={`Set ${cat.name} budget`}
                   onSave={async (paise) => {
                     "use server";
                     await saveCategoryBudgetAction(cat.id, paise);
