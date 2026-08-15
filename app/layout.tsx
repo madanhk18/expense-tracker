@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "Expenses",
   description: "Track your daily spending in seconds.",
   manifest: "/manifest.webmanifest",
+  icons: {
+    apple: "/icons/icon-192.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
