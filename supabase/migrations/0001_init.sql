@@ -3,6 +3,8 @@
 -- Run once in Supabase SQL Editor, or via `supabase db push`.
 -- ============================================================================
 
+begin;
+
 -- ----------------------------------------------------------------------------
 -- profiles: 1:1 with auth.users
 -- ----------------------------------------------------------------------------
@@ -95,10 +97,33 @@ create index if not exists expenses_user_category_idx
 create index if not exists expenses_user_payment_method_idx
   on public.expenses (user_id, payment_method);
 
+-- expense_date: a plain stored column (set by trigger below), because a
+-- direct `expense_at::date` cast is timezone-dependent (STABLE, not
+-- IMMUTABLE) and Postgres refuses to index a non-immutable expression.
+alter table public.expenses add column if not exists expense_date date;
+
+create or replace function public.set_expense_date()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.expense_date := (new.expense_at at time zone 'utc')::date;
+  return new;
+end;
+$$;
+
+drop trigger if exists set_expense_date on public.expenses;
+create trigger set_expense_date before insert or update of expense_at on public.expenses
+  for each row execute function public.set_expense_date();
+
+update public.expenses set expense_date = (expense_at at time zone 'utc')::date where expense_date is null;
+
+alter table public.expenses alter column expense_date set not null;
+
 -- Duplicate-safety net for recurring generation: only one auto-generated
 -- expense per recurring rule per calendar day, enforced at the DB level.
 create unique index if not exists expenses_recurring_dedup_uq
-  on public.expenses (recurring_expense_id, (expense_at::date))
+  on public.expenses (recurring_expense_id, expense_date)
   where recurring_expense_id is not null;
 
 -- ----------------------------------------------------------------------------
@@ -320,7 +345,7 @@ as $$
       (sum(amount_paise) filter (
         where expense_at::date >= date_trunc('month', ref_date::timestamp)::date
           and expense_at::date <= ref_date
-      )) / greatest(extract(day from ref_date - date_trunc('month', ref_date::timestamp)::date) + 1, 1),
+      )) / greatest((ref_date - date_trunc('month', ref_date::timestamp)::date) + 1, 1),
       0
     )::bigint as avg_daily_paise,
     coalesce(max(amount_paise) filter (
@@ -350,3 +375,5 @@ values
   ('Personal', 'User', true, null),
   ('Other', 'MoreHorizontal', true, null)
 on conflict do nothing;
+
+commit;
