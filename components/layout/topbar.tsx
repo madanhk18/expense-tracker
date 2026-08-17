@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Search, Wallet } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "./theme-toggle";
+import { LogoutButton } from "./logout-button";
 
 export function Topbar() {
   const router = useRouter();
@@ -29,8 +30,9 @@ export function Topbar() {
           className="pl-8"
         />
       </form>
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-1">
         <ThemeToggle />
+        <LogoutButton iconOnly />
       </div>
     </header>
   );

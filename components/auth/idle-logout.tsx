@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-const IDLE_LIMIT_MS = 60_000;
+const IDLE_LIMIT_MS = 30_000;
 const ACTIVITY_EVENTS = ["mousemove", "mousedown", "keydown", "touchstart", "scroll"] as const;
 
 /** Signs the user out and redirects to /login after IDLE_LIMIT_MS of no user activity. */
