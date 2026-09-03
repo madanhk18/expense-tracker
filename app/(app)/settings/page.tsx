@@ -58,6 +58,10 @@ export default async function SettingsPage() {
             Account &amp; security
             <ChevronRight className="size-4 text-muted-foreground" />
           </Link>
+          <Link href="/settings/help" className="flex items-center justify-between p-4 text-sm">
+            How to use this app
+            <ChevronRight className="size-4 text-muted-foreground" />
+          </Link>
         </CardContent>
       </Card>
     </div>
