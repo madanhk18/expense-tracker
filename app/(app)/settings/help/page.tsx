@@ -11,6 +11,14 @@ interface GuideSection {
 
 const SECTIONS: GuideSection[] = [
   {
+    title: "Recently added",
+    badge: "New",
+    points: [
+      "This \"How to use this app\" page — a running guide to every feature, updated as new ones ship.",
+      "That's the only feature shipped so far. Income tracking, Lending (Udhaar), and Bill Reminders below are planned but not built yet — this list will move them up here once they are.",
+    ],
+  },
+  {
     title: "Dashboard",
     points: [
       "Shows today's, this week's, and this month's spending at a glance, plus your average per day and highest single expense.",
