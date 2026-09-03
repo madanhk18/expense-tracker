@@ -14,8 +14,9 @@ const SECTIONS: GuideSection[] = [
     title: "Recently added",
     badge: "New",
     points: [
+      "Bill Reminders — the dashboard now shows an \"Upcoming Bills\" card for any recurring expense (Netflix, rent, etc.) due within the next 3 days, or already overdue. It appears right below your monthly total. Nothing to set up — it reads your existing Recurring rules automatically. See \"Bill Reminders\" below for details.",
       "This \"How to use this app\" page — a running guide to every feature, updated as new ones ship.",
-      "That's the only feature shipped so far. Income tracking, Lending (Udhaar), and Bill Reminders below are planned but not built yet — this list will move them up here once they are.",
+      "Income tracking and Lending (Udhaar) below are still planned, not built yet — they'll move up here once they ship.",
     ],
   },
   {
@@ -97,10 +98,13 @@ const SECTIONS: GuideSection[] = [
   },
   {
     title: "Bill Reminders",
-    badge: "Coming soon",
     points: [
-      "A dashboard banner will surface recurring bills due in the next few days, and flag any that are overdue.",
-      "This section will be filled in once the feature ships.",
+      "Any active Recurring expense due within the next 3 days — or already overdue — shows up automatically in the \"Upcoming Bills\" card on your dashboard.",
+      "No setup needed: it's generated from the same rules you already created under Recurring. Nothing to add or toggle.",
+      "Bills due today or tomorrow show \"Due today\" / \"Due tomorrow\"; further out shows \"Due in N days\".",
+      "A bill past its due date (not yet auto-generated as an expense) shows in red as \"Overdue by N days\" so it stands out.",
+      "Turn off a recurring rule under Recurring and it disappears from this card immediately — no separate reminder to cancel.",
+      "No bills due soon → the card simply doesn't show, keeping the dashboard uncluttered.",
     ],
   },
 ];
