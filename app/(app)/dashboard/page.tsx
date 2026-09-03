@@ -5,10 +5,12 @@ import { getRecentExpenses } from "@/lib/queries/expenses";
 import { getCategories } from "@/lib/queries/categories";
 import { getOverallBudget } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
+import { listUpcomingBills } from "@/lib/queries/recurring";
 import { monthRange } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { SpendSummary } from "@/components/dashboard/spend-summary";
+import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banner";
 import { BudgetProgress } from "@/components/budgets/budget-progress";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { AddExpenseFab } from "@/components/expenses/add-expense-fab";
@@ -27,12 +29,13 @@ export default async function DashboardPage() {
   const now = new Date();
   const { start, end } = monthRange(now);
 
-  const [stats, recentExpenses, categories, overallBudget, monthAnalytics] = await Promise.all([
+  const [stats, recentExpenses, categories, overallBudget, monthAnalytics, upcomingBills] = await Promise.all([
     getDashboardStats(now),
     getRecentExpenses(6),
     getCategories(),
     getOverallBudget(now),
     getAnalytics(start, end),
+    listUpcomingBills(),
   ]);
 
   const percentChange = momChangePercent(stats.monthPaise, stats.previousMonthPaise);
@@ -48,6 +51,8 @@ export default async function DashboardPage() {
       </div>
 
       <SpendSummary monthPaise={stats.monthPaise} percentChange={percentChange} greeting={greeting()} monthRef={now} />
+
+      <BillRemindersBanner bills={upcomingBills} />
 
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <StatCard label="Today" value={formatINR(stats.todayPaise)} />
