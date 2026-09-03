@@ -89,6 +89,11 @@ Before considering a change complete, verify:
 - [ ] Monthly analytics, category breakdown, and month-over-month % are correct
 - [ ] Budget progress thresholds (70/90/100%) show the right color/warning
 - [ ] A recurring expense generates on schedule and never duplicates (reload repeatedly to confirm)
+- [ ] A recurring expense due within 3 days shows on the dashboard's "Upcoming Bills" banner
+- [ ] A recurring expense past its due date (not yet generated) shows as "Overdue by N days" in the destructive color, not a negative day count
+- [ ] Deactivating a recurring expense (`is_active = false`) immediately removes it from the banner on next dashboard load
+- [ ] No upcoming/overdue bills → the "Upcoming Bills" card doesn't render at all (not an empty card)
+- [ ] A second test account never sees the first account's recurring expenses in their banner (RLS via existing `recurring_select_own` policy)
 - [ ] CSV/JSON export contains only the logged-in user's data
 - [ ] CSV import previews rows and rejects malformed ones without inserting them
 - [ ] Works on a real mobile viewport — bottom nav, FAB, no horizontal scroll
