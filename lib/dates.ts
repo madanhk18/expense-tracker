@@ -11,6 +11,7 @@ import {
   endOfMonth,
   subMonths,
   parseISO,
+  differenceInCalendarDays,
 } from "date-fns";
 
 /** All range helpers operate on the browser's local timezone (the user's device tz). */
@@ -65,4 +66,9 @@ export function formatTime(date: Date): string {
 
 export function monthLabel(date: Date): string {
   return format(date, "MMMM yyyy");
+}
+
+/** Calendar-day distance from `ref` to `date`. Negative means `date` is in the past (overdue). */
+export function daysUntil(date: Date, ref: Date = new Date()): number {
+  return differenceInCalendarDays(date, ref);
 }
