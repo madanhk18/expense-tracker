@@ -33,20 +33,35 @@ export async function deleteCategory(id: string) {
   if (error) throw error;
 }
 
-/** Income-type categories only, for the income form's category picker. */
-export async function getIncomeCategories(): Promise<Category[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("categories").select("*").eq("type", "income").order("name");
+/** Postgres "column does not exist" — i.e. 0002_income.sql hasn't been run. */
+const UNDEFINED_COLUMN = "42703";
 
-  if (error) throw error;
+/**
+ * Categories of one type. The `type` column only exists once
+ * 0002_income.sql has been run, so a database still on 0001 falls back to
+ * the untyped list rather than taking down every page that picks a category.
+ */
+async function getCategoriesOfType(type: "expense" | "income"): Promise<Category[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("categories").select("*").eq("type", type).order("name");
+
+  if (error) {
+    if (error.code !== UNDEFINED_COLUMN) throw error;
+    console.warn("[categories] no `type` column yet — has 0002_income.sql been run?");
+    // Pre-migration every category is an expense category, and there are no
+    // income categories to offer.
+    return type === "expense" ? getCategories() : [];
+  }
+
   return data ?? [];
 }
 
-/** Expense-type categories only — what every expense-side picker should show. */
-export async function getExpenseCategories(): Promise<Category[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("categories").select("*").eq("type", "expense").order("name");
+/** Income-type categories only, for the income form's category picker. */
+export function getIncomeCategories(): Promise<Category[]> {
+  return getCategoriesOfType("income");
+}
 
-  if (error) throw error;
-  return data ?? [];
+/** Expense-type categories only — what every expense-side picker should show. */
+export function getExpenseCategories(): Promise<Category[]> {
+  return getCategoriesOfType("expense");
 }
