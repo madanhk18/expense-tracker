@@ -1,7 +1,7 @@
 import { Layers, Target, Wallet } from "lucide-react";
 import { getOverallBudget, getCategoryBudgets } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
-import { getCategories } from "@/lib/queries/categories";
+import { getExpenseCategories } from "@/lib/queries/categories";
 import { monthRange } from "@/lib/dates";
 import { saveOverallBudgetAction, saveCategoryBudgetAction, deleteCategoryBudgetAction } from "@/lib/actions/budgets";
 import { BudgetProgress } from "@/components/budgets/budget-progress";
@@ -22,7 +22,7 @@ export default async function BudgetsPage() {
     getOverallBudget(now),
     getCategoryBudgets(now),
     getAnalytics(start, end),
-    getCategories(),
+    getExpenseCategories(),
   ]);
 
   const spentByCategoryId = new Map(analytics.categoryBreakdown.map((c) => [c.categoryId, c.paise]));

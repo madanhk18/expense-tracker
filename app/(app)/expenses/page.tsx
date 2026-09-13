@@ -1,6 +1,6 @@
 import { subDays } from "date-fns";
 import { listExpenses } from "@/lib/queries/expenses";
-import { getCategories } from "@/lib/queries/categories";
+import { getExpenseCategories } from "@/lib/queries/categories";
 import { todayRange, thisWeekRange, monthRange, previousMonthRange } from "@/lib/dates";
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
 import { ExpenseList } from "@/components/expenses/expense-list";
@@ -51,7 +51,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
     pageSize: 50,
   };
 
-  const [{ expenses, total }, categories] = await Promise.all([listExpenses(filters), getCategories()]);
+  const [{ expenses, total }, categories] = await Promise.all([listExpenses(filters), getExpenseCategories()]);
   const totalPages = Math.max(1, Math.ceil(total / 50));
 
   return (

@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { generateDueRecurringExpenses } from "@/lib/queries/dashboard";
-import { getCategories } from "@/lib/queries/categories";
+import { getExpenseCategories } from "@/lib/queries/categories";
 import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Topbar } from "@/components/layout/topbar";
@@ -23,7 +23,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   }
 
   // Powers the centre "add expense" button in the mobile bottom nav.
-  const categories = await getCategories();
+  const categories = await getExpenseCategories();
 
   return (
     <div className="flex min-h-svh">

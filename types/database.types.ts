@@ -20,6 +20,7 @@ export type PaymentMethod =
   | "Other";
 
 export type RecurringFrequency = "weekly" | "monthly" | "yearly";
+export type CategoryType = "expense" | "income";
 export type Theme = "light" | "dark" | "system";
 
 export interface Database {
@@ -47,6 +48,7 @@ export interface Database {
           icon: string | null;
           color: string | null;
           is_system: boolean;
+          type: CategoryType;
           created_at: string;
         };
         Insert: Partial<Database["public"]["Tables"]["categories"]["Row"]> & { name: string };
@@ -95,6 +97,26 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["budgets"]["Row"]>;
         Relationships: [];
       };
+      income: {
+        Row: {
+          id: string;
+          user_id: string;
+          amount_paise: number;
+          category_id: string | null;
+          description: string | null;
+          received_at: string;
+          is_recurring: boolean;
+          recurring_income_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["income"]["Row"]> & {
+          user_id: string;
+          amount_paise: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["income"]["Row"]>;
+        Relationships: [];
+      };
       recurring_expenses: {
         Row: {
           id: string;
@@ -131,6 +153,17 @@ export interface Database {
       generate_due_recurring_expenses: {
         Args: Record<PropertyKey, never>;
         Returns: number;
+      };
+      get_income_stats: {
+        Args: { ref_date?: string };
+        Returns: {
+          today_income_paise: number;
+          week_income_paise: number;
+          month_income_paise: number;
+          previous_month_income_paise: number;
+          month_expense_paise: number;
+          savings_rate_percent: number | null;
+        }[];
       };
       get_dashboard_stats: {
         Args: { ref_date?: string };

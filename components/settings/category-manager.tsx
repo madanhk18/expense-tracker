@@ -64,6 +64,34 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
         </Button>
       </form>
 
+      <CategoryGroup
+        title="Spending categories"
+        categories={categories.filter((c) => c.type !== "income")}
+        onDelete={handleDelete}
+      />
+      <CategoryGroup
+        title="Income sources"
+        categories={categories.filter((c) => c.type === "income")}
+        onDelete={handleDelete}
+      />
+    </div>
+  );
+}
+
+function CategoryGroup({
+  title,
+  categories,
+  onDelete,
+}: {
+  title: string;
+  categories: Category[];
+  onDelete: (id: string) => void;
+}) {
+  if (categories.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{title}</p>
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => (
           <span
@@ -75,7 +103,7 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
             {cat.is_system ? (
               <Lock className="size-3 text-muted-foreground" />
             ) : (
-              <button onClick={() => handleDelete(cat.id)} aria-label={`Delete ${cat.name}`}>
+              <button onClick={() => onDelete(cat.id)} aria-label={`Delete ${cat.name}`}>
                 <Trash2 className="size-3.5 text-muted-foreground hover:text-destructive" />
               </button>
             )}

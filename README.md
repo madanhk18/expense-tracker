@@ -30,7 +30,7 @@ cp .env.example .env.local
 4. Go to **Authentication → URL Configuration**:
    - Set **Site URL** to `http://localhost:3000` for now (update to your production URL after deploying).
    - Add `http://localhost:3000/**` to **Redirect URLs**.
-5. Run the schema migration — open **SQL Editor** in the Supabase dashboard, paste the contents of `supabase/migrations/0001_init.sql`, and run it. (Or, if you have the Supabase CLI: `npx supabase login`, `npx supabase link --project-ref <ref>`, `npx supabase db push`.)
+5. Run the schema migrations — open **SQL Editor** in the Supabase dashboard and run `supabase/migrations/0001_init.sql`, then `supabase/migrations/0002_income.sql` (income tracking + savings rate), in that order. (Or, if you have the Supabase CLI: `npx supabase login`, `npx supabase link --project-ref <ref>`, `npx supabase db push`.)
 6. In **Table Editor**, confirm all tables exist and RLS shows as **Enabled** on `expenses`, `budgets`, `recurring_expenses`, `categories`, `profiles`.
 7. (Optional, recommended) Regenerate the TypeScript types to match your live schema exactly:
    ```bash
@@ -61,7 +61,7 @@ Open [http://localhost:3000](http://localhost:3000). Register an account (check 
 ```
 app/
   (auth)/        Login, register, forgot/reset password
-  (app)/         Protected routes: dashboard, expenses, analytics, budgets, recurring, settings
+  (app)/         Protected routes: dashboard, expenses, income, analytics, budgets, recurring, settings
   api/           Export (CSV/JSON) and import routes
   auth/callback/ Exchanges Supabase auth codes for a session
 components/      UI components, grouped by feature
@@ -71,7 +71,8 @@ lib/
   actions/       Server Actions (budgets, account settings)
   validations/   Zod schemas
   money.ts       Paise <-> rupee conversion helpers (the only place this happens)
-supabase/migrations/0001_init.sql   Full schema, indexes, RLS policies, RPC functions
+supabase/migrations/0001_init.sql     Full schema, indexes, RLS policies, RPC functions
+supabase/migrations/0002_income.sql   Income table + categories.type + get_income_stats RPC
 types/           Database + domain TypeScript types
 ```
 
@@ -94,6 +95,12 @@ Before considering a change complete, verify:
 - [ ] Deactivating a recurring expense (`is_active = false`) immediately removes it from the banner on next dashboard load
 - [ ] No upcoming/overdue bills → the "Upcoming Bills" card doesn't render at all (not an empty card)
 - [ ] A second test account never sees the first account's recurring expenses in their banner (RLS via existing `recurring_select_own` policy)
+- [ ] Add / edit / delete an income entry; it appears on /income grouped by day
+- [ ] Savings rate on the dashboard equals (income − spending) ÷ income for the current month
+- [ ] With no income logged this month, the savings-rate card invites you to add income instead of showing 0%
+- [ ] Spending more than you earned shows a negative rate in the destructive colour
+- [ ] Income categories (Salary, Freelance…) never appear in the expense form's category picker, and vice versa
+- [ ] A second test account cannot see the first account's income (RLS)
 - [ ] CSV/JSON export contains only the logged-in user's data
 - [ ] CSV import previews rows and rejects malformed ones without inserting them
 - [ ] Works on a real mobile viewport — bottom nav, FAB, no horizontal scroll
@@ -102,5 +109,6 @@ Before considering a change complete, verify:
 
 ## Notes on money & dates
 
+- Income is stored in its own `income` table, also as `bigint` paise. The savings rate comes from the `get_income_stats` RPC, which returns `null` (never NaN) when no income has been logged.
 - All amounts are stored as `bigint` paise. `lib/money.ts` is the single place that converts to/from rupees for display and input parsing — never do float math on money elsewhere.
 - Dates use the browser's local timezone throughout (`lib/dates.ts`, built on `date-fns`). `expense_at` is stored as a `timestamptz` in Postgres.

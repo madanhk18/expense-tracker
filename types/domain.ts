@@ -19,3 +19,19 @@ export interface DashboardStats {
   avgDailyPaise: number;
   highestExpensePaise: number;
 }
+
+export type Income = Database["public"]["Tables"]["income"]["Row"];
+
+export type IncomeWithCategory = Income & {
+  category: Pick<Category, "id" | "name" | "icon" | "color"> | null;
+};
+
+export interface IncomeStats {
+  todayIncomePaise: number;
+  weekIncomePaise: number;
+  monthIncomePaise: number;
+  previousMonthIncomePaise: number;
+  monthExpensePaise: number;
+  /** null when no income has been logged this month — never NaN/Infinity. */
+  savingsRatePercent: number | null;
+}

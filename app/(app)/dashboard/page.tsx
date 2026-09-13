@@ -2,8 +2,9 @@ import Link from "next/link";
 import { CalendarDays, CalendarRange, Flame, History, Layers, Receipt, Target, TrendingUp } from "lucide-react";
 import { getDashboardStats, momChangePercent } from "@/lib/queries/dashboard";
 import { getRecentExpenses } from "@/lib/queries/expenses";
-import { getCategories } from "@/lib/queries/categories";
+import { getExpenseCategories } from "@/lib/queries/categories";
 import { getGreetingName } from "@/lib/queries/profile";
+import { getIncomeStats } from "@/lib/queries/income";
 import { getOverallBudget } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
 import { listUpcomingBills } from "@/lib/queries/recurring";
@@ -11,6 +12,7 @@ import { monthRange, formatTime } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { SpendSummary } from "@/components/dashboard/spend-summary";
+import { SavingsRateCard } from "@/components/dashboard/savings-rate-card";
 import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banner";
 import { BudgetProgress } from "@/components/budgets/budget-progress";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
@@ -33,15 +35,25 @@ export default async function DashboardPage() {
   const now = new Date();
   const { start, end } = monthRange(now);
 
-  const [stats, recentExpenses, categories, overallBudget, monthAnalytics, upcomingBills, name] =
+  const [
+    stats,
+    recentExpenses,
+    categories,
+    overallBudget,
+    monthAnalytics,
+    upcomingBills,
+    name,
+    incomeStats,
+  ] =
     await Promise.all([
       getDashboardStats(now),
       getRecentExpenses(6),
-      getCategories(),
+      getExpenseCategories(),
       getOverallBudget(now),
       getAnalytics(start, end),
       listUpcomingBills(),
       getGreetingName(),
+      getIncomeStats(),
     ]);
 
   const percentChange = momChangePercent(stats.monthPaise, stats.previousMonthPaise);
@@ -69,6 +81,8 @@ export default async function DashboardPage() {
       />
 
       <BillRemindersBanner bills={upcomingBills} />
+
+      <SavingsRateCard stats={incomeStats} />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         <StatCard label="Today" value={formatINR(stats.todayPaise)} tint="var(--chart-3)" icon={CalendarDays} />

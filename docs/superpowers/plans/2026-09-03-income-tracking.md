@@ -30,7 +30,7 @@
 **Interfaces:**
 - Produces: `public.categories.type` column (default `'expense'`); table `public.income` (`id`, `user_id`, `amount_paise`, `category_id`, `description`, `received_at`, `is_recurring`, `recurring_income_id`, `created_at`, `updated_at`); function `public.get_income_stats(ref_date date)` returning `(today_income_paise, week_income_paise, month_income_paise, previous_month_income_paise, month_expense_paise, savings_rate_percent)`. Later tasks read/write these exact names.
 
-- [ ] **Step 1: Write the migration file**
+- [x] **Step 1: Write the migration file**
 
 ```sql
 -- ============================================================================
@@ -163,11 +163,11 @@ $$;
 commit;
 ```
 
-- [ ] **Step 2: Run the migration**
+- [ ] **Step 2: Run the migration** (must be run by the project owner in Supabase)
 
 Open the Supabase dashboard SQL Editor for this project, paste the file contents, run it. (Or `npx supabase db push` if the Supabase CLI is linked.) Confirm in **Table Editor** that `income` exists with RLS **Enabled**, and that `categories` has a new `type` column with existing rows showing `expense`.
 
-- [ ] **Step 3: Regenerate types**
+- [ ] **Step 3: Regenerate types** (optional — types were hand-authored to match)
 
 ```bash
 npx supabase gen types typescript --project-id <project-ref> > types/database.types.ts
@@ -175,7 +175,7 @@ npx supabase gen types typescript --project-id <project-ref> > types/database.ty
 
 If no live Supabase project is linked yet in this environment, skip this and hand-author the types in Task 2 instead.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add supabase/migrations/0002_income.sql
@@ -194,7 +194,7 @@ git commit -m "feat(db): add categories.type, income table, get_income_stats RPC
 - Consumes: nothing new.
 - Produces: `CategoryType`, updated `categories` Row with `type`, `Database["public"]["Tables"]["income"]`, `Database["public"]["Functions"]["get_income_stats"]`; domain types `Income`, `IncomeWithCategory`, `IncomeStats`. Later tasks import these exact names.
 
-- [ ] **Step 1: Add `type` to the `categories` table shape in `types/database.types.ts`**
+- [x] **Step 1: Add `type` to the `categories` table shape in `types/database.types.ts`**
 
 Add near the top with the other unions:
 
@@ -222,7 +222,7 @@ In the existing `categories` entry, add `type: CategoryType;` to `Row`, and upda
       };
 ```
 
-- [ ] **Step 2: Add the `income` table type**
+- [x] **Step 2: Add the `income` table type**
 
 Insert after the `budgets` entry, before `recurring_expenses`:
 
@@ -249,7 +249,7 @@ Insert after the `budgets` entry, before `recurring_expenses`:
       };
 ```
 
-- [ ] **Step 3: Add the `get_income_stats` RPC type**
+- [x] **Step 3: Add the `get_income_stats` RPC type**
 
 If `Database["public"]` has no `Functions` key yet, add one as a sibling of `Tables` (same nesting level, i.e. `public: { Tables: {...}, Functions: {...} }`):
 
@@ -269,7 +269,7 @@ If `Database["public"]` has no `Functions` key yet, add one as a sibling of `Tab
     };
 ```
 
-- [ ] **Step 4: Add domain types to `types/domain.ts`**
+- [x] **Step 4: Add domain types to `types/domain.ts`**
 
 Add at the end of the file:
 
@@ -291,13 +291,13 @@ export interface IncomeStats {
 }
 ```
 
-- [ ] **Step 5: Verify**
+- [x] **Step 5: Verify**
 
 ```bash
 npx tsc --noEmit
 ```
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add types/database.types.ts types/domain.ts
@@ -315,7 +315,7 @@ git commit -m "feat(types): add income domain types and categories.type"
 - Consumes: `parseToPaise` from `lib/money.ts`.
 - Produces: `incomeFormSchema`, `IncomeFormValues`, `formToIncomeInsertValues`, `IncomeInsertValues`. Task 4 (queries) and Task 6 (form) import these exact names.
 
-- [ ] **Step 1: Write the schema file** (mirrors `lib/validations/expense.schema.ts`)
+- [x] **Step 1: Write the schema file** (mirrors `lib/validations/expense.schema.ts`)
 
 ```typescript
 import { z } from "zod";
@@ -365,13 +365,13 @@ export function formToIncomeInsertValues(values: IncomeFormValues): IncomeInsert
 }
 ```
 
-- [ ] **Step 2: Verify**
+- [x] **Step 2: Verify**
 
 ```bash
 npx tsc --noEmit && npm run lint
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add lib/validations/income.schema.ts
@@ -390,7 +390,7 @@ git commit -m "feat(income): add Zod validation schemas"
 - Consumes: `createClient` from `lib/supabase/server`; `IncomeInsertValues` from `lib/validations/income.schema`; `IncomeWithCategory`/`IncomeStats` from `types/domain`.
 - Produces: `listIncome(filters?)`, `getIncome(id)`, `createIncome(input)`, `updateIncome(id, input)`, `deleteIncome(id)`, `getRecentIncome(limit?)`, `getIncomeStats(refDate?)`; and `getIncomeCategories()` added to `lib/queries/categories.ts`. Task 5 (actions) and Task 6/7 (UI) rely on these exact names and signatures.
 
-- [ ] **Step 1: Write `lib/queries/income.ts`** (mirrors `lib/queries/expenses.ts` and `lib/queries/dashboard.ts`)
+- [x] **Step 1: Write `lib/queries/income.ts`** (mirrors `lib/queries/expenses.ts` and `lib/queries/dashboard.ts`)
 
 ```typescript
 import { createClient } from "@/lib/supabase/server";
@@ -515,7 +515,7 @@ export async function getIncomeStats(refDate: Date = new Date()): Promise<Income
 }
 ```
 
-- [ ] **Step 2: Read the existing `getCategories` function**
+- [x] **Step 2: Read the existing `getCategories` function**
 
 Open `lib/queries/categories.ts` and confirm its current export shape before editing (it should export a `getCategories()` returning all categories visible to the user, per `categories_select` RLS policy: own rows + system rows). Add a new function to the bottom of that same file:
 
@@ -531,13 +531,13 @@ export async function getIncomeCategories() {
 
 (If `createClient` and `Category` aren't already imported at the top of `lib/queries/categories.ts`, add `import { createClient } from "@/lib/supabase/server";` and `import type { Category } from "@/types/domain";` — check first, since the file's existing `getCategories` almost certainly already imports both.)
 
-- [ ] **Step 3: Verify**
+- [x] **Step 3: Verify**
 
 ```bash
 npx tsc --noEmit
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add lib/queries/income.ts lib/queries/categories.ts
@@ -555,7 +555,7 @@ git commit -m "feat(income): add query layer and income category filter"
 - Consumes: `createIncome`, `updateIncome`, `deleteIncome` from `lib/queries/income`; `IncomeInsertValues` from `lib/validations/income.schema`.
 - Produces: `createIncomeAction(input)`, `updateIncomeAction(id, input)`, `deleteIncomeAction(id)`. Task 6 (UI) imports these.
 
-- [ ] **Step 1: Write the actions file** (mirrors `lib/actions/budgets.ts`)
+- [x] **Step 1: Write the actions file** (mirrors `lib/actions/budgets.ts`)
 
 ```typescript
 "use server";
@@ -583,13 +583,13 @@ export async function deleteIncomeAction(id: string) {
 }
 ```
 
-- [ ] **Step 2: Verify**
+- [x] **Step 2: Verify**
 
 ```bash
 npx tsc --noEmit && npm run lint
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add lib/actions/income.ts
@@ -610,7 +610,7 @@ git commit -m "feat(income): add Server Actions"
 - Consumes: `createIncomeAction`, `updateIncomeAction`, `deleteIncomeAction` (Task 5); `incomeFormSchema`, `formToIncomeInsertValues` (Task 3); `IncomeWithCategory` (Task 2); `formatINR` (`lib/money.ts`); `formatTime`/`groupLabel` (`lib/dates.ts`).
 - Produces: `IncomeForm`, `AddIncomeDialog`, `IncomeRow`, `IncomeList`. Task 7 (page) imports `AddIncomeDialog` and `IncomeList`.
 
-- [ ] **Step 1: `components/income/income-form.tsx`** (mirrors `components/expenses/expense-form.tsx`)
+- [x] **Step 1: `components/income/income-form.tsx`** (mirrors `components/expenses/expense-form.tsx`)
 
 ```tsx
 "use client";
@@ -762,7 +762,7 @@ export function IncomeForm({ categories, income, onSuccess }: IncomeFormProps) {
 }
 ```
 
-- [ ] **Step 2: `components/income/add-income-dialog.tsx`** (mirrors `components/expenses/add-expense-dialog.tsx`)
+- [x] **Step 2: `components/income/add-income-dialog.tsx`** (mirrors `components/expenses/add-expense-dialog.tsx`)
 
 ```tsx
 "use client";
@@ -806,7 +806,7 @@ export function AddIncomeDialog({ categories, income, trigger }: AddIncomeDialog
 }
 ```
 
-- [ ] **Step 3: `components/income/income-row.tsx`** (mirrors `components/expenses/expense-row.tsx`)
+- [x] **Step 3: `components/income/income-row.tsx`** (mirrors `components/expenses/expense-row.tsx`)
 
 ```tsx
 "use client";
@@ -922,7 +922,7 @@ export function IncomeRow({ income, categories }: { income: IncomeWithCategory; 
 }
 ```
 
-- [ ] **Step 4: `components/income/income-list.tsx`** (mirrors `components/expenses/expense-list.tsx`)
+- [x] **Step 4: `components/income/income-list.tsx`** (mirrors `components/expenses/expense-list.tsx`)
 
 ```tsx
 import { Wallet } from "lucide-react";
@@ -960,7 +960,7 @@ export function IncomeList({ income, categories }: { income: IncomeWithCategory[
 }
 ```
 
-- [ ] **Step 5: Verify**
+- [x] **Step 5: Verify**
 
 ```bash
 npx tsc --noEmit && npm run lint
@@ -968,7 +968,7 @@ npx tsc --noEmit && npm run lint
 
 Note: if `components/ui/switch.tsx` doesn't already exist, check `ls components/ui/switch.tsx` — it's listed in the existing project structure, so it should be present already; if not, run `npx shadcn@latest add switch` before verifying.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add components/income
@@ -989,7 +989,7 @@ git commit -m "feat(income): add form, dialog, row, and list components"
 - Consumes: `listIncome`, `getIncomeStats` (Task 4); `getIncomeCategories` (Task 4); `AddIncomeDialog`, `IncomeList` (Task 6).
 - Produces: `/income` route; an "Income" nav entry; a "Savings Rate" dashboard stat card; an `IncomeExpenseChart` component.
 
-- [ ] **Step 1: `app/(app)/income/page.tsx`** (mirrors `app/(app)/expenses/page.tsx`, simplified — no search/payment-method filters since income has neither)
+- [x] **Step 1: `app/(app)/income/page.tsx`** (mirrors `app/(app)/expenses/page.tsx`, simplified — no search/payment-method filters since income has neither)
 
 ```tsx
 import { listIncome } from "@/lib/queries/income";
@@ -1013,7 +1013,7 @@ export default async function IncomePage() {
 }
 ```
 
-- [ ] **Step 2: `components/dashboard/income-expense-chart.tsx`** (mirrors `components/analytics/category-bar-chart.tsx`'s Recharts usage and `chart-colors.ts` tokens)
+- [x] **Step 2: `components/dashboard/income-expense-chart.tsx`** (mirrors `components/analytics/category-bar-chart.tsx`'s Recharts usage and `chart-colors.ts` tokens)
 
 ```tsx
 "use client";
@@ -1046,7 +1046,7 @@ export function IncomeExpenseChart({ incomePaise, expensePaise }: IncomeExpenseC
 }
 ```
 
-- [ ] **Step 3: Add nav item to `components/layout/nav-items.ts`**
+- [x] **Step 3: Add nav item to `components/layout/nav-items.ts`**
 
 Follow the same treatment as `Recurring` (desktop-only, per the existing "keep to 5 max" mobile cap — if the lending-tracker plan already added a `Lending` entry, add `Income` alongside it the same way; the block below assumes this feature is applied on its own). `Income` uses the `Wallet` icon and `Budgets` is switched to `PiggyBank` so the two nav entries don't share an icon:
 
@@ -1073,7 +1073,7 @@ export const MOBILE_NAV_ITEMS = [
 ] as const;
 ```
 
-- [ ] **Step 4: Add savings-rate stat card + comparison chart to `app/(app)/dashboard/page.tsx`**
+- [x] **Step 4: Add savings-rate stat card + comparison chart to `app/(app)/dashboard/page.tsx`**
 
 Add the imports:
 
@@ -1126,7 +1126,7 @@ Add the income-vs-expense comparison card right after that grid, before the budg
 
 `monthLabel` is already imported from `lib/dates` in this file's existing import list if it was used before — if not, add `import { monthLabel } from "@/lib/dates";` (check the existing import line for `lib/dates` in this file and merge into it rather than duplicating the import).
 
-- [ ] **Step 5: Verify**
+- [x] **Step 5: Verify**
 
 ```bash
 npx tsc --noEmit && npm run lint && npm run dev
@@ -1134,7 +1134,7 @@ npx tsc --noEmit && npm run lint && npm run dev
 
 Manually visit `/income` and `/dashboard`; confirm the savings-rate card shows "N/A" with no income logged, then log one income entry and confirm it recalculates to a real percentage and the bar chart renders both bars.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add "app/(app)/income/page.tsx" components/dashboard/income-expense-chart.tsx components/layout/nav-items.ts "app/(app)/dashboard/page.tsx"
@@ -1148,7 +1148,7 @@ git commit -m "feat(income): add /income page, nav item, savings-rate card, and 
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Add checklist items**
+- [x] **Step 1: Add checklist items**
 
 In the `## Testing checklist` section of `README.md`, add these bullets after the "Budget progress thresholds" line:
 
@@ -1160,7 +1160,7 @@ In the `## Testing checklist` section of `README.md`, add these bullets after th
 - [ ] Default income categories (Salary, Freelance, etc.) appear in the income form's source picker
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add README.md

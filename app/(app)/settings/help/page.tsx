@@ -22,6 +22,18 @@ const SECTIONS: GuideSection[] = [
     ],
   },
   {
+    title: "Income & savings rate",
+    badge: "New",
+    points: [
+      "The Income tab logs money coming in — salary, freelance work, interest, gifts, refunds. Same flow as an expense: amount, source, optional note, date.",
+      "Mark an entry as \"repeats every month\" to flag regular income. It is a label for now — nothing is added automatically yet.",
+      "Your savings rate on the dashboard is (income − spending) ÷ income for the current month. 77% means you kept 77 paise of every rupee you earned.",
+      "Log no income in a month and the card asks you to add some rather than showing a meaningless 0%.",
+      "Spend more than you earned and the rate goes negative, in red, with the amount you overshot by.",
+      "Income sources and spending categories are separate lists — you manage both under Settings → Categories.",
+    ],
+  },
+  {
     title: "Dashboard",
     points: [
       "Shows today's, this week's, and this month's spending at a glance, plus your average per day and highest single expense.",

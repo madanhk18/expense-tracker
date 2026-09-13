@@ -158,6 +158,13 @@
     oklch(0.69 0.26 342) 100%
   );
 
+  --gradient-income: linear-gradient(
+    135deg,
+    oklch(0.62 0.17 165) 0%,
+    oklch(0.66 0.16 150) 55%,
+    oklch(0.72 0.16 130) 100%
+  );
+
   /* Ambient background orbs */
   --orb-1: oklch(0.8 0.14 290 / 0.55);
   --orb-2: oklch(0.82 0.12 230 / 0.5);
@@ -257,6 +264,13 @@
     oklch(0.67 0.29 296) 0%,
     oklch(0.63 0.27 270) 45%,
     oklch(0.73 0.27 340) 100%
+  );
+
+  --gradient-income: linear-gradient(
+    135deg,
+    oklch(0.68 0.17 165) 0%,
+    oklch(0.72 0.16 150) 55%,
+    oklch(0.78 0.16 130) 100%
   );
 
   /* Ambient background orbs */
@@ -412,6 +426,24 @@
   }
   .gradient-primary:active:not(:disabled) {
     box-shadow: 0 4px 12px -6px oklch(0.55 0.25 295 / 0.8);
+  }
+
+  /* Income's counterpart to .gradient-primary — money in, not money out. */
+  .gradient-income {
+    background-image: linear-gradient(
+        to bottom,
+        oklch(1 0 0 / 0.22) 0%,
+        oklch(1 0 0 / 0.04) 45%,
+        transparent 100%
+      ),
+      var(--gradient-income);
+    color: oklch(0.99 0.005 160);
+    border: 1px solid oklch(1 0 0 / 0.28);
+    box-shadow: 0 10px 24px -10px oklch(0.6 0.16 158 / 0.75),
+      inset 0 1px 0 0 oklch(1 0 0 / 0.35);
+  }
+  .gradient-income:hover:not(:disabled) {
+    filter: brightness(1.05);
   }
 
   /* The floating add button — the app's single most-tapped control. */

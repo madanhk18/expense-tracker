@@ -1,8 +1,12 @@
 import {
+  Briefcase,
   Bus,
   Clapperboard,
   CreditCard,
+  Gift,
   Landmark,
+  Laptop,
+  Percent,
   GraduationCap,
   HeartPulse,
   Home,
@@ -14,6 +18,7 @@ import {
   ShoppingBag,
   ShoppingBasket,
   Smartphone,
+  Undo2,
   User,
   Utensils,
   Wallet,
@@ -49,6 +54,11 @@ const ICONS: Record<string, LucideIcon> = {
   Banknote,
   Landmark,
   Smartphone,
+  Laptop,
+  Percent,
+  Gift,
+  Undo2,
+  Briefcase,
 };
 
 interface CategoryStyle {
@@ -73,6 +83,15 @@ const BY_NAME: Record<string, CategoryStyle> = {
   subscriptions: { color: "var(--cat-subscriptions)", icon: Repeat },
   personal: { color: "var(--cat-personal)", icon: User },
   other: { color: "var(--cat-other)", icon: MoreHorizontal },
+
+  // Income sources (seeded by 0002_income.sql) — the green end of the palette,
+  // so money in never reads like money out.
+  salary: { color: "var(--cat-healthcare)", icon: Briefcase },
+  freelance: { color: "var(--cat-travel)", icon: Laptop },
+  interest: { color: "var(--cat-groceries)", icon: Percent },
+  gift: { color: "var(--cat-shopping)", icon: Gift },
+  refund: { color: "var(--cat-transportation)", icon: Undo2 },
+  "other income": { color: "var(--cat-other)", icon: Wallet },
 };
 
 /** Palette custom categories cycle through, so they're colourful but stable. */

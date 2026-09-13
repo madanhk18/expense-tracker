@@ -32,3 +32,21 @@ export async function deleteCategory(id: string) {
   const { error } = await supabase.from("categories").delete().eq("id", id);
   if (error) throw error;
 }
+
+/** Income-type categories only, for the income form's category picker. */
+export async function getIncomeCategories(): Promise<Category[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("categories").select("*").eq("type", "income").order("name");
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+/** Expense-type categories only — what every expense-side picker should show. */
+export async function getExpenseCategories(): Promise<Category[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("categories").select("*").eq("type", "expense").order("name");
+
+  if (error) throw error;
+  return data ?? [];
+}

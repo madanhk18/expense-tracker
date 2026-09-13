@@ -1,11 +1,11 @@
 import { listRecurringExpenses } from "@/lib/queries/recurring";
-import { getCategories } from "@/lib/queries/categories";
+import { getExpenseCategories } from "@/lib/queries/categories";
 import { RecurringForm } from "@/components/recurring/recurring-form";
 import { RecurringList } from "@/components/recurring/recurring-list";
 import { PageHeader } from "@/components/shared/page-header";
 
 export default async function RecurringPage() {
-  const [items, categories] = await Promise.all([listRecurringExpenses(), getCategories()]);
+  const [items, categories] = await Promise.all([listRecurringExpenses(), getExpenseCategories()]);
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
