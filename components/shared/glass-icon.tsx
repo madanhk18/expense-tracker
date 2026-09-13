@@ -24,7 +24,7 @@ export function GlassIcon({ icon: Icon, color, size = "md", className }: GlassIc
     <span
       style={{ "--tint": color } as React.CSSProperties}
       className={cn(
-        "glass-tint relative grid shrink-0 place-items-center border border-white/60 bg-white/45 shadow-[inset_0_1px_0_oklch(1_0_0/0.65),0_6px_14px_-8px_var(--tint)] backdrop-blur-md dark:border-white/12 dark:bg-white/8",
+        "glass-chip glass-tint relative grid shrink-0 place-items-center border shadow-[inset_0_1px_0_oklch(1_0_0/0.35),0_6px_14px_-8px_var(--tint)] backdrop-blur-md",
         SIZES[size],
         className
       )}

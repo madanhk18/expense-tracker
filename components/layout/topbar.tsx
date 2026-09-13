@@ -18,7 +18,7 @@ export function Topbar() {
 
   return (
     <header className="sticky top-0 z-30 px-3 pt-3 md:px-4">
-      <div className="glass glass-highlight flex h-14 items-center gap-3 rounded-2xl px-3">
+      <div className="glass-strong glass-highlight flex h-14 items-center gap-3 rounded-2xl px-3">
         <div className="flex items-center gap-2 md:hidden">
           <span className="gradient-primary grid size-9 place-items-center rounded-xl">
             <Wallet className="size-4.5" />

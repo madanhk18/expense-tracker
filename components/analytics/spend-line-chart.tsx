@@ -11,11 +11,11 @@ interface SpendLineChartProps {
 export function SpendLineChart({ data }: SpendLineChartProps) {
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <AreaChart data={data} margin={{ left: 0, right: 8, top: 8 }}>
+      <AreaChart data={data} margin={{ left: 0, right: 14, top: 10, bottom: 0 }}>
         <defs>
           <linearGradient id="spendFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.45} />
-            <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0.02} />
+            <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.55} />
+            <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0.04} />
           </linearGradient>
         </defs>
         <CartesianGrid stroke="var(--border)" strokeOpacity={0.6} vertical={false} />

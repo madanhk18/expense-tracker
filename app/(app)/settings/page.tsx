@@ -15,6 +15,7 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { GlassCard } from "@/components/shared/glass-card";
 import { GlassIcon } from "@/components/shared/glass-icon";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/shared/page-header";
 
 const LINKS = [
   {
@@ -48,7 +49,7 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-xl font-bold tracking-tight">Settings</h1>
+      <PageHeader title="Settings" description="Your profile, appearance and account." />
 
       <GlassCard tint="var(--chart-1)">
         <CardHeader>

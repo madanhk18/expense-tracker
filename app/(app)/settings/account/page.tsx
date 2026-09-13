@@ -4,11 +4,12 @@ import { DeleteAccountDialog } from "@/components/settings/delete-account-dialog
 import { LogoutButton } from "@/components/layout/logout-button";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GlassCard } from "@/components/shared/glass-card";
+import { PageHeader } from "@/components/shared/page-header";
 
 export default function AccountSettingsPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-xl font-bold tracking-tight">Account &amp; security</h1>
+      <PageHeader title="Account &amp; security" description="Password, sessions and account removal." />
 
       <GlassCard>
         <CardHeader>

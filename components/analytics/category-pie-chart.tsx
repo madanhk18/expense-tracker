@@ -19,19 +19,21 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
   const total = data.reduce((sum, d) => sum + d.paise, 0);
 
   return (
-    <div className="grid items-center gap-4 sm:grid-cols-[minmax(0,220px)_1fr]">
-      <div className="relative">
-        <ResponsiveContainer width="100%" height={220}>
+    <div className="grid items-center gap-5 sm:grid-cols-[minmax(0,200px)_1fr]">
+      <div className="relative mx-auto w-full max-w-[220px]">
+        <ResponsiveContainer width="100%" height={200}>
           <PieChart>
             <Pie
               data={data}
               dataKey="paise"
               nameKey="name"
-              innerRadius={62}
-              outerRadius={92}
-              paddingAngle={3}
+              innerRadius={64}
+              outerRadius={90}
+              paddingAngle={1}
               stroke="none"
-              cornerRadius={6}
+              cornerRadius={2}
+              startAngle={90}
+              endAngle={-270}
             >
               {data.map((slice) => (
                 <Cell key={slice.name} fill={categoryStyle(slice.name).color} />
@@ -42,25 +44,30 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
         </ResponsiveContainer>
         <div className="pointer-events-none absolute inset-0 grid place-items-center text-center">
           <div>
-            <p className="text-[11px] text-muted-foreground">Total</p>
-            <p className="text-base font-semibold tabular-nums">{formatINR(total)}</p>
+            <p className="text-[11px] tracking-wide text-muted-foreground uppercase">Total</p>
+            <p className="text-lg font-bold tabular-nums">{formatINR(total)}</p>
           </div>
         </div>
       </div>
 
       {/* Legend — values matter as much as the shape, so they're spelled out. */}
-      <ul className="space-y-1.5">
+      <ul className="space-y-0.5">
         {data.map((slice) => (
-          <li key={slice.name} className="flex items-center gap-2 text-sm">
+          <li
+            key={slice.name}
+            className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+          >
             <span
               className="size-2.5 shrink-0 rounded-full"
               style={{ backgroundColor: categoryStyle(slice.name).color }}
             />
             <span className="min-w-0 flex-1 truncate">{slice.name}</span>
-            <span className="text-xs text-muted-foreground tabular-nums">
+            <span className="w-9 shrink-0 text-right text-xs text-muted-foreground tabular-nums">
               {total > 0 ? Math.round((slice.paise / total) * 100) : 0}%
             </span>
-            <span className="w-20 text-right font-medium tabular-nums">{formatINR(slice.paise)}</span>
+            <span className="w-20 shrink-0 text-right font-semibold tabular-nums">
+              {formatINR(slice.paise)}
+            </span>
           </li>
         ))}
       </ul>

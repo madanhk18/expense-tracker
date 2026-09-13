@@ -17,12 +17,12 @@ export function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <Button variant="ghost" size="icon" className="size-9" />;
+  if (!mounted) return <Button variant="ghost" size="icon-sm" className="rounded-full" />;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-9" aria-label="Toggle theme">
+        <Button variant="secondary" size="icon-sm" className="rounded-full" aria-label="Toggle theme">
           {theme === "dark" ? <Moon className="size-4" /> : theme === "light" ? <Sun className="size-4" /> : <Monitor className="size-4" />}
         </Button>
       </DropdownMenuTrigger>

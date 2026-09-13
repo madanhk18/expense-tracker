@@ -65,7 +65,7 @@ export function ExpenseFilters({ categories }: { categories: Category[] }) {
       </form>
 
       {/* Category pills — the filter people reach for most often. */}
-      <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="scroll-fade-x -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
         <FilterPill
           label="All"
           active={activeCategory === "all"}

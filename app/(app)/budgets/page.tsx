@@ -1,4 +1,4 @@
-import { Wallet } from "lucide-react";
+import { Layers, Target, Wallet } from "lucide-react";
 import { getOverallBudget, getCategoryBudgets } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
 import { getCategories } from "@/lib/queries/categories";
@@ -11,6 +11,8 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GlassCard } from "@/components/shared/glass-card";
 import { CategoryIcon } from "@/components/shared/category-icon";
+import { GlassIcon } from "@/components/shared/glass-icon";
+import { PageHeader } from "@/components/shared/page-header";
 
 export default async function BudgetsPage() {
   const now = new Date();
@@ -29,11 +31,14 @@ export default async function BudgetsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-xl font-bold tracking-tight">Budgets</h1>
+      <PageHeader title="Budgets" description="Set a limit and track how close you are." />
 
       <GlassCard tint="var(--chart-1)">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base">Monthly Budget</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={Target} color="var(--chart-1)" size="sm" />
+            Monthly Budget
+          </CardTitle>
           <BudgetForm
             label="Monthly budget"
             currentPaise={overallBudget?.amount_paise}
@@ -54,7 +59,10 @@ export default async function BudgetsPage() {
 
       <GlassCard>
         <CardHeader>
-          <CardTitle className="text-base">Category Budgets</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={Layers} color="var(--cat-shopping)" size="sm" />
+            Category Budgets
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {categoryBudgets.length === 0 && (

@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GlassCard } from "@/components/shared/glass-card";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/shared/page-header";
 
 interface GuideSection {
   title: string;
@@ -113,16 +114,19 @@ const SECTIONS: GuideSection[] = [
 export default function HelpPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <div className="flex items-center gap-2">
-        <Link href="/settings" className="text-muted-foreground hover:text-foreground">
-          <ArrowLeft className="size-5" />
+      <div className="flex items-start gap-2">
+        <Link
+          href="/settings"
+          aria-label="Back to settings"
+          className="glass mt-1 grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <ArrowLeft className="size-4" />
         </Link>
-        <h1 className="text-xl font-bold tracking-tight">How to use this app</h1>
+        <PageHeader
+          title="How to use this app"
+          description="A quick guide to every feature — what it does and how to use it."
+        />
       </div>
-
-      <p className="text-sm text-muted-foreground">
-        A quick guide to every feature — what it does and how to use it.
-      </p>
 
       {SECTIONS.map((section) => (
         <GlassCard key={section.title}>

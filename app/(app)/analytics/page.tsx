@@ -1,4 +1,5 @@
 import { parseISO } from "date-fns";
+import { ChartPie, CreditCard, Lightbulb, Scale, Store, TrendingUp, Wallet } from "lucide-react";
 import { getAnalytics, getMonthComparison } from "@/lib/queries/analytics";
 import { monthRange, previousMonthRange } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
@@ -11,6 +12,8 @@ import { MonthComparison } from "@/components/analytics/month-comparison";
 import { InsightsList } from "@/components/analytics/insights-list";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { GlassCard } from "@/components/shared/glass-card";
+import { GlassIcon } from "@/components/shared/glass-icon";
+import { PageHeader } from "@/components/shared/page-header";
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -52,14 +55,18 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-bold tracking-tight">Analytics</h1>
-        <MonthPicker monthRef={monthRef} />
-      </div>
+      <PageHeader
+        title="Analytics"
+        description="Where your money actually goes."
+        actions={<MonthPicker monthRef={monthRef} />}
+      />
 
       <GlassCard tint="var(--chart-1)">
         <CardHeader>
-          <CardTitle className="text-base">Total spending</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={Wallet} color="var(--chart-1)" size="sm" />
+            Total spending
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-4xl font-bold tracking-tight tabular-nums">{formatINR(analytics.totalPaise)}</p>
@@ -70,7 +77,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
       {!isCustomRange && comparison && (
         <GlassCard>
           <CardHeader>
-            <CardTitle className="text-base">Month-to-month comparison</CardTitle>
+            <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={Scale} color="var(--chart-2)" size="sm" />
+            Month-to-month comparison
+          </CardTitle>
           </CardHeader>
           <CardContent>
             <MonthComparison
@@ -87,7 +97,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
       <GlassCard>
         <CardHeader>
-          <CardTitle className="text-base">Category breakdown</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={ChartPie} color="var(--cat-shopping)" size="sm" />
+            Category breakdown
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <CategoryPieChart data={analytics.categoryBreakdown} />
@@ -97,7 +110,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
       <GlassCard>
         <CardHeader>
-          <CardTitle className="text-base">Spending over time</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={TrendingUp} color="var(--cat-healthcare)" size="sm" />
+            Spending over time
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <SpendLineChart data={analytics.series} />
@@ -106,7 +122,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
       <GlassCard>
         <CardHeader>
-          <CardTitle className="text-base">Payment methods</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={CreditCard} color="var(--cat-subscriptions)" size="sm" />
+            Payment methods
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <CategoryBarChart
@@ -119,7 +138,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
       {analytics.topMerchants.length > 0 && (
         <GlassCard>
           <CardHeader>
-            <CardTitle className="text-base">Top merchants</CardTitle>
+            <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={Store} color="var(--cat-food)" size="sm" />
+            Top merchants
+          </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {analytics.topMerchants.map((m) => (
@@ -138,7 +160,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
       {insights.length > 0 && (
         <GlassCard>
           <CardHeader>
-            <CardTitle className="text-base">Insights</CardTitle>
+            <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={Lightbulb} color="var(--warning)" size="sm" />
+            Insights
+          </CardTitle>
           </CardHeader>
           <CardContent>
             <InsightsList insights={insights} />

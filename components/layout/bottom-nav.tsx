@@ -18,7 +18,7 @@ export function BottomNav({ categories }: { categories: Category[] }) {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden">
-      <div className="glass glass-highlight mx-auto flex max-w-md items-center justify-between rounded-3xl px-2 py-1.5">
+      <div className="glass-strong glass-highlight mx-auto flex max-w-md items-center justify-between rounded-3xl px-2 py-1.5">
         {left.map((item) => (
           <NavLink key={item.href} item={item} active={pathname.startsWith(item.href)} />
         ))}
@@ -54,7 +54,7 @@ function NavLink({
     <Link
       href={item.href}
       className={cn(
-        "flex w-16 flex-col items-center gap-0.5 rounded-2xl py-2 text-[11px] font-medium transition-colors",
+        "flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-1 py-2 text-[11px] font-medium transition-colors",
         active ? "text-primary" : "text-muted-foreground"
       )}
     >
@@ -66,7 +66,7 @@ function NavLink({
       >
         <item.icon className="size-[18px]" />
       </span>
-      {item.label}
+      <span className="w-full truncate text-center">{item.label}</span>
     </Link>
   );
 }

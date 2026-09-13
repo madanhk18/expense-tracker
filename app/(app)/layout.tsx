@@ -31,7 +31,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar />
-        <main className="flex-1 p-4 pb-28 md:p-6 md:pb-8">{children}</main>
+        <main className="flex-1 p-4 pb-32 md:p-6 md:pb-8">{children}</main>
       </div>
       <BottomNav categories={categories} />
     </div>

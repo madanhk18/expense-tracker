@@ -133,8 +133,14 @@
   --glass-border: oklch(1 0 0 / 0.65);
   --glass-highlight: oklch(1 0 0 / 0.7);
   --glass-blur: 18px;
-  --glass-shadow: 0 6px 24px -12px oklch(0.35 0.1 280 / 0.35),
-    0 2px 6px -3px oklch(0.35 0.1 280 / 0.18);
+  --glass-sheen: linear-gradient(
+    150deg,
+    oklch(1 0 0 / 0.5) 0%,
+    oklch(1 0 0 / 0.12) 45%,
+    transparent 100%
+  );
+  --glass-shadow: 0 10px 30px -14px oklch(0.35 0.1 280 / 0.45),
+    0 3px 8px -4px oklch(0.35 0.1 280 / 0.22);
   --glass-shadow-lg: 0 24px 60px -24px oklch(0.35 0.12 280 / 0.45),
     0 8px 20px -12px oklch(0.35 0.1 280 / 0.25);
 
@@ -161,23 +167,23 @@
 
 .dark {
   /* Base — deep navy, never pure black */
-  --background: oklch(0.21 0.035 275);
-  --foreground: oklch(0.96 0.012 285);
+  --background: oklch(0.17 0.03 272);
+  --foreground: oklch(0.97 0.012 285);
 
-  /* Surfaces */
-  --card: oklch(0.72 0.06 285 / 0.1);
-  --card-foreground: oklch(0.96 0.012 285);
-  --popover: oklch(0.27 0.04 278 / 0.9);
+  /* Surfaces — kept well above the ground colour so cards read as cards */
+  --card: oklch(0.78 0.07 285 / 0.16);
+  --card-foreground: oklch(0.97 0.012 285);
+  --popover: oklch(0.26 0.04 278 / 0.97);
   --popover-foreground: oklch(0.96 0.012 285);
 
   /* Brand */
   --primary: oklch(0.68 0.19 292);
   --primary-foreground: oklch(0.16 0.03 285);
-  --secondary: oklch(0.72 0.06 285 / 0.16);
-  --secondary-foreground: oklch(0.95 0.012 285);
-  --muted: oklch(0.72 0.06 285 / 0.14);
-  --muted-foreground: oklch(0.74 0.035 275);
-  --accent: oklch(0.7 0.1 300 / 0.22);
+  --secondary: oklch(0.78 0.07 285 / 0.2);
+  --secondary-foreground: oklch(0.97 0.012 285);
+  --muted: oklch(0.78 0.07 285 / 0.18);
+  --muted-foreground: oklch(0.79 0.035 275);
+  --accent: oklch(0.72 0.11 300 / 0.28);
   --accent-foreground: oklch(0.95 0.02 300);
 
   /* Semantic */
@@ -187,8 +193,8 @@
   --warning: oklch(0.82 0.15 75);
 
   /* Lines + focus */
-  --border: oklch(1 0 0 / 0.12);
-  --input: oklch(1 0 0 / 0.16);
+  --border: oklch(1 0 0 / 0.16);
+  --input: oklch(1 0 0 / 0.2);
   --ring: oklch(0.68 0.19 292 / 0.6);
 
   /* Charts */
@@ -224,10 +230,16 @@
   --sidebar-ring: oklch(0.68 0.19 292 / 0.6);
 
   /* Glass system */
-  --glass-bg: oklch(0.72 0.06 285 / 0.1);
-  --glass-bg-strong: oklch(0.3 0.04 280 / 0.72);
-  --glass-border: oklch(1 0 0 / 0.14);
-  --glass-highlight: oklch(1 0 0 / 0.16);
+  --glass-bg: oklch(0.78 0.07 285 / 0.16);
+  --glass-bg-strong: oklch(0.28 0.04 280 / 0.96);
+  --glass-border: oklch(1 0 0 / 0.18);
+  --glass-highlight: oklch(1 0 0 / 0.2);
+  --glass-sheen: linear-gradient(
+    150deg,
+    oklch(1 0 0 / 0.07) 0%,
+    oklch(1 0 0 / 0.015) 45%,
+    transparent 100%
+  );
   --glass-shadow: 0 6px 24px -12px oklch(0.1 0.03 280 / 0.7),
     0 2px 6px -3px oklch(0.1 0.03 280 / 0.5);
   --glass-shadow-lg: 0 24px 60px -24px oklch(0.08 0.03 280 / 0.8),
@@ -248,10 +260,10 @@
   );
 
   /* Ambient background orbs */
-  --orb-1: oklch(0.5 0.2 292 / 0.4);
-  --orb-2: oklch(0.45 0.18 250 / 0.38);
-  --orb-3: oklch(0.5 0.16 340 / 0.28);
-  --orb-4: oklch(0.48 0.13 195 / 0.26);
+  --orb-1: oklch(0.55 0.22 292 / 0.55);
+  --orb-2: oklch(0.5 0.2 250 / 0.5);
+  --orb-3: oklch(0.55 0.18 340 / 0.4);
+  --orb-4: oklch(0.52 0.14 195 / 0.34);
 }
 
 @layer base {
@@ -275,9 +287,9 @@
   html.dark {
     background-image: linear-gradient(
       160deg,
-      oklch(0.22 0.04 288) 0%,
-      oklch(0.2 0.035 265) 50%,
-      oklch(0.19 0.03 240) 100%
+      oklch(0.19 0.04 288) 0%,
+      oklch(0.17 0.03 265) 50%,
+      oklch(0.155 0.028 245) 100%
     );
   }
 
@@ -313,6 +325,7 @@
   /* Base frosted surface. Everything glassy composes from this. */
   .glass {
     background-color: var(--glass-bg);
+    background-image: var(--glass-sheen);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     backdrop-filter: blur(var(--glass-blur)) saturate(160%);
@@ -323,6 +336,7 @@
      (dialogs, dropdowns, popovers) where readability comes first. */
   .glass-strong {
     background-color: var(--glass-bg-strong);
+    background-image: var(--glass-sheen);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow-lg);
     backdrop-filter: blur(28px) saturate(180%);
@@ -406,11 +420,49 @@
 
   /* Colour-tinted glass — pass the tint via --tint (a category/brand colour). */
   .glass-tint {
-    background-image: linear-gradient(
-      140deg,
-      color-mix(in oklch, var(--tint) 18%, transparent) 0%,
-      color-mix(in oklch, var(--tint) 4%, transparent) 70%
+    background-image: var(--glass-sheen),
+      linear-gradient(
+        140deg,
+        color-mix(in oklch, var(--tint) 32%, transparent) 0%,
+        color-mix(in oklch, var(--tint) 8%, transparent) 74%
+      );
+  }
+  /* On a dark ground a light tint reads as grey unless the surface colour
+     itself carries the hue — not just a gradient laid over grey. */
+  .dark .glass-tint {
+    background-color: color-mix(in oklch, var(--tint) 22%, var(--glass-bg));
+    border-color: color-mix(in oklch, var(--tint) 30%, var(--glass-border));
+    background-image: var(--glass-sheen),
+      linear-gradient(
+        140deg,
+        color-mix(in oklch, var(--tint) 36%, transparent) 0%,
+        color-mix(in oklch, var(--tint) 12%, transparent) 78%
+      );
+  }
+
+  /* Horizontally scrollable rows fade at the edges so it reads as scrollable. */
+  .scroll-fade-x {
+    scrollbar-width: none;
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      black 14px,
+      black calc(100% - 28px),
+      transparent 100%
     );
+  }
+  .scroll-fade-x::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* The icon chip: the colour lives in the chip, not just the glyph. */
+  .glass-chip {
+    background-color: color-mix(in oklch, var(--tint) 16%, transparent);
+    border-color: color-mix(in oklch, var(--tint) 34%, transparent);
+  }
+  .dark .glass-chip {
+    background-color: color-mix(in oklch, var(--tint) 26%, transparent);
+    border-color: color-mix(in oklch, var(--tint) 46%, transparent);
   }
 }
 

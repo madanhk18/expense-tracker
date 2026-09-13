@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, CalendarRange, Flame, Receipt, TrendingUp } from "lucide-react";
+import { CalendarDays, CalendarRange, Flame, History, Layers, Receipt, Target, TrendingUp } from "lucide-react";
 import { getDashboardStats, momChangePercent } from "@/lib/queries/dashboard";
 import { getRecentExpenses } from "@/lib/queries/expenses";
 import { getCategories } from "@/lib/queries/categories";
@@ -16,8 +16,10 @@ import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { GlassCard } from "@/components/shared/glass-card";
 import { CategoryIcon } from "@/components/shared/category-icon";
+import { GlassIcon } from "@/components/shared/glass-icon";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { categoryStyle } from "@/lib/category-style";
+import { PageHeader } from "@/components/shared/page-header";
 
 function greeting() {
   const hour = new Date().getHours();
@@ -45,12 +47,15 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold tracking-tight">Dashboard</h1>
-        <div className="hidden md:block">
-          <AddExpenseDialog categories={categories} />
-        </div>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        description="Your spending this month, at a glance."
+        actions={
+          <div className="hidden md:block">
+            <AddExpenseDialog categories={categories} />
+          </div>
+        }
+      />
 
       <SpendSummary monthPaise={stats.monthPaise} percentChange={percentChange} greeting={greeting()} monthRef={now} />
 
@@ -66,7 +71,10 @@ export default async function DashboardPage() {
       {overallBudget && (
         <GlassCard>
           <CardHeader>
-            <CardTitle className="text-base">Monthly Budget</CardTitle>
+            <CardTitle className="flex items-center gap-2.5 text-base">
+              <GlassIcon icon={Target} color="var(--cat-healthcare)" size="sm" />
+              Monthly Budget
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <BudgetProgress label="" spentPaise={stats.monthPaise} budgetPaise={overallBudget.amount_paise} />
@@ -77,7 +85,10 @@ export default async function DashboardPage() {
       {topCategories.length > 0 && (
         <GlassCard>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-base">Top Categories</CardTitle>
+            <CardTitle className="flex items-center gap-2.5 text-base">
+              <GlassIcon icon={Layers} color="var(--cat-shopping)" size="sm" />
+              Top Categories
+            </CardTitle>
             <Link href="/analytics" className="text-sm text-primary hover:underline">
               View all
             </Link>
@@ -112,7 +123,10 @@ export default async function DashboardPage() {
 
       <GlassCard>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-base">Recent Expenses</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+              <GlassIcon icon={History} color="var(--chart-2)" size="sm" />
+              Recent Expenses
+            </CardTitle>
           <Link href="/expenses" className="text-sm text-primary hover:underline">
             View all
           </Link>

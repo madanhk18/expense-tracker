@@ -22,8 +22,8 @@ export function SpendSummary({ monthPaise, percentChange, greeting, monthRef }: 
       <CardContent className="space-y-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-sm text-muted-foreground">{greeting} 👋</p>
-            <p className="mt-0.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+            <p className="text-sm text-foreground/75">{greeting} 👋</p>
+            <p className="mt-0.5 text-xs font-medium tracking-wide text-foreground/60 uppercase">
               {monthLabel(monthRef)}
             </p>
           </div>
@@ -31,7 +31,7 @@ export function SpendSummary({ monthPaise, percentChange, greeting, monthRef }: 
         </div>
 
         <div>
-          <p className="text-xs font-medium tracking-wide text-muted-foreground">Total spent</p>
+          <p className="text-xs font-medium tracking-wide text-foreground/70">Total spent</p>
           <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums sm:text-5xl">
             {formatINR(monthPaise)}
           </p>

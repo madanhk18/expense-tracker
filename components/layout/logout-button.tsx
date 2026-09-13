@@ -18,9 +18,9 @@ export function LogoutButton({ iconOnly = false }: { iconOnly?: boolean }) {
   if (iconOnly) {
     return (
       <Button
-        variant="ghost"
-        size="icon"
-        className="text-muted-foreground"
+        variant="secondary"
+        size="icon-sm"
+        className="rounded-full text-muted-foreground"
         onClick={handleLogout}
         aria-label="Log out"
         title="Log out"

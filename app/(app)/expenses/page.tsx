@@ -9,6 +9,7 @@ import { ExportButtons } from "@/components/expenses/export-buttons";
 import { ImportDialog } from "@/components/expenses/import-dialog";
 import { Button } from "@/components/ui/button";
 import type { ExpenseFilters as ExpenseFiltersInput } from "@/lib/queries/expenses";
+import { PageHeader } from "@/components/shared/page-header";
 
 function resolveDateRange(preset: string | undefined) {
   const now = new Date();
@@ -55,16 +56,19 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 className="text-xl font-bold tracking-tight">Expenses</h1>
-        <div className="flex items-center gap-2">
-          <ImportDialog />
-          <ExportButtons />
-          <div className="hidden md:block">
-            <AddExpenseDialog categories={categories} />
-          </div>
-        </div>
-      </div>
+      <PageHeader
+        title="Expenses"
+        description={`${total} ${total === 1 ? "expense" : "expenses"} matching your filters`}
+        actions={
+          <>
+            <ImportDialog />
+            <ExportButtons />
+            <div className="hidden md:block">
+              <AddExpenseDialog categories={categories} />
+            </div>
+          </>
+        }
+      />
 
       <ExpenseFilters categories={categories} />
       <ExpenseList expenses={expenses} categories={categories} />
