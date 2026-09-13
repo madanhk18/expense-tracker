@@ -1,11 +1,11 @@
 import { ArrowDown, ArrowUp, Minus } from "lucide-react";
 import { formatINR } from "@/lib/money";
-import { monthLabel } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 
 interface MonthComparisonProps {
-  currentLabel: Date;
-  previousLabel: Date;
+  /** Ready-made labels — a month name, or a date range for custom windows. */
+  currentLabel: string;
+  previousLabel: string;
   currentPaise: number;
   previousPaise: number;
   diffPaise: number;
@@ -19,11 +19,11 @@ export function MonthComparison({ currentLabel, previousLabel, currentPaise, pre
   return (
     <div className="grid grid-cols-2 gap-3">
       <div className="rounded-2xl border border-white/50 bg-white/40 p-3 dark:border-white/10 dark:bg-white/6">
-        <p className="text-xs text-muted-foreground">{monthLabel(currentLabel)}</p>
+        <p className="text-xs text-muted-foreground">{currentLabel}</p>
         <p className="text-xl font-semibold tabular-nums">{formatINR(currentPaise)}</p>
       </div>
       <div className="rounded-2xl border border-white/50 bg-white/40 p-3 dark:border-white/10 dark:bg-white/6">
-        <p className="text-xs text-muted-foreground">{monthLabel(previousLabel)}</p>
+        <p className="text-xs text-muted-foreground">{previousLabel}</p>
         <p className="text-xl font-semibold tabular-nums">{formatINR(previousPaise)}</p>
       </div>
       <div className="col-span-2 flex flex-wrap items-center gap-2 border-t border-white/40 pt-3 dark:border-white/10">
@@ -39,7 +39,7 @@ export function MonthComparison({ currentLabel, previousLabel, currentPaise, pre
         <span className="text-sm text-muted-foreground">
           {percentChange === null
             ? "no prior data"
-            : `you spent ${Math.abs(Math.round(percentChange))}% ${isIncrease ? "more" : "less"} than last month`}
+            : `you spent ${Math.abs(Math.round(percentChange))}% ${isIncrease ? "more" : "less"} than the period before`}
         </span>
       </div>
     </div>

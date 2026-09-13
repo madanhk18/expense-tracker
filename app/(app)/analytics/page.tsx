@@ -1,7 +1,15 @@
 import { parseISO } from "date-fns";
 import { ChartPie, CreditCard, Lightbulb, Scale, Store, TrendingUp, Wallet } from "lucide-react";
 import { getAnalytics, getMonthComparison } from "@/lib/queries/analytics";
-import { monthRange, previousMonthRange } from "@/lib/dates";
+import {
+  monthRange,
+  previousMonthRange,
+  customRange,
+  precedingRange,
+  rangeDays,
+  rangeLabel,
+  monthLabel,
+} from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { buildInsights } from "@/lib/insights";
 import { MonthPicker } from "@/components/analytics/month-picker";
@@ -26,19 +34,26 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   const toParam = typeof params.to === "string" ? params.to : undefined;
 
   const monthRef = monthParam ? parseISO(`${monthParam}-01`) : new Date();
-  const isCustomRange = Boolean(fromParam && toParam);
 
-  const { start, end } = isCustomRange
-    ? { start: parseISO(fromParam!), end: parseISO(toParam!) }
-    : monthRange(monthRef);
-  const { start: prevStart, end: prevEnd } = previousMonthRange(monthRef);
+  // A custom range covers whole days: "to 13 Sep" has to include everything
+  // spent on 13 Sep, so the end is the end of that day (see lib/dates).
+  const custom = customRange(fromParam, toParam);
+  const isCustomRange = custom !== null;
+  const { start, end } = custom ?? monthRange(monthRef);
 
-  const granularity = end.getTime() - start.getTime() > 1000 * 60 * 60 * 24 * 90 ? "month" : "day";
+  // Compare a month against last month, and a custom range against the window
+  // of the same length immediately before it.
+  const { start: prevStart, end: prevEnd } = isCustomRange
+    ? precedingRange(start, end)
+    : previousMonthRange(monthRef);
+
+  const days = rangeDays(start, end);
+  const granularity = days > 90 ? "month" : days > 31 ? "week" : "day";
 
   const [analytics, comparison, prevAnalytics] = await Promise.all([
     getAnalytics(start, end, granularity),
-    isCustomRange ? Promise.resolve(null) : getMonthComparison(start, end, prevStart, prevEnd),
-    isCustomRange ? Promise.resolve(null) : getAnalytics(prevStart, prevEnd),
+    getMonthComparison(start, end, prevStart, prevEnd),
+    getAnalytics(prevStart, prevEnd),
   ]);
 
   const insights = !isCustomRange
@@ -53,11 +68,15 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
       })
     : [];
 
+  const avgPerDay = days > 0 ? Math.round(analytics.totalPaise / days) : 0;
+
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader
         title="Analytics"
-        description="Where your money actually goes."
+        description={`${isCustomRange ? rangeLabel(start, end) : monthLabel(start)} · ${days} ${
+          days === 1 ? "day" : "days"
+        }`}
         actions={<MonthPicker monthRef={monthRef} />}
       />
 
@@ -69,23 +88,31 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-4xl font-bold tracking-tight tabular-nums">{formatINR(analytics.totalPaise)}</p>
-          <p className="text-sm text-muted-foreground">{analytics.transactionCount} transactions</p>
+          <p className="text-xs font-medium tracking-wide text-foreground/70 uppercase">
+            {isCustomRange ? rangeLabel(start, end) : monthLabel(start)}
+          </p>
+          <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">
+            {formatINR(analytics.totalPaise)}
+          </p>
+          <p className="mt-1 text-sm text-foreground/70">
+            {analytics.transactionCount} {analytics.transactionCount === 1 ? "transaction" : "transactions"} ·{" "}
+            {formatINR(avgPerDay, { decimals: false })}/day
+          </p>
         </CardContent>
       </GlassCard>
 
-      {!isCustomRange && comparison && (
+      {comparison && (
         <GlassCard>
           <CardHeader>
             <CardTitle className="flex items-center gap-2.5 text-base">
             <GlassIcon icon={Scale} color="var(--chart-2)" size="sm" />
-            Month-to-month comparison
+            {isCustomRange ? "Vs the previous period" : "Month-to-month comparison"}
           </CardTitle>
           </CardHeader>
           <CardContent>
             <MonthComparison
-              currentLabel={monthRef}
-              previousLabel={prevStart}
+              currentLabel={isCustomRange ? rangeLabel(start, end) : monthLabel(start)}
+              previousLabel={isCustomRange ? rangeLabel(prevStart, prevEnd) : monthLabel(prevStart)}
               currentPaise={comparison.currentPaise}
               previousPaise={comparison.previousPaise}
               diffPaise={comparison.diffPaise}
