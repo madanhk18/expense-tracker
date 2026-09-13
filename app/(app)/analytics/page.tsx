@@ -9,7 +9,8 @@ import { CategoryBarChart } from "@/components/analytics/category-bar-chart";
 import { SpendLineChart } from "@/components/analytics/spend-line-chart";
 import { MonthComparison } from "@/components/analytics/month-comparison";
 import { InsightsList } from "@/components/analytics/insights-list";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
 
 interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -52,22 +53,22 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-lg font-semibold">Analytics</h1>
+        <h1 className="text-xl font-bold tracking-tight">Analytics</h1>
         <MonthPicker monthRef={monthRef} />
       </div>
 
-      <Card>
+      <GlassCard tint="var(--chart-1)">
         <CardHeader>
           <CardTitle className="text-base">Total spending</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-semibold tabular-nums">{formatINR(analytics.totalPaise)}</p>
+          <p className="text-4xl font-bold tracking-tight tabular-nums">{formatINR(analytics.totalPaise)}</p>
           <p className="text-sm text-muted-foreground">{analytics.transactionCount} transactions</p>
         </CardContent>
-      </Card>
+      </GlassCard>
 
       {!isCustomRange && comparison && (
-        <Card>
+        <GlassCard>
           <CardHeader>
             <CardTitle className="text-base">Month-to-month comparison</CardTitle>
           </CardHeader>
@@ -81,10 +82,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               percentChange={comparison.percentChange}
             />
           </CardContent>
-        </Card>
+        </GlassCard>
       )}
 
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle className="text-base">Category breakdown</CardTitle>
         </CardHeader>
@@ -92,51 +93,57 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
           <CategoryPieChart data={analytics.categoryBreakdown} />
           <CategoryBarChart data={analytics.categoryBreakdown} />
         </CardContent>
-      </Card>
+      </GlassCard>
 
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle className="text-base">Spending over time</CardTitle>
         </CardHeader>
         <CardContent>
           <SpendLineChart data={analytics.series} />
         </CardContent>
-      </Card>
+      </GlassCard>
 
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle className="text-base">Payment methods</CardTitle>
         </CardHeader>
         <CardContent>
-          <CategoryBarChart data={analytics.paymentMethodBreakdown.map((p) => ({ name: p.method, paise: p.paise }))} />
+          <CategoryBarChart
+            colorBy="payment"
+            data={analytics.paymentMethodBreakdown.map((p) => ({ name: p.method, paise: p.paise }))}
+          />
         </CardContent>
-      </Card>
+      </GlassCard>
 
       {analytics.topMerchants.length > 0 && (
-        <Card>
+        <GlassCard>
           <CardHeader>
             <CardTitle className="text-base">Top merchants</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             {analytics.topMerchants.map((m) => (
-              <div key={m.merchant} className="flex items-center justify-between text-sm">
-                <span>{m.merchant}</span>
+              <div
+                key={m.merchant}
+                className="flex items-center justify-between rounded-xl px-2 py-1.5 text-sm transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+              >
+                <span className="truncate">{m.merchant}</span>
                 <span className="font-medium tabular-nums">{formatINR(m.paise)}</span>
               </div>
             ))}
           </CardContent>
-        </Card>
+        </GlassCard>
       )}
 
       {insights.length > 0 && (
-        <Card>
+        <GlassCard>
           <CardHeader>
             <CardTitle className="text-base">Insights</CardTitle>
           </CardHeader>
           <CardContent>
             <InsightsList insights={insights} />
           </CardContent>
-        </Card>
+        </GlassCard>
       )}
     </div>
   );

@@ -28,21 +28,21 @@ export function MonthPicker({ monthRef }: { monthRef: Date }) {
   const isCustomRange = searchParams.has("from");
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2">
       {!isCustomRange && (
-        <>
-          <Button variant="outline" size="icon" onClick={() => goToMonth(subMonths(monthRef, 1))}>
+        <div className="glass flex items-center gap-1 rounded-full p-1">
+          <Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => goToMonth(subMonths(monthRef, 1))}>
             <ChevronLeft className="size-4" />
           </Button>
-          <span className="min-w-32 text-center text-sm font-medium">{format(monthRef, "MMMM yyyy")}</span>
-          <Button variant="outline" size="icon" onClick={() => goToMonth(addMonths(monthRef, 1))}>
+          <span className="min-w-28 text-center text-sm font-medium">{format(monthRef, "MMMM yyyy")}</span>
+          <Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => goToMonth(addMonths(monthRef, 1))}>
             <ChevronRight className="size-4" />
           </Button>
-        </>
+        </div>
       )}
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant={isCustomRange ? "default" : "outline"} size="sm">
+          <Button variant={isCustomRange ? "default" : "outline"} size="sm" className="rounded-full">
             Custom range
           </Button>
         </PopoverTrigger>

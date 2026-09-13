@@ -45,7 +45,8 @@ export function DeleteAccountDialog({ onConfirm }: { onConfirm: () => Promise<vo
             <Input id="confirm" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} placeholder={CONFIRM_TEXT} />
           </div>
           <Button
-            variant="destructive"
+            variant="danger"
+            size="lg"
             disabled={confirmText !== CONFIRM_TEXT || deleting}
             onClick={handleDelete}
             className="w-full"

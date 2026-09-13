@@ -11,7 +11,8 @@ import { toFriendlyMessage, logError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
 
 export function RegisterForm() {
   const [submitting, setSubmitting] = useState(false);
@@ -48,7 +49,7 @@ export function RegisterForm() {
 
   if (done) {
     return (
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
@@ -62,12 +63,12 @@ export function RegisterForm() {
             </Button>
           </Link>
         </CardContent>
-      </Card>
+      </GlassCard>
     );
   }
 
   return (
-    <Card>
+    <GlassCard>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
         <CardDescription>Start tracking your expenses in seconds.</CardDescription>
@@ -96,7 +97,7 @@ export function RegisterForm() {
               <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={submitting}>
+          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
             {submitting ? "Creating account…" : "Sign up"}
           </Button>
         </form>
@@ -107,6 +108,6 @@ export function RegisterForm() {
           </Link>
         </p>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 }

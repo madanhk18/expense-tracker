@@ -11,7 +11,8 @@ import { toFriendlyMessage, logError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
 
 export function ResetPasswordForm() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <Card>
+    <GlassCard>
       <CardHeader>
         <CardTitle>Reset password</CardTitle>
         <CardDescription>Choose a new password for your account.</CardDescription>
@@ -60,11 +61,11 @@ export function ResetPasswordForm() {
               <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
             )}
           </div>
-          <Button type="submit" className="w-full" disabled={submitting}>
+          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
             {submitting ? "Updating…" : "Update password"}
           </Button>
         </form>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 }

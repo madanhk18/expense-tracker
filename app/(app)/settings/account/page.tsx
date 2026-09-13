@@ -2,32 +2,33 @@ import { deleteAccountAction } from "@/lib/actions/settings";
 import { ChangePasswordForm } from "@/components/settings/change-password-form";
 import { DeleteAccountDialog } from "@/components/settings/delete-account-dialog";
 import { LogoutButton } from "@/components/layout/logout-button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
 
 export default function AccountSettingsPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-lg font-semibold">Account &amp; security</h1>
+      <h1 className="text-xl font-bold tracking-tight">Account &amp; security</h1>
 
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle className="text-base">Change password</CardTitle>
         </CardHeader>
         <CardContent>
           <ChangePasswordForm />
         </CardContent>
-      </Card>
+      </GlassCard>
 
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle className="text-base">Session</CardTitle>
         </CardHeader>
         <CardContent>
           <LogoutButton />
         </CardContent>
-      </Card>
+      </GlassCard>
 
-      <Card className="border-destructive/50">
+      <GlassCard className="border-destructive/50">
         <CardHeader>
           <CardTitle className="text-base text-destructive">Danger zone</CardTitle>
         </CardHeader>
@@ -42,7 +43,7 @@ export default function AccountSettingsPage() {
             }}
           />
         </CardContent>
-      </Card>
+      </GlassCard>
     </div>
   );
 }

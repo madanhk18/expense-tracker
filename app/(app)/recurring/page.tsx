@@ -9,7 +9,7 @@ export default async function RecurringPage() {
   return (
     <div className="mx-auto max-w-2xl space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Recurring Expenses</h1>
+        <h1 className="text-xl font-bold tracking-tight">Recurring Expenses</h1>
         <RecurringForm categories={categories} />
       </div>
       <RecurringList items={items} />

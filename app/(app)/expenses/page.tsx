@@ -5,7 +5,6 @@ import { todayRange, thisWeekRange, monthRange, previousMonthRange } from "@/lib
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
 import { ExpenseList } from "@/components/expenses/expense-list";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
-import { AddExpenseFab } from "@/components/expenses/add-expense-fab";
 import { ExportButtons } from "@/components/expenses/export-buttons";
 import { ImportDialog } from "@/components/expenses/import-dialog";
 import { Button } from "@/components/ui/button";
@@ -56,8 +55,8 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Expenses</h1>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="text-xl font-bold tracking-tight">Expenses</h1>
         <div className="flex items-center gap-2">
           <ImportDialog />
           <ExportButtons />
@@ -81,8 +80,6 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
           </div>
         </div>
       )}
-
-      <AddExpenseFab categories={categories} />
     </div>
   );
 }

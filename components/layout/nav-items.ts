@@ -9,11 +9,13 @@ export const NAV_ITEMS = [
   { href: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-/** Subset shown in the mobile bottom nav — keep to 5 max for tap-target width. */
+/**
+ * Subset shown in the mobile bottom nav — four items, two either side of the
+ * centre "add expense" button. Budgets stays reachable from Settings.
+ */
 export const MOBILE_NAV_ITEMS = [
   NAV_ITEMS[0],
   NAV_ITEMS[1],
   NAV_ITEMS[2],
-  NAV_ITEMS[3],
   NAV_ITEMS[5],
 ] as const;

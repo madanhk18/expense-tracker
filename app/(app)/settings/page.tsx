@@ -1,10 +1,42 @@
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import {
+  ChevronRight,
+  HelpCircle,
+  Palette,
+  ShieldCheck,
+  Tags,
+  UserRound,
+  Wallet,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { updateProfileAction } from "@/lib/actions/settings";
 import { ProfileForm } from "@/components/settings/profile-form";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
+import { GlassIcon } from "@/components/shared/glass-icon";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const LINKS = [
+  {
+    href: "/settings/categories",
+    label: "Manage categories",
+    icon: Tags,
+    color: "var(--cat-shopping)",
+  },
+  { href: "/budgets", label: "Manage budgets", icon: Wallet, color: "var(--cat-healthcare)" },
+  {
+    href: "/settings/account",
+    label: "Account & security",
+    icon: ShieldCheck,
+    color: "var(--cat-bills)",
+  },
+  {
+    href: "/settings/help",
+    label: "How to use this app",
+    icon: HelpCircle,
+    color: "var(--cat-entertainment)",
+  },
+];
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -16,11 +48,14 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-lg font-semibold">Settings</h1>
+      <h1 className="text-xl font-bold tracking-tight">Settings</h1>
 
-      <Card>
+      <GlassCard tint="var(--chart-1)">
         <CardHeader>
-          <CardTitle className="text-base">Profile</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={UserRound} color="var(--chart-1)" size="sm" />
+            Profile
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ProfileForm
@@ -32,38 +67,36 @@ export default async function SettingsPage() {
             }}
           />
         </CardContent>
-      </Card>
+      </GlassCard>
 
-      <Card>
+      <GlassCard>
         <CardHeader>
-          <CardTitle className="text-base">Appearance</CardTitle>
+          <CardTitle className="flex items-center gap-2.5 text-base">
+            <GlassIcon icon={Palette} color="var(--cat-subscriptions)" size="sm" />
+            Appearance
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">Theme</p>
           <ThemeToggle />
         </CardContent>
-      </Card>
+      </GlassCard>
 
-      <Card>
-        <CardContent className="divide-y p-0">
-          <Link href="/settings/categories" className="flex items-center justify-between p-4 text-sm">
-            Manage categories
-            <ChevronRight className="size-4 text-muted-foreground" />
-          </Link>
-          <Link href="/budgets" className="flex items-center justify-between p-4 text-sm">
-            Manage budgets
-            <ChevronRight className="size-4 text-muted-foreground" />
-          </Link>
-          <Link href="/settings/account" className="flex items-center justify-between p-4 text-sm">
-            Account &amp; security
-            <ChevronRight className="size-4 text-muted-foreground" />
-          </Link>
-          <Link href="/settings/help" className="flex items-center justify-between p-4 text-sm">
-            How to use this app
-            <ChevronRight className="size-4 text-muted-foreground" />
-          </Link>
+      <GlassCard>
+        <CardContent className="space-y-1">
+          {LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="flex items-center gap-3 rounded-2xl px-2 py-2.5 text-sm font-medium transition-colors hover:bg-white/50 dark:hover:bg-white/8"
+            >
+              <GlassIcon icon={link.icon} color={link.color} size="sm" />
+              {link.label}
+              <ChevronRight className="ml-auto size-4 text-muted-foreground" />
+            </Link>
+          ))}
         </CardContent>
-      </Card>
+      </GlassCard>
     </div>
   );
 }

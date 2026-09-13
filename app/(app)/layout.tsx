@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { generateDueRecurringExpenses } from "@/lib/queries/dashboard";
+import { getCategories } from "@/lib/queries/categories";
 import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Topbar } from "@/components/layout/topbar";
@@ -21,15 +22,18 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     // Non-fatal: recurring generation failing shouldn't block the whole app from loading.
   }
 
+  // Powers the centre "add expense" button in the mobile bottom nav.
+  const categories = await getCategories();
+
   return (
     <div className="flex min-h-svh">
       <IdleLogout />
       <Sidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <Topbar />
-        <main className="flex-1 p-4 pb-24 md:p-6 md:pb-6">{children}</main>
+        <main className="flex-1 p-4 pb-28 md:p-6 md:pb-8">{children}</main>
       </div>
-      <BottomNav />
+      <BottomNav categories={categories} />
     </div>
   );
 }

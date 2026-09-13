@@ -22,6 +22,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { CategoryIcon } from "@/components/shared/category-icon";
 import { ExpenseForm } from "./expense-form";
 import type { Category, ExpenseWithCategory } from "@/types/domain";
 
@@ -50,23 +51,31 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
 
   return (
     <>
-      <div className="flex items-center justify-between gap-3 py-2.5">
-        <button className="flex min-w-0 flex-1 items-center gap-3 text-left" onClick={() => setEditOpen(true)}>
+      <div className="glass glass-highlight glass-hover flex items-center justify-between gap-2 rounded-2xl py-2.5 pr-2 pl-3">
+        <button
+          className="relative flex min-w-0 flex-1 items-center gap-3 text-left"
+          onClick={() => setEditOpen(true)}
+        >
+          <CategoryIcon name={expense.category?.name} icon={expense.category?.icon} size="md" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{expense.description}</p>
             <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-              {expense.category && <Badge variant="secondary" className="font-normal">{expense.category.name}</Badge>}
+              {expense.category && (
+                <Badge variant="secondary" className="font-normal">
+                  {expense.category.name}
+                </Badge>
+              )}
               <span>{expense.payment_method}</span>
               {expense.merchant && <span>· {expense.merchant}</span>}
               <span>· {formatTime(new Date(expense.expense_at))}</span>
             </div>
           </div>
         </button>
-        <div className="flex items-center gap-2">
-          <span className="font-medium tabular-nums">{formatINR(expense.amount_paise)}</span>
+        <div className="relative flex items-center gap-1">
+          <span className="font-semibold tabular-nums">{formatINR(expense.amount_paise)}</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="size-8">
+              <Button variant="ghost" size="icon-sm">
                 <MoreVertical className="size-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -101,7 +110,7 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction variant="danger" onClick={handleDelete} disabled={deleting}>
               {deleting ? "Deleting…" : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>

@@ -57,7 +57,7 @@ export function BudgetDeleteButton({ categoryName, onDelete }: BudgetDeleteButto
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleting}>
+          <AlertDialogAction variant="danger" onClick={handleDelete} disabled={deleting}>
             {deleting ? "Removing…" : "Remove"}
           </AlertDialogAction>
         </AlertDialogFooter>

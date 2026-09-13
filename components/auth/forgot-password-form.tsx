@@ -11,7 +11,8 @@ import { toFriendlyMessage, logError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
 
 export function ForgotPasswordForm() {
   const [submitting, setSubmitting] = useState(false);
@@ -43,7 +44,7 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
@@ -57,12 +58,12 @@ export function ForgotPasswordForm() {
             </Button>
           </Link>
         </CardContent>
-      </Card>
+      </GlassCard>
     );
   }
 
   return (
-    <Card>
+    <GlassCard>
       <CardHeader>
         <CardTitle>Forgot password</CardTitle>
         <CardDescription>Enter your email and we&apos;ll send you a reset link.</CardDescription>
@@ -74,7 +75,7 @@ export function ForgotPasswordForm() {
             <Input id="email" type="email" autoComplete="email" {...register("email")} />
             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
-          <Button type="submit" className="w-full" disabled={submitting}>
+          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
             {submitting ? "Sending…" : "Send reset link"}
           </Button>
         </form>
@@ -84,6 +85,6 @@ export function ForgotPasswordForm() {
           </Link>
         </p>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 }

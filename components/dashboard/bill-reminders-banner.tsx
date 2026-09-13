@@ -1,7 +1,10 @@
 import { AlertCircle, CalendarClock } from "lucide-react";
 import { formatINR } from "@/lib/money";
 import { daysUntil } from "@/lib/dates";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
+import { GlassIcon } from "@/components/shared/glass-icon";
+import { CategoryIcon } from "@/components/shared/category-icon";
 import { cn } from "@/lib/utils";
 import type { UpcomingBill } from "@/lib/queries/recurring";
 
@@ -17,31 +20,40 @@ export function BillRemindersBanner({ bills }: { bills: UpcomingBill[] }) {
   if (bills.length === 0) return null;
 
   return (
-    <Card>
+    <GlassCard tint="var(--warning)">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <CalendarClock className="size-4" />
+        <CardTitle className="flex items-center gap-2.5 text-base">
+          <GlassIcon icon={CalendarClock} color="var(--warning)" size="sm" />
           Upcoming Bills
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {bills.map((bill) => {
           const { text, overdue } = dueLabel(bill.nextDueDate);
           return (
-            <div key={bill.id} className="flex items-center justify-between gap-3 text-sm">
+            <div
+              key={bill.id}
+              className="flex items-center justify-between gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+            >
+              <CategoryIcon name={bill.categoryName} size="sm" />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{bill.description}</p>
-                <p className={cn("flex items-center gap-1 text-xs", overdue ? "text-destructive font-medium" : "text-muted-foreground")}>
+                <p
+                  className={cn(
+                    "flex items-center gap-1 text-xs",
+                    overdue ? "font-medium text-destructive" : "text-muted-foreground"
+                  )}
+                >
                   {overdue && <AlertCircle className="size-3" />}
                   {text}
                   {bill.categoryName && ` · ${bill.categoryName}`}
                 </p>
               </div>
-              <span className="font-medium tabular-nums">{formatINR(bill.amountPaise)}</span>
+              <span className="font-semibold tabular-nums">{formatINR(bill.amountPaise)}</span>
             </div>
           );
         })}
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 }

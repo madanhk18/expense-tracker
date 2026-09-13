@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { toFriendlyMessage, logError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { CategoryIcon } from "@/components/shared/category-icon";
 import type { Category } from "@/types/domain";
 
 export function CategoryManager({ categories }: { categories: Category[] }) {
@@ -66,16 +66,20 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
 
       <div className="flex flex-wrap gap-2">
         {categories.map((cat) => (
-          <Badge key={cat.id} variant="secondary" className="gap-1.5 py-1.5 pl-3 pr-2 font-normal">
+          <span
+            key={cat.id}
+            className="flex items-center gap-2 rounded-full border border-white/55 bg-white/45 py-1.5 pr-3 pl-1.5 text-sm backdrop-blur-md dark:border-white/10 dark:bg-white/8"
+          >
+            <CategoryIcon name={cat.name} icon={cat.icon} size="sm" className="size-7 [&>svg]:size-3.5" />
             {cat.name}
             {cat.is_system ? (
               <Lock className="size-3 text-muted-foreground" />
             ) : (
               <button onClick={() => handleDelete(cat.id)} aria-label={`Delete ${cat.name}`}>
-                <Trash2 className="size-3 text-muted-foreground hover:text-destructive" />
+                <Trash2 className="size-3.5 text-muted-foreground hover:text-destructive" />
               </button>
             )}
-          </Badge>
+          </span>
         ))}
       </div>
     </div>

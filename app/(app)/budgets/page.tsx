@@ -8,7 +8,9 @@ import { BudgetProgress } from "@/components/budgets/budget-progress";
 import { BudgetForm } from "@/components/budgets/budget-form";
 import { BudgetDeleteButton } from "@/components/budgets/budget-delete-button";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
+import { CategoryIcon } from "@/components/shared/category-icon";
 
 export default async function BudgetsPage() {
   const now = new Date();
@@ -27,9 +29,9 @@ export default async function BudgetsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-lg font-semibold">Budgets</h1>
+      <h1 className="text-xl font-bold tracking-tight">Budgets</h1>
 
-      <Card>
+      <GlassCard tint="var(--chart-1)">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-base">Monthly Budget</CardTitle>
           <BudgetForm
@@ -48,9 +50,9 @@ export default async function BudgetsPage() {
             <EmptyState icon={Wallet} title="No monthly budget set" description="Set a budget to track your spending against it." />
           )}
         </CardContent>
-      </Card>
+      </GlassCard>
 
-      <Card>
+      <GlassCard>
         <CardHeader>
           <CardTitle className="text-base">Category Budgets</CardTitle>
         </CardHeader>
@@ -60,7 +62,8 @@ export default async function BudgetsPage() {
           )}
           {categoryBudgets.map((budget) => (
             <div key={budget.id} className="flex items-start gap-3">
-              <div className="flex-1">
+              <CategoryIcon name={budget.category?.name} size="md" className="mt-0.5" />
+              <div className="min-w-0 flex-1">
                 <BudgetProgress
                   label={budget.category?.name ?? "Category"}
                   spentPaise={spentByCategoryId.get(budget.category_id!) ?? 0}
@@ -86,7 +89,7 @@ export default async function BudgetsPage() {
           ))}
 
           {availableCategories.length > 0 && (
-            <div className="flex flex-wrap gap-2 border-t pt-4">
+            <div className="flex flex-wrap gap-2 border-t border-white/40 pt-4 dark:border-white/10">
               {availableCategories.map((cat) => (
                 <BudgetForm
                   key={cat.id}
@@ -101,7 +104,7 @@ export default async function BudgetsPage() {
             </div>
           )}
         </CardContent>
-      </Card>
+      </GlassCard>
     </div>
   );
 }

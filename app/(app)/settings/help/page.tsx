@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
 import { Badge } from "@/components/ui/badge";
 
 interface GuideSection {
@@ -116,7 +117,7 @@ export default function HelpPage() {
         <Link href="/settings" className="text-muted-foreground hover:text-foreground">
           <ArrowLeft className="size-5" />
         </Link>
-        <h1 className="text-lg font-semibold">How to use this app</h1>
+        <h1 className="text-xl font-bold tracking-tight">How to use this app</h1>
       </div>
 
       <p className="text-sm text-muted-foreground">
@@ -124,7 +125,7 @@ export default function HelpPage() {
       </p>
 
       {SECTIONS.map((section) => (
-        <Card key={section.title}>
+        <GlassCard key={section.title}>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">{section.title}</CardTitle>
             {section.badge && (
@@ -140,7 +141,7 @@ export default function HelpPage() {
               ))}
             </ul>
           </CardContent>
-        </Card>
+        </GlassCard>
       ))}
     </div>
   );

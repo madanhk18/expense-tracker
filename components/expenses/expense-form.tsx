@@ -10,11 +10,14 @@ import { expenseFormSchema, formToInsertValues, type ExpenseFormValues } from "@
 import { createClient } from "@/lib/supabase/client";
 import { toFriendlyMessage, logError } from "@/lib/errors";
 import { PAYMENT_METHODS } from "@/lib/constants";
+import { paymentStyle } from "@/lib/category-style";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { CategoryIcon } from "@/components/shared/category-icon";
 import type { Category, ExpenseWithCategory } from "@/types/domain";
 
 interface ExpenseFormProps {
@@ -97,13 +100,15 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="amount">Amount</Label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">₹</span>
+        <div className="flex items-stretch gap-2">
+          <span className="gradient-primary grid w-14 shrink-0 place-items-center rounded-2xl text-xl font-semibold">
+            ₹
+          </span>
           <Input
             id="amount"
             inputMode="decimal"
             placeholder="0"
-            className="h-14 pl-8 text-2xl font-semibold"
+            className="h-16 rounded-2xl text-3xl font-bold tabular-nums md:text-3xl"
             autoFocus
             {...register("amount")}
           />
@@ -117,50 +122,68 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
         {errors.description && <p className="text-sm text-destructive">{errors.description.message}</p>}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label>Category</Label>
-          <Controller
-            control={control}
-            name="categoryId"
-            render={({ field }) => (
-              <Select value={field.value ?? ""} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
+      <div className="space-y-2">
+        <Label>Category</Label>
+        <Controller
+          control={control}
+          name="categoryId"
+          render={({ field }) => (
+            <Select value={field.value ?? ""} onValueChange={field.onChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id}>
+                    <CategoryIcon name={cat.name} icon={cat.icon} size="sm" />
+                    {cat.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+        />
+      </div>
 
-        <div className="space-y-2">
-          <Label>Payment method</Label>
-          <Controller
-            control={control}
-            name="paymentMethod"
-            render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {PAYMENT_METHODS.map((method) => (
-                    <SelectItem key={method} value={method}>
-                      {method}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          />
-        </div>
+      <div className="space-y-2">
+        <Label>Payment method</Label>
+        <Controller
+          control={control}
+          name="paymentMethod"
+          render={({ field }) => (
+            <div className="grid grid-cols-3 gap-2">
+              {PAYMENT_METHODS.map((method) => {
+                const pm = paymentStyle(method);
+                const selected = field.value === method;
+                return (
+                  <button
+                    key={method}
+                    type="button"
+                    aria-pressed={selected}
+                    onClick={() => field.onChange(method)}
+                    style={
+                      {
+                        "--tint": pm.color,
+                        borderColor: selected
+                          ? `color-mix(in oklch, ${pm.color} 55%, transparent)`
+                          : undefined,
+                      } as React.CSSProperties
+                    }
+                    className={cn(
+                      "flex flex-col items-center gap-1.5 rounded-2xl border px-2 py-2.5 text-xs font-medium transition-all active:scale-[0.97]",
+                      selected
+                        ? "glass-tint text-foreground shadow-[0_8px_20px_-12px_var(--tint)]"
+                        : "border-white/50 bg-white/40 text-muted-foreground hover:bg-white/60 dark:border-white/10 dark:bg-white/6 dark:hover:bg-white/12"
+                    )}
+                  >
+                    <pm.icon className="size-4" style={{ color: pm.color }} />
+                    <span className="truncate">{method}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        />
       </div>
 
       <div className="space-y-2">
@@ -185,7 +208,7 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
         <Textarea id="notes" rows={2} placeholder="Any extra detail…" {...register("notes")} />
       </div>
 
-      <Button type="submit" className="w-full" disabled={submitting}>
+      <Button type="submit" size="lg" className="w-full" disabled={submitting}>
         {submitting ? "Saving…" : expense ? "Save changes" : "Add expense"}
       </Button>
     </form>

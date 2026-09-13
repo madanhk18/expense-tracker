@@ -1,5 +1,7 @@
-import { ArrowDown, ArrowUp } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ArrowDown, ArrowUp, Wallet } from "lucide-react";
+import { CardContent } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
+import { GlassIcon } from "@/components/shared/glass-icon";
 import { formatINR } from "@/lib/money";
 import { monthLabel } from "@/lib/dates";
 import { cn } from "@/lib/utils";
@@ -11,22 +13,35 @@ interface SpendSummaryProps {
   monthRef: Date;
 }
 
+/** The hero card: this month's total, and how it compares with last month. */
 export function SpendSummary({ monthPaise, percentChange, greeting, monthRef }: SpendSummaryProps) {
   const isIncrease = (percentChange ?? 0) > 0;
 
   return (
-    <Card>
-      <CardContent className="space-y-3 py-2">
-        <p className="text-sm text-muted-foreground">{greeting}</p>
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{monthLabel(monthRef)}</p>
-          <p className="mt-1 text-4xl font-semibold tabular-nums">{formatINR(monthPaise)}</p>
+    <GlassCard tint="var(--chart-1)" className="glass-hover">
+      <CardContent className="space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm text-muted-foreground">{greeting} 👋</p>
+            <p className="mt-0.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
+              {monthLabel(monthRef)}
+            </p>
+          </div>
+          <GlassIcon icon={Wallet} color="var(--chart-1)" size="lg" />
         </div>
+
+        <div>
+          <p className="text-xs font-medium tracking-wide text-muted-foreground">Total spent</p>
+          <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums sm:text-5xl">
+            {formatINR(monthPaise)}
+          </p>
+        </div>
+
         {percentChange !== null && (
           <div
             className={cn(
-              "inline-flex items-center gap-1 text-sm font-medium",
-              isIncrease ? "text-destructive" : "text-emerald-600 dark:text-emerald-500"
+              "inline-flex items-center gap-1 rounded-full border border-white/50 bg-white/50 px-2.5 py-1 text-sm font-medium backdrop-blur-sm dark:border-white/10 dark:bg-white/10",
+              isIncrease ? "text-destructive" : "text-[var(--success)]"
             )}
           >
             {isIncrease ? <ArrowUp className="size-3.5" /> : <ArrowDown className="size-3.5" />}
@@ -34,6 +49,6 @@ export function SpendSummary({ monthPaise, percentChange, greeting, monthRef }: 
           </div>
         )}
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 }

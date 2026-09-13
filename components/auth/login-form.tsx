@@ -12,7 +12,8 @@ import { toFriendlyMessage, logError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
 
 export function LoginForm() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export function LoginForm() {
   }
 
   return (
-    <Card>
+    <GlassCard>
       <CardHeader>
         <CardTitle>Log in</CardTitle>
         <CardDescription>Welcome back. Enter your details to continue.</CardDescription>
@@ -64,7 +65,7 @@ export function LoginForm() {
             <Input id="password" type="password" autoComplete="current-password" {...register("password")} />
             {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
           </div>
-          <Button type="submit" className="w-full" disabled={submitting}>
+          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
             {submitting ? "Logging in…" : "Log in"}
           </Button>
         </form>
@@ -75,6 +76,6 @@ export function LoginForm() {
           </Link>
         </p>
       </CardContent>
-    </Card>
+    </GlassCard>
   );
 }

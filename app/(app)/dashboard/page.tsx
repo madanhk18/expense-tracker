@@ -1,22 +1,23 @@
 import Link from "next/link";
-import { Receipt } from "lucide-react";
+import { CalendarDays, CalendarRange, Flame, Receipt, TrendingUp } from "lucide-react";
 import { getDashboardStats, momChangePercent } from "@/lib/queries/dashboard";
 import { getRecentExpenses } from "@/lib/queries/expenses";
 import { getCategories } from "@/lib/queries/categories";
 import { getOverallBudget } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
 import { listUpcomingBills } from "@/lib/queries/recurring";
-import { monthRange } from "@/lib/dates";
+import { monthRange, formatTime } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { SpendSummary } from "@/components/dashboard/spend-summary";
 import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banner";
 import { BudgetProgress } from "@/components/budgets/budget-progress";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
-import { AddExpenseFab } from "@/components/expenses/add-expense-fab";
 import { EmptyState } from "@/components/shared/empty-state";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { GlassCard } from "@/components/shared/glass-card";
+import { CategoryIcon } from "@/components/shared/category-icon";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { categoryStyle } from "@/lib/category-style";
 
 function greeting() {
   const hour = new Date().getHours();
@@ -40,11 +41,12 @@ export default async function DashboardPage() {
 
   const percentChange = momChangePercent(stats.monthPaise, stats.previousMonthPaise);
   const topCategories = monthAnalytics.categoryBreakdown.slice(0, 4);
+  const topCategoryMax = Math.max(1, ...topCategories.map((c) => c.paise));
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Dashboard</h1>
+        <h1 className="text-xl font-bold tracking-tight">Dashboard</h1>
         <div className="hidden md:block">
           <AddExpenseDialog categories={categories} />
         </div>
@@ -54,44 +56,64 @@ export default async function DashboardPage() {
 
       <BillRemindersBanner bills={upcomingBills} />
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        <StatCard label="Today" value={formatINR(stats.todayPaise)} />
-        <StatCard label="This week" value={formatINR(stats.weekPaise)} />
-        <StatCard label="Avg per day" value={formatINR(stats.avgDailyPaise)} />
-        <StatCard label="Highest expense" value={formatINR(stats.highestExpensePaise)} />
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+        <StatCard label="Today" value={formatINR(stats.todayPaise)} tint="var(--chart-3)" icon={CalendarDays} />
+        <StatCard label="This week" value={formatINR(stats.weekPaise)} tint="var(--chart-2)" icon={CalendarRange} />
+        <StatCard label="Avg per day" value={formatINR(stats.avgDailyPaise)} tint="var(--cat-healthcare)" icon={TrendingUp} />
+        <StatCard label="Highest expense" value={formatINR(stats.highestExpensePaise)} tint="var(--chart-4)" icon={Flame} />
       </div>
 
       {overallBudget && (
-        <Card>
+        <GlassCard>
           <CardHeader>
             <CardTitle className="text-base">Monthly Budget</CardTitle>
           </CardHeader>
           <CardContent>
             <BudgetProgress label="" spentPaise={stats.monthPaise} budgetPaise={overallBudget.amount_paise} />
           </CardContent>
-        </Card>
+        </GlassCard>
       )}
 
       {topCategories.length > 0 && (
-        <Card>
-          <CardHeader>
+        <GlassCard>
+          <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">Top Categories</CardTitle>
+            <Link href="/analytics" className="text-sm text-primary hover:underline">
+              View all
+            </Link>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {topCategories.map((cat) => (
-              <div key={cat.categoryId} className="flex items-center justify-between text-sm">
-                <span>{cat.name}</span>
-                <span className="font-medium tabular-nums">{formatINR(cat.paise)}</span>
-              </div>
-            ))}
+          <CardContent className="space-y-3.5">
+            {topCategories.map((cat) => {
+              const { color } = categoryStyle(cat.name);
+              return (
+                <div key={cat.categoryId} className="flex items-center gap-3">
+                  <CategoryIcon name={cat.name} size="md" />
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="flex items-baseline justify-between gap-2 text-sm">
+                      <span className="truncate font-medium">{cat.name}</span>
+                      <span className="font-semibold tabular-nums">{formatINR(cat.paise)}</span>
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/50 dark:bg-white/10">
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${Math.max(6, (cat.paise / topCategoryMax) * 100)}%`,
+                          backgroundColor: color,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </CardContent>
-        </Card>
+        </GlassCard>
       )}
 
-      <Card>
+      <GlassCard>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-base">Recent Expenses</CardTitle>
-          <Link href="/expenses" className="text-sm text-muted-foreground hover:underline">
+          <Link href="/expenses" className="text-sm text-primary hover:underline">
             View all
           </Link>
         </CardHeader>
@@ -104,26 +126,32 @@ export default async function DashboardPage() {
               action={<AddExpenseDialog categories={categories} />}
             />
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-1">
               {recentExpenses.map((expense) => (
-                <div key={expense.id} className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <span>{expense.description}</span>
-                    {expense.category && (
-                      <Badge variant="secondary" className="font-normal">
-                        {expense.category.name}
-                      </Badge>
-                    )}
+                <div
+                  key={expense.id}
+                  className="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+                >
+                  <CategoryIcon
+                    name={expense.category?.name}
+                    icon={expense.category?.icon}
+                    size="md"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{expense.description}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {[expense.category?.name, expense.payment_method].filter(Boolean).join(" · ")}
+                      {" · "}
+                      {formatTime(new Date(expense.expense_at))}
+                    </p>
                   </div>
-                  <span className="font-medium tabular-nums">{formatINR(expense.amount_paise)}</span>
+                  <span className="text-sm font-semibold tabular-nums">{formatINR(expense.amount_paise)}</span>
                 </div>
               ))}
             </div>
           )}
         </CardContent>
-      </Card>
-
-      <AddExpenseFab categories={categories} />
+      </GlassCard>
     </div>
   );
 }

@@ -11,31 +11,39 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-60 shrink-0 flex-col border-r bg-card md:flex">
-      <div className="flex h-14 items-center gap-2 border-b px-4 font-semibold">
-        <Wallet className="size-5" />
-        Expenses
-      </div>
-      <nav className="flex-1 space-y-1 p-3">
-        {NAV_ITEMS.map((item) => {
-          const active = pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                active ? "bg-secondary text-secondary-foreground" : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-              )}
-            >
-              <item.icon className="size-4" />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-      <div className="border-t p-3">
-        <LogoutButton />
+    <aside className="sticky top-0 hidden h-svh w-64 shrink-0 flex-col p-3 md:flex">
+      <div className="glass glass-highlight flex h-full flex-col rounded-3xl p-3">
+        <div className="flex h-14 items-center gap-2.5 px-2 font-semibold">
+          <span className="gradient-primary grid size-9 place-items-center rounded-xl">
+            <Wallet className="size-4.5" />
+          </span>
+          <span className="gradient-text text-base font-bold tracking-tight">Expenses</span>
+        </div>
+
+        <nav className="mt-2 flex-1 space-y-1">
+          {NAV_ITEMS.map((item) => {
+            const active = pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-all",
+                  active
+                    ? "bg-[image:var(--gradient-primary)] text-white shadow-[0_8px_20px_-12px_oklch(0.55_0.2_290/0.8)]"
+                    : "text-muted-foreground hover:bg-white/55 hover:text-foreground dark:hover:bg-white/8"
+                )}
+              >
+                <item.icon className="size-4" />
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="border-t border-white/40 pt-3 dark:border-white/10">
+          <LogoutButton />
+        </div>
       </div>
     </aside>
   );

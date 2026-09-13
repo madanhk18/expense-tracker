@@ -1,7 +1,8 @@
 "use client";
 
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { formatINR } from "@/lib/money";
+import { AXIS_STYLE, TOOLTIP_STYLE } from "./chart-colors";
 
 interface SpendLineChartProps {
   data: { bucket: string; paise: number }[];
@@ -10,13 +11,26 @@ interface SpendLineChartProps {
 export function SpendLineChart({ data }: SpendLineChartProps) {
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <LineChart data={data}>
-        <CartesianGrid strokeOpacity={0.3} vertical={false} />
-        <XAxis dataKey="bucket" fontSize={11} tickMargin={8} />
-        <YAxis tickFormatter={(v) => formatINR(v, { decimals: false })} fontSize={11} width={70} />
-        <Tooltip formatter={(value) => formatINR(Number(value))} />
-        <Line type="monotone" dataKey="paise" stroke="var(--chart-1)" strokeWidth={2} dot={false} />
-      </LineChart>
+      <AreaChart data={data} margin={{ left: 0, right: 8, top: 8 }}>
+        <defs>
+          <linearGradient id="spendFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="var(--chart-1)" stopOpacity={0.45} />
+            <stop offset="100%" stopColor="var(--chart-1)" stopOpacity={0.02} />
+          </linearGradient>
+        </defs>
+        <CartesianGrid stroke="var(--border)" strokeOpacity={0.6} vertical={false} />
+        <XAxis dataKey="bucket" tickMargin={8} {...AXIS_STYLE} />
+        <YAxis tickFormatter={(v) => formatINR(v, { decimals: false })} width={70} {...AXIS_STYLE} />
+        <Tooltip formatter={(value) => formatINR(Number(value))} {...TOOLTIP_STYLE} />
+        <Area
+          type="monotone"
+          dataKey="paise"
+          stroke="var(--chart-1)"
+          strokeWidth={2.5}
+          fill="url(#spendFill)"
+          activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--background)" }}
+        />
+      </AreaChart>
     </ResponsiveContainer>
   );
 }

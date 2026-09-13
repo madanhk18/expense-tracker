@@ -6,7 +6,9 @@ import { formatINR } from "@/lib/money";
 import { formatDate } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/client";
 import { toFriendlyMessage, logError } from "@/lib/errors";
-import { Card, CardContent } from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
+import { GlassCard } from "@/components/shared/glass-card";
+import { CategoryIcon } from "@/components/shared/category-icon";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -66,23 +68,28 @@ export function RecurringList({ items }: { items: RecurringItem[] }) {
   return (
     <div className="space-y-3">
       {items.map((item) => (
-        <Card key={item.id}>
-          <CardContent className="flex items-center justify-between gap-3 py-3">
+        <GlassCard key={item.id} size="sm" className="glass-hover">
+          <CardContent className="flex items-center gap-3">
+            <CategoryIcon name={item.category?.name} size="md" />
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium">{item.description}</p>
               <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-                {item.category && <Badge variant="secondary" className="font-normal">{item.category.name}</Badge>}
+                {item.category && (
+                  <Badge variant="secondary" className="font-normal">
+                    {item.category.name}
+                  </Badge>
+                )}
                 <span className="capitalize">{item.frequency}</span>
                 <span>· Next: {formatDate(new Date(item.next_due_date))}</span>
               </div>
             </div>
-            <span className="font-medium tabular-nums">{formatINR(item.amount_paise)}</span>
+            <span className="font-semibold tabular-nums">{formatINR(item.amount_paise)}</span>
             <Switch checked={item.is_active} onCheckedChange={(checked) => toggleActive(item.id, checked)} />
-            <Button variant="ghost" size="icon" className="size-8" onClick={() => handleDelete(item.id)}>
+            <Button variant="ghost" size="icon-sm" onClick={() => handleDelete(item.id)}>
               <Trash2 className="size-4" />
             </Button>
           </CardContent>
-        </Card>
+        </GlassCard>
       ))}
     </div>
   );

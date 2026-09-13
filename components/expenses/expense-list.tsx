@@ -19,11 +19,11 @@ export function ExpenseList({ expenses, categories }: { expenses: ExpenseWithCat
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {[...groups.entries()].map(([label, items]) => (
-        <div key={label}>
-          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
-          <div className="divide-y">
+        <div key={label} className="space-y-2">
+          <p className="px-1 text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</p>
+          <div className="space-y-2">
             {items.map((expense) => (
               <ExpenseRow key={expense.id} expense={expense} categories={categories} />
             ))}
