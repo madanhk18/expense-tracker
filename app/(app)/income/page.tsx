@@ -19,11 +19,32 @@ export default async function IncomePage({ searchParams }: PageProps) {
   const params = await searchParams;
   const page = Number(params.page) || 1;
 
-  const [{ income, total }, categories, stats] = await Promise.all([
-    listIncome({ page, pageSize: 50, sort: "newest" }),
-    getIncomeCategories(),
+  // Before 0002_income.sql has been run there is no income table yet, so the
+  // page explains that instead of throwing.
+  const [listed, categories, stats] = await Promise.all([
+    listIncome({ page, pageSize: 50, sort: "newest" }).catch(() => null),
+    getIncomeCategories().catch(() => []),
     getIncomeStats(),
   ]);
+
+  if (!listed) {
+    return (
+      <div className="mx-auto max-w-3xl space-y-5">
+        <PageHeader title="Income" description="One setup step left." />
+        <GlassCard tint="var(--warning)">
+          <CardContent className="space-y-2">
+            <p className="text-sm font-medium">Income tracking needs its database migration</p>
+            <p className="text-sm text-muted-foreground">
+              Run <code>supabase/migrations/0002_income.sql</code> in the Supabase SQL editor, then
+              reload this page.
+            </p>
+          </CardContent>
+        </GlassCard>
+      </div>
+    );
+  }
+
+  const { income, total } = listed;
 
   return (
     <div className="mx-auto max-w-3xl space-y-5">

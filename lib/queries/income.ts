@@ -101,12 +101,30 @@ export async function getRecentIncome(limit = 5) {
   return (data ?? []) as unknown as IncomeWithCategory[];
 }
 
-/** One round trip via the get_income_stats RPC (see 0002_income.sql). */
+const EMPTY_INCOME_STATS: IncomeStats = {
+  todayIncomePaise: 0,
+  weekIncomePaise: 0,
+  monthIncomePaise: 0,
+  previousMonthIncomePaise: 0,
+  monthExpensePaise: 0,
+  savingsRatePercent: null,
+};
+
+/**
+ * One round trip via the get_income_stats RPC (see 0002_income.sql).
+ *
+ * Returns zeroes rather than throwing when the RPC isn't there yet: the
+ * dashboard reads this on every load, and it shouldn't break for anyone who
+ * hasn't run the 0002 migration.
+ */
 export async function getIncomeStats(refDate: Date = new Date()): Promise<IncomeStats> {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("get_income_stats", { ref_date: toISODate(refDate) });
 
-  if (error) throw error;
+  if (error) {
+    console.warn("[income] get_income_stats unavailable — has 0002_income.sql been run?", error.message);
+    return EMPTY_INCOME_STATS;
+  }
   const row = data?.[0];
 
   return {
