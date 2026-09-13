@@ -147,15 +147,15 @@
   /* Gradients */
   --gradient-primary: linear-gradient(
     135deg,
-    oklch(0.6 0.2 290) 0%,
-    oklch(0.58 0.19 262) 50%,
-    oklch(0.66 0.18 340) 100%
+    oklch(0.56 0.27 296) 0%,
+    oklch(0.54 0.25 272) 45%,
+    oklch(0.64 0.25 342) 100%
   );
   --gradient-primary-hover: linear-gradient(
     135deg,
-    oklch(0.64 0.21 290) 0%,
-    oklch(0.62 0.2 262) 50%,
-    oklch(0.7 0.19 340) 100%
+    oklch(0.61 0.28 296) 0%,
+    oklch(0.59 0.26 272) 45%,
+    oklch(0.69 0.26 342) 100%
   );
 
   /* Ambient background orbs */
@@ -248,22 +248,22 @@
   /* Gradients */
   --gradient-primary: linear-gradient(
     135deg,
-    oklch(0.66 0.2 292) 0%,
-    oklch(0.62 0.19 262) 50%,
-    oklch(0.68 0.18 340) 100%
+    oklch(0.62 0.28 296) 0%,
+    oklch(0.58 0.26 270) 45%,
+    oklch(0.68 0.26 340) 100%
   );
   --gradient-primary-hover: linear-gradient(
     135deg,
-    oklch(0.71 0.2 292) 0%,
-    oklch(0.67 0.19 262) 50%,
-    oklch(0.73 0.18 340) 100%
+    oklch(0.67 0.29 296) 0%,
+    oklch(0.63 0.27 270) 45%,
+    oklch(0.73 0.27 340) 100%
   );
 
   /* Ambient background orbs */
-  --orb-1: oklch(0.55 0.22 292 / 0.55);
-  --orb-2: oklch(0.5 0.2 250 / 0.5);
-  --orb-3: oklch(0.55 0.18 340 / 0.4);
-  --orb-4: oklch(0.52 0.14 195 / 0.34);
+  --orb-1: oklch(0.58 0.26 296 / 0.68);
+  --orb-2: oklch(0.52 0.23 262 / 0.6);
+  --orb-3: oklch(0.58 0.22 340 / 0.5);
+  --orb-4: oklch(0.55 0.16 195 / 0.42);
 }
 
 @layer base {
@@ -387,17 +387,57 @@
 
   /* The one gradient in the system — primary calls to action only. */
   .gradient-primary {
-    background-image: var(--gradient-primary);
+    background-image: linear-gradient(
+        to bottom,
+        oklch(1 0 0 / 0.22) 0%,
+        oklch(1 0 0 / 0.04) 45%,
+        transparent 100%
+      ),
+      var(--gradient-primary);
     color: oklch(0.99 0.005 290);
-    border: 1px solid oklch(1 0 0 / 0.22);
-    box-shadow: 0 6px 18px -8px oklch(0.55 0.2 290 / 0.65);
+    border: 1px solid oklch(1 0 0 / 0.28);
+    box-shadow: 0 10px 24px -10px oklch(0.55 0.25 295 / 0.8),
+      inset 0 1px 0 0 oklch(1 0 0 / 0.35);
   }
   .gradient-primary:hover:not(:disabled) {
-    background-image: var(--gradient-primary-hover);
-    box-shadow: 0 10px 24px -10px oklch(0.55 0.2 290 / 0.75);
+    background-image: linear-gradient(
+        to bottom,
+        oklch(1 0 0 / 0.26) 0%,
+        oklch(1 0 0 / 0.05) 45%,
+        transparent 100%
+      ),
+      var(--gradient-primary-hover);
+    box-shadow: 0 14px 30px -10px oklch(0.55 0.25 295 / 0.9),
+      inset 0 1px 0 0 oklch(1 0 0 / 0.4);
   }
   .gradient-primary:active:not(:disabled) {
-    box-shadow: 0 3px 10px -6px oklch(0.55 0.2 290 / 0.7);
+    box-shadow: 0 4px 12px -6px oklch(0.55 0.25 295 / 0.8);
+  }
+
+  /* The floating add button — the app's single most-tapped control. */
+  .fab {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 9999px;
+    color: oklch(0.99 0.005 290);
+    border: 1px solid oklch(1 0 0 / 0.38);
+    background-image: radial-gradient(
+        120% 120% at 30% 18%,
+        oklch(1 0 0 / 0.42) 0%,
+        transparent 58%
+      ),
+      var(--gradient-primary);
+    box-shadow: 0 16px 34px -12px oklch(0.55 0.26 296 / 0.95),
+      0 4px 10px -4px oklch(0.2 0.06 280 / 0.45),
+      inset 0 1px 0 0 oklch(1 0 0 / 0.55);
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+  .fab:active {
+    transform: scale(0.94);
+    box-shadow: 0 8px 18px -10px oklch(0.55 0.26 296 / 0.9),
+      inset 0 1px 0 0 oklch(1 0 0 / 0.4);
   }
 
   .gradient-text {

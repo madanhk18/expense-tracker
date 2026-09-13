@@ -3,6 +3,7 @@ import { CalendarDays, CalendarRange, Flame, History, Layers, Receipt, Target, T
 import { getDashboardStats, momChangePercent } from "@/lib/queries/dashboard";
 import { getRecentExpenses } from "@/lib/queries/expenses";
 import { getCategories } from "@/lib/queries/categories";
+import { getGreetingName } from "@/lib/queries/profile";
 import { getOverallBudget } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
 import { listUpcomingBills } from "@/lib/queries/recurring";
@@ -32,14 +33,16 @@ export default async function DashboardPage() {
   const now = new Date();
   const { start, end } = monthRange(now);
 
-  const [stats, recentExpenses, categories, overallBudget, monthAnalytics, upcomingBills] = await Promise.all([
-    getDashboardStats(now),
-    getRecentExpenses(6),
-    getCategories(),
-    getOverallBudget(now),
-    getAnalytics(start, end),
-    listUpcomingBills(),
-  ]);
+  const [stats, recentExpenses, categories, overallBudget, monthAnalytics, upcomingBills, name] =
+    await Promise.all([
+      getDashboardStats(now),
+      getRecentExpenses(6),
+      getCategories(),
+      getOverallBudget(now),
+      getAnalytics(start, end),
+      listUpcomingBills(),
+      getGreetingName(),
+    ]);
 
   const percentChange = momChangePercent(stats.monthPaise, stats.previousMonthPaise);
   const topCategories = monthAnalytics.categoryBreakdown.slice(0, 4);
@@ -57,14 +60,20 @@ export default async function DashboardPage() {
         }
       />
 
-      <SpendSummary monthPaise={stats.monthPaise} percentChange={percentChange} greeting={greeting()} monthRef={now} />
+      <SpendSummary
+        monthPaise={stats.monthPaise}
+        percentChange={percentChange}
+        greeting={greeting()}
+        name={name}
+        monthRef={now}
+      />
 
       <BillRemindersBanner bills={upcomingBills} />
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
         <StatCard label="Today" value={formatINR(stats.todayPaise)} tint="var(--chart-3)" icon={CalendarDays} />
         <StatCard label="This week" value={formatINR(stats.weekPaise)} tint="var(--chart-2)" icon={CalendarRange} />
-        <StatCard label="Avg per day" value={formatINR(stats.avgDailyPaise)} tint="var(--cat-healthcare)" icon={TrendingUp} />
+        <StatCard label="Avg per day" value={formatINR(stats.avgDailyPaise, { decimals: false })} tint="var(--cat-healthcare)" icon={TrendingUp} />
         <StatCard label="Highest expense" value={formatINR(stats.highestExpensePaise)} tint="var(--chart-4)" icon={Flame} />
       </div>
 

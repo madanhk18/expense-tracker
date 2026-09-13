@@ -26,11 +26,8 @@ export function BottomNav({ categories }: { categories: Category[] }) {
         <AddExpenseDialog
           categories={categories}
           trigger={
-            <button
-              aria-label="Add expense"
-              className="gradient-primary -mt-7 grid size-14 shrink-0 place-items-center rounded-full transition-transform active:scale-95"
-            >
-              <Plus className="size-6" />
+            <button aria-label="Add expense" className="fab -mt-8 shrink-0">
+              <Plus className="size-7" strokeWidth={2.6} />
             </button>
           }
         />
@@ -54,17 +51,19 @@ function NavLink({
     <Link
       href={item.href}
       className={cn(
-        "flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl px-1 py-2 text-[11px] font-medium transition-colors",
-        active ? "text-primary" : "text-muted-foreground"
+        "flex min-w-0 flex-1 flex-col items-center gap-1 rounded-2xl px-1 py-2 text-[11px] font-medium transition-colors",
+        active ? "text-foreground" : "text-muted-foreground hover:text-foreground/80"
       )}
     >
       <span
         className={cn(
-          "grid size-8 place-items-center rounded-xl transition-colors",
-          active && "bg-[image:var(--gradient-primary)] text-white"
+          "grid size-9 place-items-center rounded-2xl transition-all duration-200",
+          active
+            ? "gradient-primary scale-105 shadow-[0_10px_22px_-10px_oklch(0.55_0.22_295/0.9)]"
+            : "scale-100"
         )}
       >
-        <item.icon className="size-[18px]" />
+        <item.icon className="size-[18px]" strokeWidth={active ? 2.4 : 2} />
       </span>
       <span className="w-full truncate text-center">{item.label}</span>
     </Link>

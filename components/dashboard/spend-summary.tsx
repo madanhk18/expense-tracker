@@ -10,20 +10,23 @@ interface SpendSummaryProps {
   monthPaise: number;
   percentChange: number | null;
   greeting: string;
+  /** First name to greet by — see lib/queries/profile. */
+  name: string;
   monthRef: Date;
 }
 
 /** The hero card: this month's total, and how it compares with last month. */
-export function SpendSummary({ monthPaise, percentChange, greeting, monthRef }: SpendSummaryProps) {
+export function SpendSummary({ monthPaise, percentChange, greeting, name, monthRef }: SpendSummaryProps) {
   const isIncrease = (percentChange ?? 0) > 0;
 
   return (
     <GlassCard tint="var(--chart-1)" className="glass-hover">
       <CardContent className="space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <div>
-            <p className="text-sm text-foreground/75">{greeting} 👋</p>
-            <p className="mt-0.5 text-xs font-medium tracking-wide text-foreground/60 uppercase">
+          <div className="min-w-0">
+            <p className="text-sm text-foreground/70">{greeting}</p>
+            <p className="truncate text-xl font-bold tracking-tight">Hey, {name} 👋</p>
+            <p className="mt-1 text-xs font-medium tracking-wide text-foreground/60 uppercase">
               {monthLabel(monthRef)}
             </p>
           </div>

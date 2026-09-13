@@ -42,7 +42,7 @@ export function ResetPasswordForm() {
   }
 
   return (
-    <GlassCard>
+    <GlassCard tint="var(--chart-1)">
       <CardHeader>
         <CardTitle>Reset password</CardTitle>
         <CardDescription>Choose a new password for your account.</CardDescription>

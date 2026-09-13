@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { Lock, Mail, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { registerSchema, type RegisterValues } from "@/lib/validations/auth.schema";
 import { createClient } from "@/lib/supabase/client";
@@ -49,7 +50,7 @@ export function RegisterForm() {
 
   if (done) {
     return (
-      <GlassCard>
+      <GlassCard tint="var(--chart-1)">
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
@@ -68,31 +69,64 @@ export function RegisterForm() {
   }
 
   return (
-    <GlassCard>
+    <GlassCard tint="var(--chart-1)">
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
+        <CardTitle className="text-2xl font-bold tracking-tight">Create your account</CardTitle>
         <CardDescription>Start tracking your expenses in seconds.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="fullName">Name</Label>
-            <Input id="fullName" autoComplete="name" {...register("fullName")} />
+            <div className="relative">
+              <UserRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input id="fullName" autoComplete="name" placeholder="Your name" className="pl-10" {...register("fullName")} />
+            </div>
             {errors.fullName && <p className="text-sm text-destructive">{errors.fullName.message}</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" type="email" autoComplete="email" {...register("email")} />
+            <div className="relative">
+              <Mail className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                className="pl-10"
+                {...register("email")}
+              />
+            </div>
             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" autoComplete="new-password" {...register("password")} />
+            <div className="relative">
+              <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="password"
+                type="password"
+                autoComplete="new-password"
+                placeholder="••••••••"
+                className="pl-10"
+                {...register("password")}
+              />
+            </div>
             {errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
           </div>
           <div className="space-y-2">
             <Label htmlFor="confirmPassword">Confirm password</Label>
-            <Input id="confirmPassword" type="password" autoComplete="new-password" {...register("confirmPassword")} />
+            <div className="relative">
+              <Lock className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                id="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                placeholder="••••••••"
+                className="pl-10"
+                {...register("confirmPassword")}
+              />
+            </div>
             {errors.confirmPassword && (
               <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
             )}
@@ -103,7 +137,7 @@ export function RegisterForm() {
         </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-foreground hover:underline">
+          <Link href="/login" className="font-semibold text-primary hover:underline">
             Log in
           </Link>
         </p>

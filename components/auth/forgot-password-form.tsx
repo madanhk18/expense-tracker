@@ -44,7 +44,7 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <GlassCard>
+      <GlassCard tint="var(--chart-1)">
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
@@ -63,7 +63,7 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <GlassCard>
+    <GlassCard tint="var(--chart-1)">
       <CardHeader>
         <CardTitle>Forgot password</CardTitle>
         <CardDescription>Enter your email and we&apos;ll send you a reset link.</CardDescription>
