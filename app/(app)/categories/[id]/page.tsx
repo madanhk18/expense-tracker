@@ -87,7 +87,7 @@ export default async function CategoryMonthPage({ params, searchParams }: PagePr
           <div className="space-y-2 rounded-xl bg-muted px-4 py-3">
             <div className="flex items-baseline justify-between gap-3 text-sm">
               <span className="text-muted-foreground">
-                Share of this month <strong className="text-foreground">{Math.round(share)}%</strong>
+                Actual spent <strong className="text-foreground">{Math.round(share)}%</strong>
               </span>
               <span className="font-semibold tabular-nums">{formatINR(spentPaise)}</span>
             </div>
