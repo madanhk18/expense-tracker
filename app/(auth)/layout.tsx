@@ -4,7 +4,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-7 px-5 py-10">
       <div className="flex flex-col items-center gap-3 text-center">
-        <span className="gradient-primary grid size-16 place-items-center rounded-[1.4rem] shadow-[0_18px_40px_-14px_oklch(0.55_0.26_296/0.9)]">
+        <span className="gradient-primary grid size-16 place-items-center rounded-[1.4rem] shadow-[0_18px_40px_-14px_oklch(0.5_0.2_255/0.9)]">
           <Wallet className="size-7" />
         </span>
         <div>

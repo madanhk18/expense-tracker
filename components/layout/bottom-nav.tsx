@@ -59,7 +59,7 @@ function NavLink({
         className={cn(
           "grid size-9 place-items-center rounded-2xl transition-all duration-200",
           active
-            ? "gradient-primary scale-105 shadow-[0_10px_22px_-10px_oklch(0.55_0.22_295/0.9)]"
+            ? "gradient-primary scale-105 shadow-[0_10px_22px_-10px_oklch(0.5_0.2_255/0.9)]"
             : "scale-100"
         )}
       >
