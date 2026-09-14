@@ -8,7 +8,7 @@ export default async function RecurringPage() {
   const [items, categories] = await Promise.all([listRecurringExpenses(), getExpenseCategories()]);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-4xl space-y-4">
       <PageHeader
         title="Recurring"
         description="Subscriptions, rent and bills that repeat on their own."

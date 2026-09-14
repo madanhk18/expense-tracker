@@ -48,7 +48,7 @@ export default async function SettingsPage() {
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user!.id).single();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader title="Settings" description="Your profile, appearance and account." />
 
       <GlassCard tint="var(--chart-1)">

@@ -8,7 +8,7 @@ export default async function CategoriesSettingsPage() {
   const categories = await getCategories();
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader title="Categories" description="Add your own or use the defaults." />
       <GlassCard>
         <CardHeader>

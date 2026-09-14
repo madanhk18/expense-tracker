@@ -125,7 +125,7 @@ const SECTIONS: GuideSection[] = [
 
 export default function HelpPage() {
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4">
       <div className="flex items-start gap-2">
         <Link
           href="/settings"

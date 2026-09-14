@@ -17,14 +17,14 @@ export function Topbar() {
   }
 
   return (
-    <header className="sticky top-0 z-30 px-3 pt-3 md:px-4">
-      <div className="glass-strong glass-highlight flex h-14 items-center gap-3 rounded-2xl px-3">
+    <header className="sticky top-0 z-30 px-3 pt-3 md:px-6">
+      <div className="glass-strong glass-highlight mx-auto flex h-14 w-full max-w-6xl items-center gap-3 rounded-2xl px-3">
         <div className="flex items-center gap-2 md:hidden">
           <span className="gradient-primary grid size-9 place-items-center rounded-xl">
             <Wallet className="size-4.5" />
           </span>
         </div>
-        <form onSubmit={handleSearch} className="relative max-w-sm flex-1">
+        <form onSubmit={handleSearch} className="relative w-full max-w-md flex-1">
           <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={search}

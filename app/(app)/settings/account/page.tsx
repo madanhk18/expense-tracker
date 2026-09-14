@@ -8,7 +8,7 @@ import { PageHeader } from "@/components/shared/page-header";
 
 export default function AccountSettingsPage() {
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader title="Account &amp; security" description="Password, sessions and account removal." />
 
       <GlassCard>

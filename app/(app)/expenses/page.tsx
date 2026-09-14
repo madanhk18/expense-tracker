@@ -55,7 +55,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
   const totalPages = Math.max(1, Math.ceil(total / 50));
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4">
+    <div className="mx-auto max-w-4xl space-y-4">
       <PageHeader
         title="Expenses"
         description={`${total} ${total === 1 ? "expense" : "expenses"} matching your filters`}

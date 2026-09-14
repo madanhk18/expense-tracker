@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { GlassCard } from "@/components/shared/glass-card";
 import { GlassIcon } from "@/components/shared/glass-icon";
 import { SavingsRateCard } from "@/components/dashboard/savings-rate-card";
+import { IncomeSetupNotice } from "@/components/income/income-setup-notice";
 import { CardContent } from "@/components/ui/card";
 
 interface PageProps {
@@ -27,27 +28,12 @@ export default async function IncomePage({ searchParams }: PageProps) {
     getIncomeStats(),
   ]);
 
-  if (!listed) {
-    return (
-      <div className="mx-auto max-w-3xl space-y-5">
-        <PageHeader title="Income" description="One setup step left." />
-        <GlassCard tint="var(--warning)">
-          <CardContent className="space-y-2">
-            <p className="text-sm font-medium">Income tracking needs its database migration</p>
-            <p className="text-sm text-muted-foreground">
-              Run <code>supabase/migrations/0002_income.sql</code> in the Supabase SQL editor, then
-              reload this page.
-            </p>
-          </CardContent>
-        </GlassCard>
-      </div>
-    );
-  }
+  if (!listed) return <IncomeSetupNotice />;
 
   const { income, total } = listed;
 
   return (
-    <div className="mx-auto max-w-3xl space-y-5">
+    <div className="mx-auto max-w-5xl space-y-5">
       <PageHeader
         title="Income"
         description={`${total} ${total === 1 ? "entry" : "entries"} logged`}
@@ -58,51 +44,76 @@ export default async function IncomePage({ searchParams }: PageProps) {
         }
       />
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <GlassCard tint="var(--success)" size="sm">
-          <CardContent className="space-y-1">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium tracking-wide text-foreground/70">
-                Earned in {monthLabel(new Date())}
-              </p>
-              <GlassIcon icon={TrendingUp} color="var(--success)" size="sm" />
-            </div>
-            <p className="text-2xl font-semibold tabular-nums">{formatINR(stats.monthIncomePaise)}</p>
-            <p className="text-xs text-foreground/65">
-              Last month {formatINR(stats.previousMonthIncomePaise)}
-            </p>
-          </CardContent>
-        </GlassCard>
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="space-y-5 lg:order-1">
+          <div className="md:hidden">
+            <AddIncomeDialog
+              categories={categories}
+              trigger={
+                <button className="gradient-income flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold">
+                  <Wallet className="size-4" />
+                  Add income
+                </button>
+              }
+            />
+          </div>
+          <IncomeList income={income} categories={categories} />
+        </div>
 
-        <GlassCard tint="var(--chart-4)" size="sm">
-          <CardContent className="space-y-1">
-            <div className="flex items-start justify-between gap-2">
-              <p className="text-xs font-medium tracking-wide text-foreground/70">Spent this month</p>
-              <GlassIcon icon={TrendingDown} color="var(--chart-4)" size="sm" />
-            </div>
-            <p className="text-2xl font-semibold tabular-nums">{formatINR(stats.monthExpensePaise)}</p>
-            <p className="text-xs text-foreground/65">
-              {formatINR(Math.max(0, stats.monthIncomePaise - stats.monthExpensePaise))} kept
-            </p>
-          </CardContent>
-        </GlassCard>
+        <aside className="space-y-3 lg:sticky lg:top-24 lg:self-start">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+            <GlassCard tint="var(--success)" size="sm">
+              <CardContent className="space-y-1">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-xs font-medium tracking-wide text-foreground/70">
+                    Earned in {monthLabel(new Date())}
+                  </p>
+                  <GlassIcon
+                    icon={TrendingUp}
+                    color="var(--success)"
+                    size="sm"
+                  />
+                </div>
+                <p className="text-2xl font-semibold tabular-nums">
+                  {formatINR(stats.monthIncomePaise)}
+                </p>
+                <p className="text-xs text-foreground/65">
+                  Last month {formatINR(stats.previousMonthIncomePaise)}
+                </p>
+              </CardContent>
+            </GlassCard>
+
+            <GlassCard tint="var(--chart-4)" size="sm">
+              <CardContent className="space-y-1">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-xs font-medium tracking-wide text-foreground/70">
+                    Spent this month
+                  </p>
+                  <GlassIcon
+                    icon={TrendingDown}
+                    color="var(--chart-4)"
+                    size="sm"
+                  />
+                </div>
+                <p className="text-2xl font-semibold tabular-nums">
+                  {formatINR(stats.monthExpensePaise)}
+                </p>
+                <p className="text-xs text-foreground/65">
+                  {formatINR(
+                    Math.max(
+                      0,
+                      stats.monthIncomePaise - stats.monthExpensePaise,
+                    ),
+                  )}{" "}
+                  kept
+                </p>
+              </CardContent>
+            </GlassCard>
+          </div>
+
+          <SavingsRateCard stats={stats} />
+        </aside>
       </div>
-
-      <SavingsRateCard stats={stats} />
-
-      <div className="md:hidden">
-        <AddIncomeDialog
-          categories={categories}
-          trigger={
-            <button className="gradient-income flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold">
-              <Wallet className="size-4" />
-              Add income
-            </button>
-          }
-        />
-      </div>
-
-      <IncomeList income={income} categories={categories} />
     </div>
   );
 }
