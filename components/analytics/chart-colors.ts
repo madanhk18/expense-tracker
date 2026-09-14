@@ -7,14 +7,13 @@ export const CHART_COLORS = [
   "var(--chart-5)",
 ];
 
-/** Frosted tooltip so recharts popups match the rest of the UI. */
+/** Tooltip styled like the app's other floating surfaces. */
 export const TOOLTIP_STYLE = {
   contentStyle: {
-    background: "var(--glass-bg-strong)",
-    border: "1px solid var(--glass-border)",
+    background: "var(--popover)",
+    border: "1px solid var(--border)",
     borderRadius: "14px",
-    boxShadow: "var(--glass-shadow)",
-    backdropFilter: "blur(16px)",
+    boxShadow: "var(--shadow-raised)",
     color: "var(--foreground)",
     fontSize: "12px",
   },

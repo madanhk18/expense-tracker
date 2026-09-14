@@ -306,12 +306,4 @@
   .fab:active {
     transform: scale(0.95);
   }
-
-  /* Horizontally scrollable rows hide their scrollbar. */
-  .scroll-fade-x {
-    scrollbar-width: none;
-  }
-  .scroll-fade-x::-webkit-scrollbar {
-    display: none;
-  }
 }

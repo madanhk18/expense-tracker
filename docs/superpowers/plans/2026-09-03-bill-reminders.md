@@ -1,5 +1,8 @@
 # Bill Due-Date Reminders Implementation Plan
 
+> **Status: implemented.** All tasks below are done and shipped; the
+> dashboard banner is live. Checkboxes ticked after a verification pass.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Surface upcoming and overdue recurring-expense due dates on the dashboard, so the user doesn't miss a bill.
@@ -31,7 +34,7 @@
 - Consumes: `differenceInCalendarDays` from `date-fns`; existing `createClient` import in `lib/queries/recurring.ts`.
 - Produces: `daysUntil(date: Date, ref?: Date): number` in `lib/dates.ts`; `listUpcomingBills(withinDays?: number): Promise<UpcomingBill[]>` in `lib/queries/recurring.ts`, plus the `UpcomingBill` type. Task 2 (UI) imports `listUpcomingBills` and `UpcomingBill`.
 
-- [ ] **Step 1: Add `daysUntil` to `lib/dates.ts`**
+- [x] **Step 1: Add `daysUntil` to `lib/dates.ts`**
 
 Add the import `differenceInCalendarDays` to the existing `date-fns` import line at the top of the file (merge into the existing multi-line import rather than adding a second one), then add this function anywhere after the other range helpers:
 
@@ -42,7 +45,7 @@ export function daysUntil(date: Date, ref: Date = new Date()): number {
 }
 ```
 
-- [ ] **Step 2: Add `listUpcomingBills` to `lib/queries/recurring.ts`**
+- [x] **Step 2: Add `listUpcomingBills` to `lib/queries/recurring.ts`**
 
 Add this import at the top of the file:
 
@@ -97,13 +100,13 @@ export async function listUpcomingBills(withinDays = 3): Promise<UpcomingBill[]>
 }
 ```
 
-- [ ] **Step 3: Verify**
+- [x] **Step 3: Verify**
 
 ```bash
 npx tsc --noEmit
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add lib/dates.ts lib/queries/recurring.ts
@@ -121,7 +124,7 @@ git commit -m "feat(bills): add listUpcomingBills query and daysUntil date helpe
 - Consumes: `UpcomingBill` type (Task 1); `formatINR` (`lib/money.ts`); `daysUntil` (`lib/dates.ts`).
 - Produces: `BillRemindersBanner`. Task 3 (dashboard page) imports this.
 
-- [ ] **Step 1: Write the component**
+- [x] **Step 1: Write the component**
 
 ```tsx
 import { AlertCircle, CalendarClock } from "lucide-react";
@@ -173,13 +176,13 @@ export function BillRemindersBanner({ bills }: { bills: UpcomingBill[] }) {
 }
 ```
 
-- [ ] **Step 2: Verify**
+- [x] **Step 2: Verify**
 
 ```bash
 npx tsc --noEmit && npm run lint
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add components/dashboard/bill-reminders-banner.tsx
@@ -196,14 +199,14 @@ git commit -m "feat(bills): add BillRemindersBanner component"
 **Interfaces:**
 - Consumes: `listUpcomingBills` (Task 1); `BillRemindersBanner` (Task 2).
 
-- [ ] **Step 1: Add the import**
+- [x] **Step 1: Add the import**
 
 ```typescript
 import { listUpcomingBills } from "@/lib/queries/recurring";
 import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banner";
 ```
 
-- [ ] **Step 2: Add `listUpcomingBills()` to the existing `Promise.all` and destructure it as `upcomingBills`**
+- [x] **Step 2: Add `listUpcomingBills()` to the existing `Promise.all` and destructure it as `upcomingBills`**
 
 ```typescript
   const [stats, recentExpenses, categories, overallBudget, monthAnalytics, upcomingBills] = await Promise.all([
@@ -218,7 +221,7 @@ import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banne
 
 (If this file already has a longer `Promise.all` destructure from another feature plan applied earlier — e.g. `getPersonBalances` from the lending plan, or `getIncomeStats` from the income plan — append `listUpcomingBills()` and `upcomingBills` to that existing list rather than replacing it; the exact position among the array entries doesn't matter, only that each promise lines up with its destructured name.)
 
-- [ ] **Step 3: Render the banner**
+- [x] **Step 3: Render the banner**
 
 Place `<BillRemindersBanner bills={upcomingBills} />` directly after the `<SpendSummary ... />` line and before the stat-card grid, so it's the first thing the user sees below the headline number:
 
@@ -232,7 +235,7 @@ Place `<BillRemindersBanner bills={upcomingBills} />` directly after the `<Spend
 
 (Keep whatever `grid-cols-*` value is already in that line — this task doesn't change the stat-card grid.)
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
 ```bash
 npx tsc --noEmit && npm run lint && npm run dev
@@ -240,7 +243,7 @@ npx tsc --noEmit && npm run lint && npm run dev
 
 Manually visit `/dashboard`. To exercise the overdue path without waiting for a real due date: temporarily set an existing recurring expense's `next_due_date` to yesterday's date directly in the Supabase Table Editor, reload the dashboard, confirm it shows "Overdue by 1 day" in the destructive color, then set it back (or let `generate_due_recurring_expenses` catch it up on the next dashboard load, per existing behavior).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add "app/(app)/dashboard/page.tsx"
@@ -254,7 +257,7 @@ git commit -m "feat(bills): show upcoming/overdue bill reminders on dashboard"
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Add checklist items**
+- [x] **Step 1: Add checklist items**
 
 In the `## Testing checklist` section of `README.md`, add these bullets after the "recurring expense generates on schedule" line:
 
@@ -266,7 +269,7 @@ In the `## Testing checklist` section of `README.md`, add these bullets after th
 - [ ] A second test account never sees the first account's recurring expenses in their banner (RLS via existing `recurring_select_own` policy)
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add README.md

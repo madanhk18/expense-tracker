@@ -128,9 +128,9 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             </CardHeader>
             <CardContent className="space-y-6">
               <CategoryPieChart
-            data={analytics.categoryBreakdown}
-            transactionCount={analytics.transactionCount}
-          />
+                data={analytics.categoryBreakdown}
+                transactionCount={analytics.transactionCount}
+              />
               <CategoryBarChart data={analytics.categoryBreakdown} />
             </CardContent>
           </Panel>
@@ -232,11 +232,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             <Panel>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2.5 text-base">
-                  <IconChip
-                    icon={Lightbulb}
-                    color="var(--warning)"
-                    size="sm"
-                  />
+                  <IconChip icon={Lightbulb} color="var(--warning)" size="sm" />
                   Insights
                 </CardTitle>
               </CardHeader>

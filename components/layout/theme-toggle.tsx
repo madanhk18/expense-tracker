@@ -17,7 +17,7 @@ export function ThemeToggle() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return <Button variant="ghost" size="icon-sm" className="rounded-full" />;
+  if (!mounted) return <span aria-hidden className="inline-block size-8" />;
 
   return (
     <DropdownMenu>

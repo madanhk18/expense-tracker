@@ -93,6 +93,8 @@ export default async function DashboardPage() {
             monthRef={now}
           />
 
+          <BillRemindersBanner bills={upcomingBills} />
+
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
             <StatCard
               label="Today"
@@ -144,8 +146,6 @@ export default async function DashboardPage() {
         </div>
 
         <div className="space-y-5">
-          <BillRemindersBanner bills={upcomingBills} />
-
           <SavingsRateCard stats={incomeStats} />
 
           {topCategories.length > 0 && (

@@ -35,7 +35,7 @@ export function BillRemindersBanner({ bills }: { bills: UpcomingBill[] }) {
               key={bill.id}
               className="flex items-center justify-between gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-muted"
             >
-              <CategoryIcon name={bill.categoryName} size="sm" />
+              <CategoryIcon name={bill.categoryName} size="md" variant="solid" />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-medium">{bill.description}</p>
                 <p
