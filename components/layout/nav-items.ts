@@ -10,13 +10,11 @@ export const NAV_ITEMS = [
   { href: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
-/**
- * Subset shown in the mobile bottom nav — four items, two either side of the
- * centre "add expense" button. Budgets stays reachable from Settings.
- */
+/** Subset shown in the mobile bottom bar. Budgets stays reachable from Settings. */
 export const MOBILE_NAV_ITEMS = [
   NAV_ITEMS[0], // Dashboard
   NAV_ITEMS[1], // Expenses
+  NAV_ITEMS[2], // Income
   NAV_ITEMS[3], // Analytics
   NAV_ITEMS[6], // Settings
 ] as const;

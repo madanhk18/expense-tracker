@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 
 export function RegisterForm() {
   const [submitting, setSubmitting] = useState(false);
@@ -50,7 +50,7 @@ export function RegisterForm() {
 
   if (done) {
     return (
-      <GlassCard tint="var(--chart-1)">
+      <Panel>
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
@@ -64,12 +64,12 @@ export function RegisterForm() {
             </Button>
           </Link>
         </CardContent>
-      </GlassCard>
+      </Panel>
     );
   }
 
   return (
-    <GlassCard tint="var(--chart-1)">
+    <Panel>
       <CardHeader>
         <CardTitle className="text-2xl font-bold tracking-tight">Create your account</CardTitle>
         <CardDescription>Start tracking your expenses in seconds.</CardDescription>
@@ -142,6 +142,6 @@ export function RegisterForm() {
           </Link>
         </p>
       </CardContent>
-    </GlassCard>
+    </Panel>
   );
 }

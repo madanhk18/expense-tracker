@@ -12,8 +12,8 @@ import { createClient } from "@/lib/supabase/server";
 import { updateProfileAction } from "@/lib/actions/settings";
 import { ProfileForm } from "@/components/settings/profile-form";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
-import { GlassCard } from "@/components/shared/glass-card";
-import { GlassIcon } from "@/components/shared/glass-icon";
+import { Panel } from "@/components/shared/panel";
+import { IconChip } from "@/components/shared/icon-chip";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/shared/page-header";
 
@@ -51,10 +51,10 @@ export default async function SettingsPage() {
     <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader title="Settings" description="Your profile, appearance and account." />
 
-      <GlassCard tint="var(--chart-1)">
+      <Panel>
         <CardHeader>
           <CardTitle className="flex items-center gap-2.5 text-base">
-            <GlassIcon icon={UserRound} color="var(--chart-1)" size="sm" />
+            <IconChip icon={UserRound} color="var(--chart-1)" size="sm" />
             Profile
           </CardTitle>
         </CardHeader>
@@ -68,12 +68,12 @@ export default async function SettingsPage() {
             }}
           />
         </CardContent>
-      </GlassCard>
+      </Panel>
 
-      <GlassCard>
+      <Panel>
         <CardHeader>
           <CardTitle className="flex items-center gap-2.5 text-base">
-            <GlassIcon icon={Palette} color="var(--cat-subscriptions)" size="sm" />
+            <IconChip icon={Palette} color="var(--cat-subscriptions)" size="sm" />
             Appearance
           </CardTitle>
         </CardHeader>
@@ -81,23 +81,23 @@ export default async function SettingsPage() {
           <p className="text-sm text-muted-foreground">Theme</p>
           <ThemeToggle />
         </CardContent>
-      </GlassCard>
+      </Panel>
 
-      <GlassCard>
+      <Panel>
         <CardContent className="space-y-1">
           {LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="flex items-center gap-3 rounded-2xl px-2 py-2.5 text-sm font-medium transition-colors hover:bg-white/50 dark:hover:bg-white/8"
+              className="flex items-center gap-3 rounded-xl px-2 py-2.5 text-sm font-medium transition-colors hover:bg-muted"
             >
-              <GlassIcon icon={link.icon} color={link.color} size="sm" />
+              <IconChip icon={link.icon} color={link.color} size="sm" />
               {link.label}
               <ChevronRight className="ml-auto size-4 text-muted-foreground" />
             </Link>
           ))}
         </CardContent>
-      </GlassCard>
+      </Panel>
     </div>
   );
 }

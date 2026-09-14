@@ -39,7 +39,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            "cn-toast backdrop-blur-xl shadow-[var(--glass-shadow-lg)] saturate-150",
+            "cn-toast shadow-[var(--glass-shadow-lg)] saturate-150",
         },
       }}
       {...props}

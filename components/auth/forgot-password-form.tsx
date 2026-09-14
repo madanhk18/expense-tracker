@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 
 export function ForgotPasswordForm() {
   const [submitting, setSubmitting] = useState(false);
@@ -44,7 +44,7 @@ export function ForgotPasswordForm() {
 
   if (sent) {
     return (
-      <GlassCard tint="var(--chart-1)">
+      <Panel>
         <CardHeader>
           <CardTitle>Check your email</CardTitle>
           <CardDescription>
@@ -58,12 +58,12 @@ export function ForgotPasswordForm() {
             </Button>
           </Link>
         </CardContent>
-      </GlassCard>
+      </Panel>
     );
   }
 
   return (
-    <GlassCard tint="var(--chart-1)">
+    <Panel>
       <CardHeader>
         <CardTitle>Forgot password</CardTitle>
         <CardDescription>Enter your email and we&apos;ll send you a reset link.</CardDescription>
@@ -85,6 +85,6 @@ export function ForgotPasswordForm() {
           </Link>
         </p>
       </CardContent>
-    </GlassCard>
+    </Panel>
   );
 }

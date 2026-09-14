@@ -101,14 +101,14 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
       <div className="space-y-2">
         <Label htmlFor="amount">Amount</Label>
         <div className="flex items-stretch gap-2">
-          <span className="gradient-primary grid w-14 shrink-0 place-items-center rounded-2xl text-xl font-semibold">
+          <span className="btn-solid grid w-14 shrink-0 place-items-center rounded-xl text-xl font-semibold">
             ₹
           </span>
           <Input
             id="amount"
             inputMode="decimal"
             placeholder="0"
-            className="h-16 rounded-2xl text-3xl font-bold tabular-nums md:text-3xl"
+            className="h-16 rounded-xl text-3xl font-bold tabular-nums md:text-3xl"
             autoFocus
             {...register("amount")}
           />
@@ -170,10 +170,10 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
                       } as React.CSSProperties
                     }
                     className={cn(
-                      "flex flex-col items-center gap-1.5 rounded-2xl border px-2 py-2.5 text-xs font-medium transition-all active:scale-[0.97]",
+                      "flex flex-col items-center gap-1.5 rounded-xl border px-2 py-2.5 text-xs font-medium transition-all active:scale-[0.97]",
                       selected
-                        ? "glass-tint text-foreground shadow-[0_8px_20px_-12px_var(--tint)]"
-                        : "border-white/50 bg-white/40 text-muted-foreground hover:bg-white/60 dark:border-white/10 dark:bg-white/6 dark:hover:bg-white/12"
+                        ? "surface-tint text-foreground shadow-[0_8px_20px_-12px_var(--tint)]"
+                        : "border-border bg-card text-muted-foreground hover:bg-muted"
                     )}
                   >
                     <pm.icon className="size-4" style={{ color: pm.color }} />

@@ -2,8 +2,8 @@ import { AlertCircle, CalendarClock } from "lucide-react";
 import { formatINR } from "@/lib/money";
 import { daysUntil } from "@/lib/dates";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
-import { GlassIcon } from "@/components/shared/glass-icon";
+import { Panel } from "@/components/shared/panel";
+import { IconChip } from "@/components/shared/icon-chip";
 import { CategoryIcon } from "@/components/shared/category-icon";
 import { cn } from "@/lib/utils";
 import type { UpcomingBill } from "@/lib/queries/recurring";
@@ -20,10 +20,10 @@ export function BillRemindersBanner({ bills }: { bills: UpcomingBill[] }) {
   if (bills.length === 0) return null;
 
   return (
-    <GlassCard tint="var(--warning)">
+    <Panel>
       <CardHeader>
         <CardTitle className="flex items-center gap-2.5 text-base">
-          <GlassIcon icon={CalendarClock} color="var(--warning)" size="sm" />
+          <IconChip icon={CalendarClock} color="var(--warning)" size="sm" />
           Upcoming Bills
         </CardTitle>
       </CardHeader>
@@ -33,7 +33,7 @@ export function BillRemindersBanner({ bills }: { bills: UpcomingBill[] }) {
           return (
             <div
               key={bill.id}
-              className="flex items-center justify-between gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+              className="flex items-center justify-between gap-3 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-muted"
             >
               <CategoryIcon name={bill.categoryName} size="sm" />
               <div className="min-w-0 flex-1">
@@ -54,6 +54,6 @@ export function BillRemindersBanner({ bills }: { bills: UpcomingBill[] }) {
           );
         })}
       </CardContent>
-    </GlassCard>
+    </Panel>
   );
 }

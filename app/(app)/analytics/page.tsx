@@ -27,8 +27,8 @@ import { SpendLineChart } from "@/components/analytics/spend-line-chart";
 import { MonthComparison } from "@/components/analytics/month-comparison";
 import { InsightsList } from "@/components/analytics/insights-list";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
-import { GlassIcon } from "@/components/shared/glass-icon";
+import { Panel } from "@/components/shared/panel";
+import { IconChip } from "@/components/shared/icon-chip";
 import { PageHeader } from "@/components/shared/page-header";
 
 interface PageProps {
@@ -91,21 +91,21 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-2">
-          <GlassCard tint="var(--chart-1)">
+          <Panel>
             <CardHeader>
               <CardTitle className="flex items-center gap-2.5 text-base">
-                <GlassIcon icon={Wallet} color="var(--chart-1)" size="sm" />
+                <IconChip icon={Wallet} color="var(--chart-1)" size="sm" />
                 Total spending
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-xs font-medium tracking-wide text-foreground/70 uppercase">
+              <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
                 {isCustomRange ? rangeLabel(start, end) : monthLabel(start)}
               </p>
               <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">
                 {formatINR(analytics.totalPaise)}
               </p>
-              <p className="mt-1 text-sm text-foreground/70">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {analytics.transactionCount}{" "}
                 {analytics.transactionCount === 1
                   ? "transaction"
@@ -113,12 +113,12 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                 · {formatINR(avgPerDay, { decimals: false })}/day
               </p>
             </CardContent>
-          </GlassCard>
+          </Panel>
 
-          <GlassCard>
+          <Panel>
             <CardHeader>
               <CardTitle className="flex items-center gap-2.5 text-base">
-                <GlassIcon
+                <IconChip
                   icon={ChartPie}
                   color="var(--cat-shopping)"
                   size="sm"
@@ -130,12 +130,12 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               <CategoryPieChart data={analytics.categoryBreakdown} />
               <CategoryBarChart data={analytics.categoryBreakdown} />
             </CardContent>
-          </GlassCard>
+          </Panel>
 
-          <GlassCard>
+          <Panel>
             <CardHeader>
               <CardTitle className="flex items-center gap-2.5 text-base">
-                <GlassIcon
+                <IconChip
                   icon={TrendingUp}
                   color="var(--cat-healthcare)"
                   size="sm"
@@ -146,12 +146,12 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
             <CardContent>
               <SpendLineChart data={analytics.series} />
             </CardContent>
-          </GlassCard>
+          </Panel>
 
-          <GlassCard>
+          <Panel>
             <CardHeader>
               <CardTitle className="flex items-center gap-2.5 text-base">
-                <GlassIcon
+                <IconChip
                   icon={CreditCard}
                   color="var(--cat-subscriptions)"
                   size="sm"
@@ -168,15 +168,15 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                 }))}
               />
             </CardContent>
-          </GlassCard>
+          </Panel>
         </div>
 
         <div className="space-y-4">
           {comparison && (
-            <GlassCard>
+            <Panel>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2.5 text-base">
-                  <GlassIcon icon={Scale} color="var(--chart-2)" size="sm" />
+                  <IconChip icon={Scale} color="var(--chart-2)" size="sm" />
                   {isCustomRange
                     ? "Vs the previous period"
                     : "Month-to-month comparison"}
@@ -198,14 +198,14 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                   percentChange={comparison.percentChange}
                 />
               </CardContent>
-            </GlassCard>
+            </Panel>
           )}
 
           {analytics.topMerchants.length > 0 && (
-            <GlassCard>
+            <Panel>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2.5 text-base">
-                  <GlassIcon icon={Store} color="var(--cat-food)" size="sm" />
+                  <IconChip icon={Store} color="var(--cat-food)" size="sm" />
                   Top merchants
                 </CardTitle>
               </CardHeader>
@@ -213,7 +213,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                 {analytics.topMerchants.map((m) => (
                   <div
                     key={m.merchant}
-                    className="flex items-center justify-between rounded-xl px-2 py-1.5 text-sm transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+                    className="flex items-center justify-between rounded-xl px-2 py-1.5 text-sm transition-colors hover:bg-muted"
                   >
                     <span className="truncate">{m.merchant}</span>
                     <span className="font-medium tabular-nums">
@@ -222,14 +222,14 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
                   </div>
                 ))}
               </CardContent>
-            </GlassCard>
+            </Panel>
           )}
 
           {insights.length > 0 && (
-            <GlassCard>
+            <Panel>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2.5 text-base">
-                  <GlassIcon
+                  <IconChip
                     icon={Lightbulb}
                     color="var(--warning)"
                     size="sm"
@@ -240,7 +240,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               <CardContent>
                 <InsightsList insights={insights} />
               </CardContent>
-            </GlassCard>
+            </Panel>
           )}
         </div>
       </div>

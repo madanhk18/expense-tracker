@@ -4,6 +4,7 @@ import { generateDueRecurringExpenses } from "@/lib/queries/dashboard";
 import { getExpenseCategories } from "@/lib/queries/categories";
 import { Sidebar } from "@/components/layout/sidebar";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { AddExpenseFab } from "@/components/expenses/add-expense-fab";
 import { Topbar } from "@/components/layout/topbar";
 import { IdleLogout } from "@/components/auth/idle-logout";
 
@@ -22,7 +23,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     // Non-fatal: recurring generation failing shouldn't block the whole app from loading.
   }
 
-  // Powers the centre "add expense" button in the mobile bottom nav.
+  // Powers the mobile add-expense button.
   const categories = await getExpenseCategories();
 
   return (
@@ -33,7 +34,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <Topbar />
         <main className="flex-1 p-4 pb-32 md:p-6 md:pb-8">{children}</main>
       </div>
-      <BottomNav categories={categories} />
+      <AddExpenseFab categories={categories} />
+      <BottomNav />
     </div>
   );
 }

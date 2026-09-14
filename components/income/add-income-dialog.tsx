@@ -20,7 +20,7 @@ export function AddIncomeDialog({ categories, income, trigger }: AddIncomeDialog
     <>
       <span onClick={() => setOpen(true)} className="contents">
         {trigger ?? (
-          <Button className="gradient-income">
+          <Button className="btn-income">
             <Plus className="mr-1.5 size-4" />
             Add income
           </Button>

@@ -152,8 +152,8 @@ function FilterPill({
       className={cn(
         "flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-all active:scale-[0.97]",
         active
-          ? "border-white/25 bg-[image:var(--gradient-primary)] text-white shadow-[0_8px_20px_-12px_oklch(0.5_0.19_255/0.8)]"
-          : "border-white/50 bg-white/45 text-muted-foreground backdrop-blur-md hover:bg-white/65 dark:border-white/10 dark:bg-white/8 dark:hover:bg-white/14"
+          ? "border-border bg-[image:var(--btn-solid)] text-white shadow-[0_8px_20px_-12px_oklch(0.5_0.19_255/0.8)]"
+          : "border-border bg-card text-muted-foreground hover:bg-muted"
       )}
     >
       {color && (

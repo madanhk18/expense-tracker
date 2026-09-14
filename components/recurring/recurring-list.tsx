@@ -7,7 +7,7 @@ import { formatDate } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/client";
 import { toFriendlyMessage, logError } from "@/lib/errors";
 import { CardContent } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 import { CategoryIcon } from "@/components/shared/category-icon";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
@@ -68,7 +68,7 @@ export function RecurringList({ items }: { items: RecurringItem[] }) {
   return (
     <div className="space-y-3">
       {items.map((item) => (
-        <GlassCard key={item.id} size="sm" className="glass-hover">
+        <Panel key={item.id} size="sm" className="surface-hover">
           <CardContent className="flex items-center gap-3">
             <CategoryIcon name={item.category?.name} size="md" />
             <div className="min-w-0 flex-1">
@@ -89,7 +89,7 @@ export function RecurringList({ items }: { items: RecurringItem[] }) {
               <Trash2 className="size-4" />
             </Button>
           </CardContent>
-        </GlassCard>
+        </Panel>
       ))}
     </div>
   );

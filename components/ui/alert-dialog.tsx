@@ -36,7 +36,7 @@ function AlertDialogOverlay({
     <AlertDialogPrimitive.Overlay
       data-slot="alert-dialog-overlay"
       className={cn(
-        "fixed inset-0 z-50 bg-[oklch(0.3_0.06_280/0.28)] duration-100 supports-backdrop-filter:backdrop-blur-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 z-50 bg-[oklch(0.3_0.06_280/0.28)] duration-100 supports-backdrop-filter:data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -58,7 +58,7 @@ function AlertDialogContent({
         data-slot="alert-dialog-content"
         data-size={size}
         className={cn(
-          "glass-strong group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-3xl p-5 text-popover-foreground duration-100 outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+          "surface-raised group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-5 text-popover-foreground duration-100 outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           className
         )}
         {...props}
@@ -91,7 +91,7 @@ function AlertDialogFooter({
     <div
       data-slot="alert-dialog-footer"
       className={cn(
-        "-mx-5 -mb-5 flex flex-col-reverse gap-2 rounded-b-3xl border-t border-white/40 bg-white/25 p-4 group-data-[size=sm]/alert-dialog-content:grid dark:border-white/10 dark:bg-white/5 group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
+        "-mx-5 -mb-5 flex flex-col-reverse gap-2 rounded-b-3xl border-t border-border bg-card p-4 group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
         className
       )}
       {...props}

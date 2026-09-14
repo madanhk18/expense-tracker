@@ -96,7 +96,7 @@ function CategoryGroup({
         {categories.map((cat) => (
           <span
             key={cat.id}
-            className="flex items-center gap-2 rounded-full border border-white/55 bg-white/45 py-1.5 pr-3 pl-1.5 text-sm backdrop-blur-md dark:border-white/10 dark:bg-white/8"
+            className="flex items-center gap-2 rounded-full border border-border bg-card py-1.5 pr-3 pl-1.5 text-sm"
           >
             <CategoryIcon name={cat.name} icon={cat.icon} size="sm" className="size-7 [&>svg]:size-3.5" />
             {cat.name}

@@ -1,5 +1,5 @@
 import { Lightbulb } from "lucide-react";
-import { GlassIcon } from "@/components/shared/glass-icon";
+import { IconChip } from "@/components/shared/icon-chip";
 import type { Insight } from "@/lib/insights";
 
 export function InsightsList({ insights }: { insights: Insight[] }) {
@@ -10,9 +10,9 @@ export function InsightsList({ insights }: { insights: Insight[] }) {
       {insights.map((insight) => (
         <li
           key={insight.id}
-          className="flex items-start gap-3 rounded-2xl border border-white/50 bg-white/40 p-3 text-sm dark:border-white/10 dark:bg-white/6"
+          className="flex items-start gap-3 rounded-xl border border-border bg-card p-3 text-sm"
         >
-          <GlassIcon icon={Lightbulb} color="var(--warning)" size="sm" />
+          <IconChip icon={Lightbulb} color="var(--warning)" size="sm" />
           <span className="pt-1.5">{insight.text}</span>
         </li>
       ))}

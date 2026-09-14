@@ -55,7 +55,7 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
         {data.map((slice) => (
           <li
             key={slice.name}
-            className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+            className="flex items-center gap-2.5 rounded-xl px-2 py-1.5 text-sm transition-colors hover:bg-muted"
           >
             <span
               className="size-2.5 shrink-0 rounded-full"

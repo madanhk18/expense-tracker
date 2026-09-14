@@ -6,8 +6,8 @@ import { monthLabel } from "@/lib/dates";
 import { IncomeList } from "@/components/income/income-list";
 import { AddIncomeDialog } from "@/components/income/add-income-dialog";
 import { PageHeader } from "@/components/shared/page-header";
-import { GlassCard } from "@/components/shared/glass-card";
-import { GlassIcon } from "@/components/shared/glass-icon";
+import { Panel } from "@/components/shared/panel";
+import { IconChip } from "@/components/shared/icon-chip";
 import { SavingsRateCard } from "@/components/dashboard/savings-rate-card";
 import { IncomeSetupNotice } from "@/components/income/income-setup-notice";
 import { CardContent } from "@/components/ui/card";
@@ -50,7 +50,7 @@ export default async function IncomePage({ searchParams }: PageProps) {
             <AddIncomeDialog
               categories={categories}
               trigger={
-                <button className="gradient-income flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold">
+                <button className="btn-income flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold">
                   <Wallet className="size-4" />
                   Add income
                 </button>
@@ -62,13 +62,13 @@ export default async function IncomePage({ searchParams }: PageProps) {
 
         <aside className="space-y-3 lg:sticky lg:top-24 lg:self-start">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <GlassCard tint="var(--success)" size="sm">
+            <Panel size="sm">
               <CardContent className="space-y-1">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-xs font-medium tracking-wide text-foreground/70">
+                  <p className="text-xs font-medium tracking-wide text-muted-foreground">
                     Earned in {monthLabel(new Date())}
                   </p>
-                  <GlassIcon
+                  <IconChip
                     icon={TrendingUp}
                     color="var(--success)"
                     size="sm"
@@ -77,19 +77,19 @@ export default async function IncomePage({ searchParams }: PageProps) {
                 <p className="text-2xl font-semibold tabular-nums">
                   {formatINR(stats.monthIncomePaise)}
                 </p>
-                <p className="text-xs text-foreground/65">
+                <p className="text-xs text-muted-foreground">
                   Last month {formatINR(stats.previousMonthIncomePaise)}
                 </p>
               </CardContent>
-            </GlassCard>
+            </Panel>
 
-            <GlassCard tint="var(--chart-4)" size="sm">
+            <Panel size="sm">
               <CardContent className="space-y-1">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-xs font-medium tracking-wide text-foreground/70">
+                  <p className="text-xs font-medium tracking-wide text-muted-foreground">
                     Spent this month
                   </p>
-                  <GlassIcon
+                  <IconChip
                     icon={TrendingDown}
                     color="var(--chart-4)"
                     size="sm"
@@ -98,7 +98,7 @@ export default async function IncomePage({ searchParams }: PageProps) {
                 <p className="text-2xl font-semibold tabular-nums">
                   {formatINR(stats.monthExpensePaise)}
                 </p>
-                <p className="text-xs text-foreground/65">
+                <p className="text-xs text-muted-foreground">
                   {formatINR(
                     Math.max(
                       0,
@@ -108,7 +108,7 @@ export default async function IncomePage({ searchParams }: PageProps) {
                   kept
                 </p>
               </CardContent>
-            </GlassCard>
+            </Panel>
           </div>
 
           <SavingsRateCard stats={stats} />

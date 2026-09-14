@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 
 export function LoginForm() {
   const router = useRouter();
@@ -44,7 +44,7 @@ export function LoginForm() {
   }
 
   return (
-    <GlassCard tint="var(--chart-1)">
+    <Panel>
       <CardHeader>
         <CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
         <CardDescription>Log in to pick up where you left off.</CardDescription>
@@ -97,6 +97,6 @@ export function LoginForm() {
           </Link>
         </p>
       </CardContent>
-    </GlassCard>
+    </Panel>
   );
 }

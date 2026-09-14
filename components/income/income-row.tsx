@@ -54,7 +54,7 @@ export function IncomeRow({ income, categories }: { income: IncomeWithCategory; 
 
   return (
     <>
-      <div className="glass glass-highlight glass-hover flex items-center justify-between gap-2 rounded-2xl py-2.5 pr-2 pl-3">
+      <div className="surface surface-hover flex items-center justify-between gap-2 rounded-xl py-2.5 pr-2 pl-3">
         <button
           className="relative flex min-w-0 flex-1 items-center gap-3 text-left"
           onClick={() => setEditOpen(true)}

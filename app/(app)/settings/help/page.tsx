@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/shared/page-header";
 
@@ -130,7 +130,7 @@ export default function HelpPage() {
         <Link
           href="/settings"
           aria-label="Back to settings"
-          className="glass mt-1 grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+          className="surface mt-1 grid size-9 shrink-0 place-items-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="size-4" />
         </Link>
@@ -141,7 +141,7 @@ export default function HelpPage() {
       </div>
 
       {SECTIONS.map((section) => (
-        <GlassCard key={section.title}>
+        <Panel key={section.title}>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-base">{section.title}</CardTitle>
             {section.badge && (
@@ -157,7 +157,7 @@ export default function HelpPage() {
               ))}
             </ul>
           </CardContent>
-        </GlassCard>
+        </Panel>
       ))}
     </div>
   );

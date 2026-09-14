@@ -13,9 +13,9 @@ import { BudgetForm } from "@/components/budgets/budget-form";
 import { BudgetDeleteButton } from "@/components/budgets/budget-delete-button";
 import { EmptyState } from "@/components/shared/empty-state";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 import { CategoryIcon } from "@/components/shared/category-icon";
-import { GlassIcon } from "@/components/shared/glass-icon";
+import { IconChip } from "@/components/shared/icon-chip";
 import { PageHeader } from "@/components/shared/page-header";
 
 export default async function BudgetsPage() {
@@ -48,10 +48,10 @@ export default async function BudgetsPage() {
       />
 
       <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-        <GlassCard tint="var(--chart-1)">
+        <Panel>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="flex items-center gap-2.5 text-base">
-              <GlassIcon icon={Target} color="var(--chart-1)" size="sm" />
+              <IconChip icon={Target} color="var(--chart-1)" size="sm" />
               Monthly Budget
             </CardTitle>
             <BudgetForm
@@ -78,12 +78,12 @@ export default async function BudgetsPage() {
               />
             )}
           </CardContent>
-        </GlassCard>
+        </Panel>
 
-        <GlassCard>
+        <Panel>
           <CardHeader>
             <CardTitle className="flex items-center gap-2.5 text-base">
-              <GlassIcon icon={Layers} color="var(--cat-shopping)" size="sm" />
+              <IconChip icon={Layers} color="var(--cat-shopping)" size="sm" />
               Category Budgets
             </CardTitle>
           </CardHeader>
@@ -126,7 +126,7 @@ export default async function BudgetsPage() {
             ))}
 
             {availableCategories.length > 0 && (
-              <div className="flex flex-wrap gap-2 border-t border-white/40 pt-4 dark:border-white/10">
+              <div className="flex flex-wrap gap-2 border-t border-border pt-4">
                 {availableCategories.map((cat) => (
                   <BudgetForm
                     key={cat.id}
@@ -141,7 +141,7 @@ export default async function BudgetsPage() {
               </div>
             )}
           </CardContent>
-        </GlassCard>
+        </Panel>
       </div>
     </div>
   );

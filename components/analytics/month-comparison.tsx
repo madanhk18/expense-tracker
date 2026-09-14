@@ -18,18 +18,18 @@ export function MonthComparison({ currentLabel, previousLabel, currentPaise, pre
 
   return (
     <div className="grid grid-cols-2 gap-3">
-      <div className="rounded-2xl border border-white/50 bg-white/40 p-3 dark:border-white/10 dark:bg-white/6">
+      <div className="rounded-xl border border-border bg-card p-3">
         <p className="text-xs text-muted-foreground">{currentLabel}</p>
         <p className="text-xl font-semibold tabular-nums">{formatINR(currentPaise)}</p>
       </div>
-      <div className="rounded-2xl border border-white/50 bg-white/40 p-3 dark:border-white/10 dark:bg-white/6">
+      <div className="rounded-xl border border-border bg-card p-3">
         <p className="text-xs text-muted-foreground">{previousLabel}</p>
         <p className="text-xl font-semibold tabular-nums">{formatINR(previousPaise)}</p>
       </div>
-      <div className="col-span-2 flex flex-wrap items-center gap-2 border-t border-white/40 pt-3 dark:border-white/10">
+      <div className="col-span-2 flex flex-wrap items-center gap-2 border-t border-border pt-3">
         <span
           className={cn(
-            "inline-flex items-center gap-1 rounded-full border border-white/50 bg-white/50 px-2.5 py-1 text-sm font-medium dark:border-white/10 dark:bg-white/10",
+            "inline-flex items-center gap-1 rounded-full border border-border bg-card px-2.5 py-1 text-sm font-medium",
             isFlat ? "text-muted-foreground" : isIncrease ? "text-destructive" : "text-[var(--success)]"
           )}
         >

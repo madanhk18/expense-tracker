@@ -1,7 +1,7 @@
 import { getCategories } from "@/lib/queries/categories";
 import { CategoryManager } from "@/components/settings/category-manager";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 import { PageHeader } from "@/components/shared/page-header";
 
 export default async function CategoriesSettingsPage() {
@@ -10,14 +10,14 @@ export default async function CategoriesSettingsPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-4">
       <PageHeader title="Categories" description="Add your own or use the defaults." />
-      <GlassCard>
+      <Panel>
         <CardHeader>
           <CardTitle className="text-base">Your categories</CardTitle>
         </CardHeader>
         <CardContent>
           <CategoryManager categories={categories} />
         </CardContent>
-      </GlassCard>
+      </Panel>
     </div>
   );
 }

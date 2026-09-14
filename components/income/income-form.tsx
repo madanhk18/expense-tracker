@@ -89,14 +89,14 @@ export function IncomeForm({ categories, income, onSuccess }: IncomeFormProps) {
       <div className="space-y-2">
         <Label htmlFor="income-amount">Amount received</Label>
         <div className="flex items-stretch gap-2">
-          <span className="gradient-income grid w-14 shrink-0 place-items-center rounded-2xl text-xl font-semibold">
+          <span className="btn-income grid w-14 shrink-0 place-items-center rounded-xl text-xl font-semibold">
             ₹
           </span>
           <Input
             id="income-amount"
             inputMode="decimal"
             placeholder="0"
-            className="h-16 rounded-2xl text-3xl font-bold tabular-nums md:text-3xl"
+            className="h-16 rounded-xl text-3xl font-bold tabular-nums md:text-3xl"
             autoFocus
             {...register("amount")}
           />
@@ -149,7 +149,7 @@ export function IncomeForm({ categories, income, onSuccess }: IncomeFormProps) {
         control={control}
         name="isRecurring"
         render={({ field }) => (
-          <div className="flex items-center justify-between rounded-2xl border border-white/50 bg-white/40 px-3.5 py-3 dark:border-white/12 dark:bg-white/6">
+          <div className="flex items-center justify-between rounded-xl border border-border bg-card px-3.5 py-3">
             <div>
               <p className="text-sm font-medium">Repeats every month</p>
               <p className="text-xs text-muted-foreground">
@@ -161,7 +161,7 @@ export function IncomeForm({ categories, income, onSuccess }: IncomeFormProps) {
         )}
       />
 
-      <Button type="submit" size="lg" className="gradient-income w-full" disabled={submitting}>
+      <Button type="submit" size="lg" className="btn-income w-full" disabled={submitting}>
         {submitting ? "Saving…" : income ? "Save changes" : "Add income"}
       </Button>
     </form>

@@ -26,9 +26,9 @@ import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banne
 import { BudgetProgress } from "@/components/budgets/budget-progress";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
-import { GlassCard } from "@/components/shared/glass-card";
+import { Panel } from "@/components/shared/panel";
 import { CategoryIcon } from "@/components/shared/category-icon";
-import { GlassIcon } from "@/components/shared/glass-icon";
+import { IconChip } from "@/components/shared/icon-chip";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { categoryStyle } from "@/lib/category-style";
 import { PageHeader } from "@/components/shared/page-header";
@@ -121,10 +121,10 @@ export default async function DashboardPage() {
           </div>
 
           {overallBudget && (
-            <GlassCard>
+            <Panel>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2.5 text-base">
-                  <GlassIcon
+                  <IconChip
                     icon={Target}
                     color="var(--cat-healthcare)"
                     size="sm"
@@ -139,7 +139,7 @@ export default async function DashboardPage() {
                   budgetPaise={overallBudget.amount_paise}
                 />
               </CardContent>
-            </GlassCard>
+            </Panel>
           )}
         </div>
 
@@ -149,10 +149,10 @@ export default async function DashboardPage() {
           <SavingsRateCard stats={incomeStats} />
 
           {topCategories.length > 0 && (
-            <GlassCard>
+            <Panel>
               <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="flex items-center gap-2.5 text-base">
-                  <GlassIcon
+                  <IconChip
                     icon={Layers}
                     color="var(--cat-shopping)"
                     size="sm"
@@ -184,7 +184,7 @@ export default async function DashboardPage() {
                             {formatINR(cat.paise)}
                           </span>
                         </div>
-                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/50 dark:bg-white/10">
+                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-card">
                           <div
                             className="h-full rounded-full"
                             style={{
@@ -198,13 +198,13 @@ export default async function DashboardPage() {
                   );
                 })}
               </CardContent>
-            </GlassCard>
+            </Panel>
           )}
 
-          <GlassCard>
+          <Panel>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="flex items-center gap-2.5 text-base">
-                <GlassIcon icon={History} color="var(--chart-2)" size="sm" />
+                <IconChip icon={History} color="var(--chart-2)" size="sm" />
                 Recent Expenses
               </CardTitle>
               <Link
@@ -227,7 +227,7 @@ export default async function DashboardPage() {
                   {recentExpenses.map((expense) => (
                     <div
                       key={expense.id}
-                      className="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-white/45 dark:hover:bg-white/8"
+                      className="flex items-center gap-3 rounded-xl px-2 py-2 transition-colors hover:bg-muted"
                     >
                       <CategoryIcon
                         name={expense.category?.name}
@@ -254,7 +254,7 @@ export default async function DashboardPage() {
                 </div>
               )}
             </CardContent>
-          </GlassCard>
+          </Panel>
         </div>
       </div>
     </div>

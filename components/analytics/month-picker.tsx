@@ -55,7 +55,7 @@ export function MonthPicker({ monthRef }: { monthRef: Date }) {
           Clear range
         </Button>
       ) : (
-        <div className="glass flex items-center justify-between gap-1 rounded-full p-1">
+        <div className="surface flex items-center justify-between gap-1 rounded-full p-1">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -100,7 +100,7 @@ export function MonthPicker({ monthRef }: { monthRef: Date }) {
                   key={preset.label}
                   type="button"
                   onClick={() => applyRange(toISODate(preset.from), toISODate(preset.to))}
-                  className="rounded-full border border-white/50 bg-white/45 px-3 py-1.5 text-xs font-medium transition-colors hover:bg-white/70 dark:border-white/12 dark:bg-white/8 dark:hover:bg-white/16"
+                  className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
                 >
                   {preset.label}
                 </button>

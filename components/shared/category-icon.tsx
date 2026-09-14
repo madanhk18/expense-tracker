@@ -1,5 +1,5 @@
 import { categoryStyle, paymentStyle } from "@/lib/category-style";
-import { GlassIcon } from "./glass-icon";
+import { IconChip } from "./icon-chip";
 
 interface CategoryIconProps {
   name: string | null | undefined;
@@ -12,7 +12,7 @@ interface CategoryIconProps {
 /** The colour-coded chip used for a category anywhere it appears. */
 export function CategoryIcon({ name, icon, size = "md", className }: CategoryIconProps) {
   const style = categoryStyle(name, icon);
-  return <GlassIcon icon={style.icon} color={style.color} size={size} className={className} />;
+  return <IconChip icon={style.icon} color={style.color} size={size} className={className} />;
 }
 
 /** Same idea, keyed off a payment method instead. */
@@ -26,5 +26,5 @@ export function PaymentIcon({
   className?: string;
 }) {
   const style = paymentStyle(method);
-  return <GlassIcon icon={style.icon} color={style.color} size={size} className={className} />;
+  return <IconChip icon={style.icon} color={style.color} size={size} className={className} />;
 }
