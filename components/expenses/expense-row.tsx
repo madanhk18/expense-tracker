@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { formatINR } from "@/lib/money";
 import { formatTime } from "@/lib/dates";
 import { toFriendlyMessage, logError } from "@/lib/errors";
@@ -22,11 +22,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { CategoryIcon } from "@/components/shared/category-icon";
+import { ExpenseDetail } from "./expense-detail";
 import { ExpenseForm } from "./expense-form";
 import type { Category, ExpenseWithCategory } from "@/types/domain";
 
 export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCategory; categories: Category[] }) {
   const router = useRouter();
+  const [detailOpen, setDetailOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -53,7 +55,7 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
       <div className="surface surface-hover flex items-center justify-between gap-2 rounded-xl p-3">
         <button
           className="relative flex min-w-0 flex-1 items-center gap-3 text-left"
-          onClick={() => setEditOpen(true)}
+          onClick={() => setDetailOpen(true)}
         >
           <CategoryIcon
             name={expense.category?.name}
@@ -81,6 +83,9 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setDetailOpen(true)}>
+                <Eye className="mr-2 size-4" /> View
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setEditOpen(true)}>
                 <Pencil className="mr-2 size-4" /> Edit
               </DropdownMenuItem>
@@ -91,6 +96,26 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
           </DropdownMenu>
         </div>
       </div>
+
+      <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+        <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-sm">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Expense details</DialogTitle>
+          </DialogHeader>
+          <ExpenseDetail
+            expense={expense}
+            onEdit={() => {
+              setDetailOpen(false);
+              setEditOpen(true);
+            }}
+            onDelete={() => {
+              setDetailOpen(false);
+              setDeleteOpen(true);
+            }}
+            onDone={() => setDetailOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={editOpen} onOpenChange={setEditOpen}>
         <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-md">

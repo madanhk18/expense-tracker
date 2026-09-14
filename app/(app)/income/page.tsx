@@ -111,7 +111,7 @@ export default async function IncomePage({ searchParams }: PageProps) {
             </Panel>
           </div>
 
-          <SavingsRateCard stats={stats} />
+          {stats.monthIncomePaise > 0 && <SavingsRateCard stats={stats} />}
         </aside>
       </div>
     </div>

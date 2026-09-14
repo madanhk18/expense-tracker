@@ -27,12 +27,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const categories = await getExpenseCategories();
 
   return (
-    <div className="flex min-h-svh">
+    // Dark ground on mobile, so the content sheet reads as a card sitting on
+    // top of it with the nav bar showing through underneath.
+    <div className="flex min-h-svh bg-foreground md:bg-background">
       <IdleLogout />
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar />
-        <main className="flex-1 p-4 pb-32 md:p-6 md:pb-8">{children}</main>
+        <div className="flex min-h-svh flex-1 flex-col rounded-b-3xl bg-background pb-24 md:min-h-0 md:rounded-none md:pb-0">
+          <Topbar />
+          <main className="flex-1 p-4 pb-8 md:p-6">{children}</main>
+        </div>
       </div>
       <AddExpenseFab categories={categories} />
       <BottomNav />

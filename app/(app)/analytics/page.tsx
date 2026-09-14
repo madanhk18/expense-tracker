@@ -127,7 +127,10 @@ export default async function AnalyticsPage({ searchParams }: PageProps) {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <CategoryPieChart data={analytics.categoryBreakdown} />
+              <CategoryPieChart
+            data={analytics.categoryBreakdown}
+            transactionCount={analytics.transactionCount}
+          />
               <CategoryBarChart data={analytics.categoryBreakdown} />
             </CardContent>
           </Panel>

@@ -1,8 +1,10 @@
-import { subDays } from "date-fns";
+import { subDays, parseISO } from "date-fns";
 import { listExpenses } from "@/lib/queries/expenses";
 import { getExpenseCategories } from "@/lib/queries/categories";
 import { todayRange, thisWeekRange, monthRange, previousMonthRange } from "@/lib/dates";
+import { formatINR } from "@/lib/money";
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
+import { MonthSwitcher } from "@/components/expenses/month-switcher";
 import { ExpenseList } from "@/components/expenses/expense-list";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { ExportButtons } from "@/components/expenses/export-buttons";
@@ -10,6 +12,11 @@ import { ImportDialog } from "@/components/expenses/import-dialog";
 import { Button } from "@/components/ui/button";
 import type { ExpenseFilters as ExpenseFiltersInput } from "@/lib/queries/expenses";
 import { PageHeader } from "@/components/shared/page-header";
+
+function resolveMonth(monthParam: string | undefined) {
+  const ref = monthParam ? parseISO(`${monthParam}-01`) : new Date();
+  return Number.isNaN(ref.getTime()) ? new Date() : ref;
+}
 
 function resolveDateRange(preset: string | undefined) {
   const now = new Date();
@@ -37,7 +44,10 @@ interface PageProps {
 
 export default async function ExpensesPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const range = resolveDateRange(typeof params.range === "string" ? params.range : undefined);
+  const monthRef = resolveMonth(typeof params.month === "string" ? params.month : undefined);
+  const preset = typeof params.range === "string" ? params.range : undefined;
+  // An explicit preset wins; otherwise the list is scoped to the month shown.
+  const range = resolveDateRange(preset) ?? monthRange(monthRef);
   const page = Number(params.page) || 1;
 
   const filters: ExpenseFiltersInput = {
@@ -53,6 +63,7 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
 
   const [{ expenses, total }, categories] = await Promise.all([listExpenses(filters), getExpenseCategories()]);
   const totalPages = Math.max(1, Math.ceil(total / 50));
+  const shownPaise = expenses.reduce((sum, e) => sum + e.amount_paise, 0);
 
   return (
     <div className="mx-auto max-w-4xl space-y-4">
@@ -69,6 +80,18 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
           </>
         }
       />
+
+      {/* Month browsing plus the month's headline total, the way the
+          reference app opens: period first, number second, list third. */}
+      <div className="surface rounded-xl px-4 py-5">
+        <MonthSwitcher monthRef={monthRef} />
+        <p className="mt-4 text-center text-xs font-medium tracking-wide text-muted-foreground uppercase">
+          Total expenses
+        </p>
+        <p className="mt-1 text-center text-4xl font-bold tracking-tight tabular-nums">
+          {formatINR(shownPaise)}
+        </p>
+      </div>
 
       <ExpenseFilters categories={categories} />
       <ExpenseList expenses={expenses} categories={categories} />

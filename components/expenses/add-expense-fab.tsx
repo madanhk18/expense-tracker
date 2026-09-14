@@ -7,7 +7,7 @@ import type { Category } from "@/types/domain";
 /** Floating add button — mobile only, clear of the bottom bar. */
 export function AddExpenseFab({ categories }: { categories: Category[] }) {
   return (
-    <div className="fixed right-4 bottom-[calc(4.5rem+env(safe-area-inset-bottom))] z-40 md:hidden">
+    <div className="fixed right-5 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-40 md:hidden">
       <AddExpenseDialog
         categories={categories}
         trigger={

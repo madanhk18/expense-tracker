@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PiggyBank } from "lucide-react";
+import { PiggyBank, Plus } from "lucide-react";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Panel } from "@/components/shared/panel";
 import { IconChip } from "@/components/shared/icon-chip";
@@ -24,12 +24,17 @@ export function SavingsRateCard({ stats }: { stats: IncomeStats }) {
             Savings rate
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent className="flex items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            Log what you earn this month and you&apos;ll see how much of it you actually keep.
+            Log what you earn and see how much of it you keep.
           </p>
-          <Link href="/income" className="text-sm font-semibold text-primary hover:underline">
-            Add income →
+          <Link
+            href="/income"
+            aria-label="Add income"
+            title="Add income"
+            className="btn-solid grid size-10 shrink-0 place-items-center rounded-full transition-transform active:scale-95"
+          >
+            <Plus className="size-5" strokeWidth={2.4} />
           </Link>
         </CardContent>
       </Panel>
