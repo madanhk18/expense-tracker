@@ -200,9 +200,9 @@
   --sidebar-border: oklch(0.3 0.004 260);
   --sidebar-ring: oklch(0.8 0.01 260 / 0.35);
 
-  /* The floating bottom bar */
-  --nav: oklch(0.24 0.004 260);
-  --nav-foreground: oklch(0.99 0 0);
+  /* The floating bottom bar — light, against the dark page */
+  --nav: oklch(0.96 0.001 260);
+  --nav-foreground: oklch(0.18 0.004 260);
 
   /* Elevation */
   --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4);
