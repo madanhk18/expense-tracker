@@ -8,7 +8,6 @@ import { formatINR } from "@/lib/money";
 import { formatTime } from "@/lib/dates";
 import { toFriendlyMessage, logError } from "@/lib/errors";
 import { deleteIncomeAction } from "@/lib/actions/income";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -59,24 +58,27 @@ export function IncomeRow({ income, categories }: { income: IncomeWithCategory; 
           className="relative flex min-w-0 flex-1 items-center gap-3 text-left"
           onClick={() => setEditOpen(true)}
         >
-          <CategoryIcon name={income.category?.name} icon={income.category?.icon} size="md" />
+          <CategoryIcon
+            name={income.category?.name}
+            icon={income.category?.icon}
+            size="md"
+            variant="solid"
+          />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">
+            <p className="truncate text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+              {income.category?.name ?? "Income"}
+            </p>
+            <p className="truncate text-sm font-semibold">
               {income.description || income.category?.name || "Income"}
             </p>
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-              {income.category && (
-                <Badge variant="secondary" className="font-normal">
-                  {income.category.name}
-                </Badge>
-              )}
+            <p className="flex items-center gap-1 truncate text-xs text-muted-foreground">
               {income.is_recurring && (
-                <span className="inline-flex items-center gap-1">
-                  <Repeat className="size-3" /> Monthly
-                </span>
+                <>
+                  <Repeat className="size-3" /> Monthly ·
+                </>
               )}
-              <span>· {formatTime(new Date(income.received_at))}</span>
-            </div>
+              {formatTime(new Date(income.received_at))}
+            </p>
           </div>
         </button>
         <div className="relative flex items-center gap-1">

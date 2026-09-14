@@ -12,6 +12,8 @@ interface IconChipProps {
   /** Any CSS colour — usually a `var(--cat-*)` from lib/category-style. */
   color: string;
   size?: keyof typeof SIZES;
+  /** "tint" = pale wash with a coloured glyph; "solid" = filled tile. */
+  variant?: "tint" | "solid";
   className?: string;
 }
 
@@ -19,13 +21,25 @@ interface IconChipProps {
  * A lucide icon on a pale tint of its own colour. Flat: no blur, no shadow —
  * the colour does the work of telling categories apart.
  */
-export function IconChip({ icon: Icon, color, size = "md", className }: IconChipProps) {
+export function IconChip({
+  icon: Icon,
+  color,
+  size = "md",
+  variant = "tint",
+  className,
+}: IconChipProps) {
+  const solid = variant === "solid";
+
   return (
     <span
-      style={{ "--tint": color } as React.CSSProperties}
-      className={cn("chip grid shrink-0 place-items-center", SIZES[size], className)}
+      style={
+        solid
+          ? ({ backgroundColor: color } as React.CSSProperties)
+          : ({ "--tint": color } as React.CSSProperties)
+      }
+      className={cn("grid shrink-0 place-items-center", solid ? "text-white" : "chip", SIZES[size], className)}
     >
-      <Icon style={{ color }} strokeWidth={2} />
+      <Icon style={solid ? undefined : { color }} strokeWidth={2} />
     </span>
   );
 }

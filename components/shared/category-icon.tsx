@@ -6,13 +6,16 @@ interface CategoryIconProps {
   /** The category's `icon` column, when it has one. */
   icon?: string | null;
   size?: "sm" | "md" | "lg";
+  variant?: "tint" | "solid";
   className?: string;
 }
 
 /** The colour-coded chip used for a category anywhere it appears. */
-export function CategoryIcon({ name, icon, size = "md", className }: CategoryIconProps) {
+export function CategoryIcon({ name, icon, size = "md", variant, className }: CategoryIconProps) {
   const style = categoryStyle(name, icon);
-  return <IconChip icon={style.icon} color={style.color} size={size} className={className} />;
+  return (
+    <IconChip icon={style.icon} color={style.color} size={size} variant={variant} className={className} />
+  );
 }
 
 /** Same idea, keyed off a payment method instead. */

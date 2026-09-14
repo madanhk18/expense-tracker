@@ -8,7 +8,6 @@ import { formatINR } from "@/lib/money";
 import { formatTime } from "@/lib/dates";
 import { toFriendlyMessage, logError } from "@/lib/errors";
 import { createClient } from "@/lib/supabase/client";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
@@ -51,28 +50,30 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
 
   return (
     <>
-      <div className="surface surface-hover flex items-center justify-between gap-2 rounded-xl py-2.5 pr-2 pl-3">
+      <div className="surface surface-hover flex items-center justify-between gap-2 rounded-xl p-3">
         <button
           className="relative flex min-w-0 flex-1 items-center gap-3 text-left"
           onClick={() => setEditOpen(true)}
         >
-          <CategoryIcon name={expense.category?.name} icon={expense.category?.icon} size="md" />
+          <CategoryIcon
+            name={expense.category?.name}
+            icon={expense.category?.icon}
+            size="md"
+            variant="solid"
+          />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{expense.description}</p>
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-              {expense.category && (
-                <Badge variant="secondary" className="font-normal">
-                  {expense.category.name}
-                </Badge>
-              )}
-              <span>{expense.payment_method}</span>
-              {expense.merchant && <span>· {expense.merchant}</span>}
-              <span>· {formatTime(new Date(expense.expense_at))}</span>
-            </div>
+            {/* Meta line first, the way a statement reads: where, then what. */}
+            <p className="truncate text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+              {[expense.category?.name, expense.payment_method].filter(Boolean).join(" · ")}
+            </p>
+            <p className="truncate text-sm font-semibold">{expense.description}</p>
+            <p className="truncate text-xs text-muted-foreground">
+              {[expense.merchant, formatTime(new Date(expense.expense_at))].filter(Boolean).join(" · ")}
+            </p>
           </div>
         </button>
         <div className="relative flex items-center gap-1">
-          <span className="font-semibold tabular-nums">{formatINR(expense.amount_paise)}</span>
+          <span className="font-semibold tabular-nums">-{formatINR(expense.amount_paise)}</span>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon-sm">
