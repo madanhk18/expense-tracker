@@ -125,6 +125,11 @@
   --sidebar-border: oklch(0.9 0.003 260);
   --sidebar-ring: oklch(0.55 0.02 260 / 0.35);
 
+  /* The ground the content sheet floats on, and the bar that sits on it */
+  --shell: oklch(0.16 0.006 260);
+  --nav: oklch(0.2 0.006 260);
+  --nav-foreground: oklch(0.99 0 0);
+
   /* Elevation — barely there, never coloured */
   --shadow-card: 0 1px 2px oklch(0.2 0.01 260 / 0.05),
     0 1px 3px oklch(0.2 0.01 260 / 0.04);
@@ -195,6 +200,11 @@
   --sidebar-accent-foreground: oklch(0.96 0.001 260);
   --sidebar-border: oklch(0.3 0.004 260);
   --sidebar-ring: oklch(0.8 0.01 260 / 0.35);
+
+  /* Ground + bar: darker than the sheet, so the sheet still reads as raised */
+  --shell: oklch(0.07 0 0);
+  --nav: oklch(0.24 0.004 260);
+  --nav-foreground: oklch(0.99 0 0);
 
   /* Elevation */
   --shadow-card: 0 1px 2px oklch(0 0 0 / 0.4);

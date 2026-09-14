@@ -29,7 +29,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     // Dark ground on mobile, so the content sheet reads as a card sitting on
     // top of it with the nav bar showing through underneath.
-    <div className="flex min-h-svh bg-foreground p-1.5 pb-0 md:bg-background md:p-0">
+    <div className="flex min-h-svh bg-[var(--shell)] p-1.5 pb-0 md:bg-background md:p-0">
       <IdleLogout />
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
