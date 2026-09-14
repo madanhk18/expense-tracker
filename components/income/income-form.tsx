@@ -133,13 +133,13 @@ export function IncomeForm({ categories, income, onSuccess }: IncomeFormProps) {
         {errors.description && <p className="text-sm text-destructive">{errors.description.message}</p>}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="min-w-0 space-y-2">
           <Label htmlFor="income-date">Date</Label>
           <Input id="income-date" type="date" {...register("date")} />
           {errors.date && <p className="text-sm text-destructive">{errors.date.message}</p>}
         </div>
-        <div className="space-y-2">
+        <div className="min-w-0 space-y-2">
           <Label htmlFor="income-time">Time (optional)</Label>
           <Input id="income-time" type="time" {...register("time")} />
         </div>

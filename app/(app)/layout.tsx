@@ -33,7 +33,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <IdleLogout />
       <Sidebar />
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex min-h-svh flex-1 flex-col rounded-b-3xl bg-background pb-24 md:min-h-0 md:rounded-none md:pb-0">
+        <div className="flex min-h-svh flex-1 flex-col rounded-b-3xl bg-background pb-28 md:min-h-0 md:rounded-none md:pb-0">
           <Topbar />
           <main className="flex-1 p-4 pb-8 md:p-6">{children}</main>
         </div>

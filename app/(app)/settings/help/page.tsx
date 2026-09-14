@@ -48,17 +48,15 @@ const SECTIONS: GuideSection[] = [
       "Tap \"Add Expense\" (top bar on desktop, the floating + button on mobile) from any screen.",
       "Amount, description, and payment method are required. Category, merchant, date/time, and notes are optional.",
       "Amount always means rupees — type \"450\" or \"450.50\", no need to type ₹.",
-      "The same form is used to edit — tap any expense in the list to open it pre-filled.",
+      "Tap an expense to open its details; Edit opens the same form pre-filled.",
     ],
   },
   {
     title: "Expenses list",
     points: [
-      "Search by description, merchant, or notes. Filter by category, payment method, or date range (Today / This week / This month / Last month / custom).",
-      "Sort by newest, oldest, highest amount, or lowest amount.",
-      "Swipe/tap the ⋮ menu on any row to edit or delete it.",
-      "Export your expenses as CSV or JSON from the top of this page — useful for backups or spreadsheets.",
-      "Import a CSV: the app previews every row first and rejects malformed ones before anything is saved.",
+      "Opens on the current month with everything in it. The month strip under the total steps back through the last six months.",
+      "The slider button in the header filters: search by description, merchant or notes, narrow to a category or payment method, and change the sort.",
+      "Tap any expense to see its full details, then Edit or Delete from there.",
     ],
   },
   {

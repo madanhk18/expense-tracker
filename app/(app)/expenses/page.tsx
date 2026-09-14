@@ -1,14 +1,12 @@
 import { subDays, parseISO } from "date-fns";
 import { listExpenses } from "@/lib/queries/expenses";
 import { getExpenseCategories } from "@/lib/queries/categories";
-import { todayRange, thisWeekRange, monthRange, previousMonthRange } from "@/lib/dates";
+import { todayRange, thisWeekRange, monthRange, previousMonthRange, monthLabel } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
-import { MonthSwitcher } from "@/components/expenses/month-switcher";
+import { MonthPills } from "@/components/expenses/month-pills";
 import { ExpenseList } from "@/components/expenses/expense-list";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
-import { ExportButtons } from "@/components/expenses/export-buttons";
-import { ImportDialog } from "@/components/expenses/import-dialog";
 import { Button } from "@/components/ui/button";
 import type { ExpenseFilters as ExpenseFiltersInput } from "@/lib/queries/expenses";
 import { PageHeader } from "@/components/shared/page-header";
@@ -69,11 +67,10 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
     <div className="mx-auto max-w-4xl space-y-4">
       <PageHeader
         title="Expenses"
-        description={`${total} ${total === 1 ? "expense" : "expenses"} matching your filters`}
+        description={`${total} ${total === 1 ? "expense" : "expenses"} in ${monthLabel(monthRef)}`}
         actions={
           <>
-            <ImportDialog />
-            <ExportButtons />
+            <ExpenseFilters categories={categories} />
             <div className="hidden md:block">
               <AddExpenseDialog categories={categories} />
             </div>
@@ -81,19 +78,12 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
         }
       />
 
-      {/* Month browsing plus the month's headline total, the way the
-          reference app opens: period first, number second, list third. */}
-      <div className="surface rounded-xl px-4 py-5">
-        <MonthSwitcher monthRef={monthRef} />
-        <p className="mt-4 text-center text-xs font-medium tracking-wide text-muted-foreground uppercase">
-          Total expenses
-        </p>
-        <p className="mt-1 text-center text-4xl font-bold tracking-tight tabular-nums">
-          {formatINR(shownPaise)}
-        </p>
+      {/* Total first, then the month strip, then the list. */}
+      <div className="space-y-4 pt-2 pb-1 text-center">
+        <p className="text-4xl font-bold tracking-tight tabular-nums">{formatINR(shownPaise)}</p>
+        <MonthPills monthRef={monthRef} />
       </div>
 
-      <ExpenseFilters categories={categories} />
       <ExpenseList expenses={expenses} categories={categories} />
 
       {totalPages > 1 && (

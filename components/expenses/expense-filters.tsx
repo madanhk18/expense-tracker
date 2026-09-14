@@ -2,23 +2,15 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useState, useCallback } from "react";
-import { Search, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PAYMENT_METHODS } from "@/lib/constants";
 import { categoryStyle } from "@/lib/category-style";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/types/domain";
-
-const DATE_PRESETS = [
-  { value: "all", label: "All time" },
-  { value: "today", label: "Today" },
-  { value: "yesterday", label: "Yesterday" },
-  { value: "this_week", label: "This week" },
-  { value: "this_month", label: "This month" },
-  { value: "last_month", label: "Last month" },
-] as const;
 
 const SORT_OPTIONS = [
   { value: "newest", label: "Newest first" },
@@ -27,11 +19,16 @@ const SORT_OPTIONS = [
   { value: "amount_asc", label: "Amount: low to high" },
 ] as const;
 
+/**
+ * Filtering lives behind one control in the header: the list shows everything
+ * for the month by default, and narrowing it is opt-in.
+ */
 export function ExpenseFilters({ categories }: { categories: Category[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
+  const [open, setOpen] = useState(false);
 
   const updateParam = useCallback(
     (key: string, value: string | null) => {
@@ -46,90 +43,99 @@ export function ExpenseFilters({ categories }: { categories: Category[] }) {
 
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setOpen(false);
     updateParam("q", search || null);
   }
 
   const activeCategory = searchParams.get("category") ?? "all";
-  const hasActiveFilters = [...searchParams.keys()].some((k) => k !== "page");
+  const activePayment = searchParams.get("payment") ?? "all";
+  const activeSort = searchParams.get("sort") ?? "newest";
+  // The month is navigation, not a filter — it doesn't count as "narrowed".
+  const activeCount = ["q", "category", "payment", "sort"].filter((k) => searchParams.has(k)).length;
+
+  function clearAll() {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const key of ["q", "category", "payment", "sort", "range", "page"]) params.delete(key);
+    setSearch("");
+    router.push(params.toString() ? `${pathname}?${params.toString()}` : pathname);
+  }
 
   return (
-    <div className="space-y-3">
-      <form onSubmit={handleSearchSubmit} className="relative">
-        <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search by item, merchant, notes…"
-          className="rounded-full pl-10"
-        />
-      </form>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" size="icon" aria-label="Filter expenses" className="relative">
+          <SlidersHorizontal className="size-4" />
+          {activeCount > 0 && (
+            <span className="absolute -top-1 -right-1 grid size-4 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
+              {activeCount}
+            </span>
+          )}
+        </Button>
+      </PopoverTrigger>
 
-      {/* Category pills — the filter people reach for most often. */}
-      <div className="scroll-fade-x -mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-        <FilterPill
-          label="All"
-          active={activeCategory === "all"}
-          onClick={() => updateParam("category", null)}
-        />
-        {categories.map((cat) => (
-          <FilterPill
-            key={cat.id}
-            label={cat.name}
-            color={categoryStyle(cat.name, cat.icon).color}
-            active={activeCategory === cat.id}
-            onClick={() => updateParam("category", cat.id)}
+      <PopoverContent align="end" className="w-[19rem] gap-4">
+        <form onSubmit={handleSearchSubmit} className="relative">
+          <Search className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search item, merchant, notes…"
+            className="pl-10"
           />
-        ))}
-      </div>
+        </form>
 
-      <div className="flex flex-wrap gap-2">
-        <Select defaultValue={searchParams.get("range") ?? "all"} onValueChange={(v) => updateParam("range", v)}>
-          <SelectTrigger size="sm" className="w-auto min-w-32 rounded-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {DATE_PRESETS.map((p) => (
-              <SelectItem key={p.value} value={p.value}>
-                {p.label}
-              </SelectItem>
+        <div className="space-y-2">
+          <p className="text-[0.8rem] font-medium tracking-wide text-muted-foreground">Category</p>
+          <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto">
+            <FilterPill label="All" active={activeCategory === "all"} onClick={() => updateParam("category", null)} />
+            {categories.map((cat) => (
+              <FilterPill
+                key={cat.id}
+                label={cat.name}
+                color={categoryStyle(cat.name, cat.icon).color}
+                active={activeCategory === cat.id}
+                onClick={() => updateParam("category", cat.id)}
+              />
             ))}
-          </SelectContent>
-        </Select>
+          </div>
+        </div>
 
-        <Select defaultValue={searchParams.get("payment") ?? "all"} onValueChange={(v) => updateParam("payment", v)}>
-          <SelectTrigger size="sm" className="w-auto min-w-32 rounded-full">
-            <SelectValue placeholder="Payment" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All payment methods</SelectItem>
-            {PAYMENT_METHODS.map((m) => (
-              <SelectItem key={m} value={m}>
-                {m}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="grid gap-2">
+          <Select defaultValue={activePayment} onValueChange={(v) => updateParam("payment", v)}>
+            <SelectTrigger size="sm" className="w-full">
+              <SelectValue placeholder="Payment" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All payment methods</SelectItem>
+              {PAYMENT_METHODS.map((m) => (
+                <SelectItem key={m} value={m}>
+                  {m}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-        <Select defaultValue={searchParams.get("sort") ?? "newest"} onValueChange={(v) => updateParam("sort", v)}>
-          <SelectTrigger size="sm" className="w-auto min-w-32 rounded-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {SORT_OPTIONS.map((s) => (
-              <SelectItem key={s.value} value={s.value}>
-                {s.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+          <Select defaultValue={activeSort} onValueChange={(v) => updateParam("sort", v)}>
+            <SelectTrigger size="sm" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {SORT_OPTIONS.map((s) => (
+                <SelectItem key={s.value} value={s.value}>
+                  {s.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-        {hasActiveFilters && (
-          <Button variant="ghost" size="sm" className="rounded-full" onClick={() => router.push(pathname)}>
-            <X className="mr-1 size-3.5" /> Clear
+        {activeCount > 0 && (
+          <Button variant="ghost" size="sm" onClick={clearAll}>
+            <X className="mr-1 size-3.5" /> Clear filters
           </Button>
         )}
-      </div>
-    </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -150,17 +156,12 @@ function FilterPill({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium whitespace-nowrap transition-all active:scale-[0.97]",
-        active
-          ? "border-border bg-[image:var(--btn-solid)] text-white shadow-[0_8px_20px_-12px_oklch(0.5_0.19_255/0.8)]"
-          : "border-border bg-card text-muted-foreground hover:bg-muted"
+        "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors",
+        active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground hover:text-foreground"
       )}
     >
       {color && (
-        <span
-          className="size-2 rounded-full"
-          style={{ backgroundColor: active ? "currentColor" : color }}
-        />
+        <span className="size-2 rounded-full" style={{ backgroundColor: active ? "currentColor" : color }} />
       )}
       {label}
     </button>

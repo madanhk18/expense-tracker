@@ -62,7 +62,6 @@ Open [http://localhost:3000](http://localhost:3000). Register an account (check 
 app/
   (auth)/        Login, register, forgot/reset password
   (app)/         Protected routes: dashboard, expenses, income, analytics, budgets, recurring, settings
-  api/           Export (CSV/JSON) and import routes
   auth/callback/ Exchanges Supabase auth codes for a session
 components/      UI components, grouped by feature
 lib/
@@ -101,8 +100,6 @@ Before considering a change complete, verify:
 - [ ] Spending more than you earned shows a negative rate in the destructive colour
 - [ ] Income categories (Salary, Freelance…) never appear in the expense form's category picker, and vice versa
 - [ ] A second test account cannot see the first account's income (RLS)
-- [ ] CSV/JSON export contains only the logged-in user's data
-- [ ] CSV import previews rows and rejects malformed ones without inserting them
 - [ ] Works on a real mobile viewport — bottom nav, FAB, no horizontal scroll
 - [ ] Dark mode, light mode, and system preference all render correctly
 - [ ] No secrets appear in browser devtools / client bundle

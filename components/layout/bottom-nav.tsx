@@ -10,8 +10,8 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 bg-foreground pb-[env(safe-area-inset-bottom)] text-background md:hidden">
-      <div className="mx-auto flex max-w-md items-center justify-around">
+    <nav className="fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 px-4 md:hidden">
+      <div className="mx-auto flex max-w-md items-center justify-around rounded-full bg-foreground px-2 text-background shadow-[0_10px_30px_-10px_oklch(0.2_0.01_260/0.55)]">
         {MOBILE_NAV_ITEMS.map((item) => {
           const active = pathname.startsWith(item.href);
           return (
