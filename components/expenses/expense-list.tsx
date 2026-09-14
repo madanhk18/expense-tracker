@@ -5,10 +5,18 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { Receipt } from "lucide-react";
 import type { Category, ExpenseWithCategory } from "@/types/domain";
 
-export function ExpenseList({ expenses, categories }: { expenses: ExpenseWithCategory[]; categories: Category[] }) {
+/** Expenses grouped by day: a dated header with the day's total, then one
+ *  card holding that day's rows, divided by hairlines. */
+export function ExpenseList({
+  expenses,
+  categories,
+}: {
+  expenses: ExpenseWithCategory[];
+  categories: Category[];
+}) {
   if (expenses.length === 0) {
     return (
-      <EmptyState icon={Receipt} title="No expenses found" description="Try adjusting your filters or search term." />
+      <EmptyState icon={Receipt} title="No expenses found" description="Nothing here for this month yet." />
     );
   }
 
@@ -29,7 +37,7 @@ export function ExpenseList({ expenses, categories }: { expenses: ExpenseWithCat
               -{formatINR(items.reduce((sum, e) => sum + e.amount_paise, 0))}
             </p>
           </div>
-          <div className="space-y-2">
+          <div className="surface divide-y divide-border overflow-hidden rounded-xl">
             {items.map((expense) => (
               <ExpenseRow key={expense.id} expense={expense} categories={categories} />
             ))}

@@ -52,7 +52,7 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
 
   return (
     <>
-      <div className="surface surface-hover flex items-center justify-between gap-2 rounded-xl p-3">
+      <div className="surface-hover flex items-center justify-between gap-2 p-3">
         <button
           className="relative flex min-w-0 flex-1 items-center gap-3 text-left"
           onClick={() => setDetailOpen(true)}

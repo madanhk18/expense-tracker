@@ -5,6 +5,7 @@ import { formatINR } from "@/lib/money";
 import { formatDate, formatTime } from "@/lib/dates";
 import { Button } from "@/components/ui/button";
 import { CategoryIcon } from "@/components/shared/category-icon";
+import { categoryStyle } from "@/lib/category-style";
 import type { ExpenseWithCategory } from "@/types/domain";
 
 function Detail({ label, value }: { label: string; value: string }) {
@@ -34,9 +35,15 @@ export function ExpenseDetail({
 }) {
   const at = new Date(expense.expense_at);
 
+  const { color } = categoryStyle(expense.category?.name, expense.category?.icon);
+
   return (
     <div className="space-y-5">
-      <div className="flex flex-col items-center gap-3 pt-1 text-center">
+      {/* A band in the category's colour, so the sheet announces what it is. */}
+      <div
+        className="-mx-5 -mt-5 flex flex-col items-center gap-3 px-5 py-7 text-center"
+        style={{ backgroundColor: `color-mix(in oklch, ${color} 12%, var(--card))` }}
+      >
         <CategoryIcon
           name={expense.category?.name}
           icon={expense.category?.icon}
@@ -47,15 +54,15 @@ export function ExpenseDetail({
           <p className="text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
             {expense.category?.name ?? "Uncategorised"}
           </p>
-          <p className="mt-0.5 text-xl font-bold tracking-tight">{expense.description}</p>
-          <p className="mt-2 text-4xl font-bold tracking-tight tabular-nums">
+          <p className="mt-1 text-xl font-bold tracking-tight">{expense.description}</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{formatDate(at, "d MMM yyyy")}</p>
+          <p className="mt-3 text-4xl font-bold tracking-tight tabular-nums">
             {formatINR(expense.amount_paise)}
           </p>
         </div>
       </div>
 
-      <div className="divide-y divide-border rounded-xl border border-border px-3.5">
-        <Detail label="Date" value={formatDate(at, "d MMM yyyy")} />
+      <div className="divide-y divide-border rounded-xl bg-muted px-3.5">
         <Detail label="Time" value={formatTime(at)} />
         <Detail label="Payment" value={expense.payment_method} />
         {expense.merchant && <Detail label="Merchant" value={expense.merchant} />}

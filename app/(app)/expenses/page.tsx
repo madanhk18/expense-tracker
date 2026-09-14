@@ -4,12 +4,17 @@ import { getExpenseCategories } from "@/lib/queries/categories";
 import { todayRange, thisWeekRange, monthRange, previousMonthRange, monthLabel } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
-import { MonthPills } from "@/components/expenses/month-pills";
+import { MonthSwitcher } from "@/components/expenses/month-switcher";
+import { ExpensesSearch } from "@/components/expenses/expenses-search";
+import { ViewToggle } from "@/components/expenses/view-toggle";
+import { CategoryPieChart } from "@/components/analytics/category-pie-chart";
+import { getAnalytics } from "@/lib/queries/analytics";
+import { Panel } from "@/components/shared/panel";
+import { CardContent } from "@/components/ui/card";
 import { ExpenseList } from "@/components/expenses/expense-list";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { Button } from "@/components/ui/button";
 import type { ExpenseFilters as ExpenseFiltersInput } from "@/lib/queries/expenses";
-import { PageHeader } from "@/components/shared/page-header";
 
 function resolveMonth(monthParam: string | undefined) {
   const ref = monthParam ? parseISO(`${monthParam}-01`) : new Date();
@@ -59,32 +64,52 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
     pageSize: 50,
   };
 
-  const [{ expenses, total }, categories] = await Promise.all([listExpenses(filters), getExpenseCategories()]);
+  const view = params.view === "insights" ? "insights" : "list";
+  const [{ expenses, total }, categories, analytics] = await Promise.all([
+    listExpenses(filters),
+    getExpenseCategories(),
+    getAnalytics(range.start, range.end),
+  ]);
   const totalPages = Math.max(1, Math.ceil(total / 50));
   const shownPaise = expenses.reduce((sum, e) => sum + e.amount_paise, 0);
 
   return (
     <div className="mx-auto max-w-4xl space-y-4">
-      <PageHeader
-        title="Expenses"
-        description={`${total} ${total === 1 ? "expense" : "expenses"} in ${monthLabel(monthRef)}`}
-        actions={
-          <>
-            <ExpenseFilters categories={categories} />
-            <div className="hidden md:block">
-              <AddExpenseDialog categories={categories} />
-            </div>
-          </>
-        }
-      />
-
-      {/* Total first, then the month strip, then the list. */}
-      <div className="space-y-4 pt-2 pb-1 text-center">
-        <p className="text-4xl font-bold tracking-tight tabular-nums">{formatINR(shownPaise)}</p>
-        <MonthPills monthRef={monthRef} />
+      {/* Search · month · filter, then the month's total, then the view. */}
+      <div className="flex items-center justify-between gap-2">
+        <ExpensesSearch />
+        <MonthSwitcher monthRef={monthRef} />
+        <div className="flex items-center gap-2">
+          <ExpenseFilters categories={categories} />
+          <div className="hidden md:block">
+            <AddExpenseDialog categories={categories} />
+          </div>
+        </div>
       </div>
 
-      <ExpenseList expenses={expenses} categories={categories} />
+      <div className="space-y-5 pt-2 text-center">
+        <div>
+          <p className="text-sm text-muted-foreground">Total expenses</p>
+          <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">{formatINR(shownPaise)}</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {total} {total === 1 ? "expense" : "expenses"} in {monthLabel(monthRef)}
+          </p>
+        </div>
+        <ViewToggle view={view} />
+      </div>
+
+      {view === "list" ? (
+        <ExpenseList expenses={expenses} categories={categories} />
+      ) : (
+        <Panel>
+          <CardContent>
+            <CategoryPieChart
+              data={analytics.categoryBreakdown}
+              transactionCount={analytics.transactionCount}
+            />
+          </CardContent>
+        </Panel>
+      )}
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-2">
