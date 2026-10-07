@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { NAV_ITEMS } from "./nav-items";
+import { NAV_ITEMS, isNavItemActive } from "./nav-items";
 import { LogoutButton } from "./logout-button";
 
 export function Sidebar() {
@@ -22,7 +22,7 @@ export function Sidebar() {
 
         <nav className="mt-2 flex-1 space-y-1">
           {NAV_ITEMS.map((item) => {
-            const active = pathname.startsWith(item.href);
+            const active = isNavItemActive(item, pathname);
             return (
               <Link
                 key={item.href}
@@ -30,7 +30,7 @@ export function Sidebar() {
                 className={cn(
                   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   active
-                    ? "bg-[image:var(--btn-solid)] text-white shadow-[0_8px_20px_-12px_oklch(0.5_0.19_255/0.8)]"
+                    ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >

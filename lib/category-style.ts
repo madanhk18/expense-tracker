@@ -1,5 +1,12 @@
 import {
   Briefcase,
+  ChartCandlestick,
+  ChartPie,
+  Coins,
+  PiggyBank,
+  ShieldCheck,
+  TrendingUp,
+  Umbrella,
   Bus,
   Clapperboard,
   CreditCard,
@@ -147,4 +154,23 @@ export function paymentStyle(method: string | null | undefined): CategoryStyle {
   return (
     PAYMENT_STYLES[(method ?? "").trim().toLowerCase()] ?? PAYMENT_STYLES.other
   );
+}
+
+/* -------------------------------------------------------------------------- */
+
+const INVESTMENT_STYLES: Record<string, CategoryStyle> = {
+  sip: { color: "var(--cat-groceries)", icon: TrendingUp },
+  "mutual fund": { color: "var(--cat-healthcare)", icon: ChartPie },
+  stocks: { color: "var(--cat-bills)", icon: ChartCandlestick },
+  fd: { color: "var(--cat-education)", icon: Landmark },
+  rd: { color: "var(--cat-travel)", icon: PiggyBank },
+  gold: { color: "var(--cat-rent)", icon: Coins },
+  "ppf / epf": { color: "var(--cat-transportation)", icon: ShieldCheck },
+  nps: { color: "var(--cat-entertainment)", icon: Umbrella },
+  other: { color: "var(--cat-other)", icon: Wallet },
+};
+
+/** Colour + icon for an investment type (SIP, FD, Gold…). */
+export function investmentStyle(type: string | null | undefined): CategoryStyle {
+  return INVESTMENT_STYLES[(type ?? "").trim().toLowerCase()] ?? INVESTMENT_STYLES.other;
 }

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Search, Wallet } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "./theme-toggle";
+import { PrivacyButton } from "./privacy-toggle";
 import { LogoutButton } from "./logout-button";
 
 export function Topbar() {
@@ -34,6 +35,7 @@ export function Topbar() {
           />
         </form>
         <div className="ml-auto flex items-center gap-1">
+          <PrivacyButton />
           <ThemeToggle />
           <LogoutButton iconOnly />
         </div>

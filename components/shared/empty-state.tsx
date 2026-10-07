@@ -17,8 +17,8 @@ export function EmptyState({ icon: Icon, title, description, action, className }
         className
       )}
     >
-      <span className="grid size-14 place-items-center rounded-xl border border-border bg-[image:var(--btn-solid)] opacity-90">
-        <Icon className="size-6 text-white" />
+      <span className="grid size-14 place-items-center rounded-xl border border-border bg-primary opacity-90">
+        <Icon className="size-6 text-primary-foreground" />
       </span>
       <div className="space-y-1">
         <p className="font-medium">{title}</p>

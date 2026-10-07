@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { parsePreferences, preferencesSchema, type Preferences } from "@/lib/preferences";
 
 export async function updateProfileAction(input: { displayName: string; dateFormat: string }) {
   const supabase = await createClient();
@@ -18,6 +19,22 @@ export async function updateProfileAction(input: { displayName: string; dateForm
 
   if (error) throw error;
   revalidatePath("/settings");
+}
+
+/** Merge a change into the user's saved preferences. */
+export async function updatePreferencesAction(change: Partial<Preferences>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Not authenticated");
+
+  const next = preferencesSchema.parse({ ...parsePreferences(user.user_metadata), ...change });
+  const { error } = await supabase.auth.updateUser({ data: { preferences: next } });
+  if (error) throw error;
+
+  // Preferences shape the whole app (bill window, form defaults).
+  revalidatePath("/", "layout");
 }
 
 /**

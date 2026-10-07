@@ -19,6 +19,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CategoryIcon } from "@/components/shared/category-icon";
 import type { Category, ExpenseWithCategory } from "@/types/domain";
+import { usePreferences } from "@/components/preferences-provider";
 
 interface ExpenseFormProps {
   categories: Category[];
@@ -28,6 +29,7 @@ interface ExpenseFormProps {
 
 export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps) {
   const router = useRouter();
+  const { defaultPaymentMethod } = usePreferences();
   const [submitting, setSubmitting] = useState(false);
 
   const now = new Date();
@@ -47,7 +49,7 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
         description: "",
         categoryId: undefined,
         merchant: "",
-        paymentMethod: "UPI",
+        paymentMethod: defaultPaymentMethod,
         date: format(now, "yyyy-MM-dd"),
         time: format(now, "HH:mm"),
         notes: "",

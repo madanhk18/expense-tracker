@@ -55,3 +55,10 @@ export function rupeesToPaise(rupees: number): number {
 export function paiseToRupees(paise: number): number {
   return paise / 100;
 }
+
+/** Plain rupee string with two decimals and no symbol, e.g. for CSV export: 123456 -> "1234.56" */
+export function paiseToPlainRupees(paise: number): string {
+  const sign = paise < 0 ? "-" : "";
+  const abs = Math.abs(paise);
+  return `${sign}${Math.floor(abs / 100)}.${String(abs % 100).padStart(2, "0")}`;
+}

@@ -81,9 +81,7 @@ export function SavingsRateCard({ stats }: { stats: IncomeStats }) {
             className="h-full rounded-full transition-[width] duration-700 ease-out"
             style={{
               width: `${overspent ? 100 : Math.max(barPercent, 2)}%`,
-              backgroundImage: overspent
-                ? "linear-gradient(90deg, oklch(0.72 0.18 25), oklch(0.62 0.2 12))"
-                : "var(--btn-income)",
+              backgroundColor: overspent ? "var(--destructive)" : "var(--success)",
             }}
           />
         </div>

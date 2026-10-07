@@ -19,7 +19,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Plus } from "lucide-react";
 import type { Category } from "@/types/domain";
 
-export function RecurringForm({ categories }: { categories: Category[] }) {
+export function RecurringForm({ categories, trigger }: { categories: Category[]; trigger?: React.ReactNode }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -82,10 +82,12 @@ export function RecurringForm({ categories }: { categories: Category[] }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-1.5 size-4" />
-          Add Recurring
-        </Button>
+        {trigger ?? (
+          <Button>
+            <Plus className="mr-1.5 size-4" />
+            Add Recurring
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="max-h-[90svh] overflow-y-auto sm:max-w-md">
         <DialogHeader>
