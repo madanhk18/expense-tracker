@@ -164,8 +164,8 @@ export default async function DashboardPage() {
 
       <WhatsNew />
 
-      <div className="grid gap-5 lg:grid-cols-3">
-        <div className="space-y-5 lg:col-span-2">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="min-w-0 space-y-5 lg:col-span-2">
           <SpendSummary
             monthPaise={stats.monthPaise}
             percentChange={percentChange}
@@ -210,7 +210,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-5">
           <SavingsRateCard stats={incomeStats} />
 
           {topCategories.length > 0 && (

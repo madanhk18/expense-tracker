@@ -57,7 +57,7 @@ export default async function IncomePage({ searchParams }: PageProps) {
 
       {flow && <MoneyFlowStrip flow={flow} />}
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="space-y-5 lg:order-1">
           <div className="md:hidden">
             <AddIncomeDialog

@@ -61,7 +61,7 @@ export default async function SavingsPage() {
 
       {flow && <MoneyFlowStrip flow={flow} monthRef={now} />}
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-2 md:hidden">
             <AddInvestmentDialog
