@@ -30,8 +30,8 @@ cp .env.example .env.local
 4. Go to **Authentication → URL Configuration**:
    - Set **Site URL** to `http://localhost:3000` for now (update to your production URL after deploying).
    - Add `http://localhost:3000/**` to **Redirect URLs**.
-5. Run the schema migrations — open **SQL Editor** in the Supabase dashboard and run `supabase/migrations/0001_init.sql`, then `supabase/migrations/0002_income.sql` (income tracking + savings rate), in that order. (Or, if you have the Supabase CLI: `npx supabase login`, `npx supabase link --project-ref <ref>`, `npx supabase db push`.)
-6. In **Table Editor**, confirm all tables exist and RLS shows as **Enabled** on `expenses`, `budgets`, `recurring_expenses`, `categories`, `profiles`.
+5. Run the schema migrations — open **SQL Editor** in the Supabase dashboard and run `supabase/migrations/0001_init.sql`, then `supabase/migrations/0002_income.sql` (income tracking + savings rate), then `supabase/migrations/0003_money_flows.sql` (savings/SIPs + lending), in that order. (Or, if you have the Supabase CLI: `npx supabase login`, `npx supabase link --project-ref <ref>`, `npx supabase db push`.)
+6. In **Table Editor**, confirm all tables exist and RLS shows as **Enabled** on `expenses`, `budgets`, `recurring_expenses`, `categories`, `profiles`, `income`, `investments`, `recurring_investments`, `lending_records`, `lending_settlements`.
 7. (Optional, recommended) Regenerate the TypeScript types to match your live schema exactly:
    ```bash
    npx supabase gen types typescript --project-id <project-ref> > types/database.types.ts
@@ -61,7 +61,7 @@ Open [http://localhost:3000](http://localhost:3000). Register an account (check 
 ```
 app/
   (auth)/        Login, register, forgot/reset password
-  (app)/         Protected routes: dashboard, expenses, income, analytics, budgets, recurring, settings
+  (app)/         Protected routes: dashboard, expenses, income, savings, lending, analytics, budgets, recurring, more, settings
   auth/callback/ Exchanges Supabase auth codes for a session
 components/      UI components, grouped by feature
 lib/
@@ -72,6 +72,7 @@ lib/
   money.ts       Paise <-> rupee conversion helpers (the only place this happens)
 supabase/migrations/0001_init.sql     Full schema, indexes, RLS policies, RPC functions
 supabase/migrations/0002_income.sql   Income table + categories.type + get_income_stats RPC
+supabase/migrations/0003_money_flows.sql  Investments, SIP rules, lending + settlements, get_money_flow RPC
 types/           Database + domain TypeScript types
 ```
 
@@ -100,6 +101,16 @@ Before considering a change complete, verify:
 - [ ] Spending more than you earned shows a negative rate in the destructive colour
 - [ ] Income categories (Salary, Freelance…) never appear in the expense form's category picker, and vice versa
 - [ ] A second test account cannot see the first account's income (RLS)
+- [ ] Add / edit / delete an investment on /savings; it never changes expense totals, budgets or the savings rate
+- [ ] A SIP starting today appears in the history immediately; reloading repeatedly never duplicates it
+- [ ] Pausing a SIP stops new entries; resuming continues from its next date
+- [ ] Lending: "I gave ₹500 to Ravi" shows Ravi as "Owes you ₹500"; a ₹200 repayment leaves ₹300 and 40% back
+- [ ] A repayment larger than what's left is refused with a clear message
+- [ ] Deleting a repayment puts the balance back; same name in different case stays one person
+- [ ] Money strip: Left = earned + borrowed + repaid to you − spent − invested − lent − repaid by you
+- [ ] Before 0003 is run, /savings and /lending show the setup steps and every other page still loads
+- [ ] Mobile bottom bar: Home · Expenses · Money · Analytics · More; More lists Bills, Budgets, Savings, Lending, Settings
+- [ ] A second test account cannot see the first account's investments, SIPs or lending (RLS)
 - [ ] Works on a real mobile viewport — bottom nav, FAB, no horizontal scroll
 - [ ] Dark mode, light mode, and system preference all render correctly
 - [ ] No secrets appear in browser devtools / client bundle

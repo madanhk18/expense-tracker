@@ -6,7 +6,6 @@ import {
   History,
   Layers,
   Receipt,
-  Target,
   TrendingUp,
 } from "lucide-react";
 import { getDashboardStats, momChangePercent } from "@/lib/queries/dashboard";
@@ -14,16 +13,24 @@ import { getRecentExpenses } from "@/lib/queries/expenses";
 import { getExpenseCategories } from "@/lib/queries/categories";
 import { getGreetingName } from "@/lib/queries/profile";
 import { getIncomeStats } from "@/lib/queries/income";
-import { getOverallBudget } from "@/lib/queries/budgets";
 import { getAnalytics } from "@/lib/queries/analytics";
 import { listUpcomingBills } from "@/lib/queries/recurring";
+import { getPreferences } from "@/lib/queries/preferences";
+import { getMoneyFlow } from "@/lib/queries/money-flow";
+import { listInvestments, listRecurringInvestments } from "@/lib/queries/investments";
+import { listLendingRecords, groupByPerson } from "@/lib/queries/lending";
+import { buildHighlights } from "@/lib/highlights";
+import { daysUntil } from "@/lib/dates";
+import { Highlights } from "@/components/dashboard/highlights";
+import { FeatureTiles, TILE_ICONS } from "@/components/dashboard/feature-tiles";
+import { WhatsNew } from "@/components/dashboard/whats-new";
+import { MoneyFlowStrip } from "@/components/money/money-flow-strip";
 import { monthRange, formatTime } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { SpendSummary } from "@/components/dashboard/spend-summary";
 import { SavingsRateCard } from "@/components/dashboard/savings-rate-card";
 import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banner";
-import { BudgetProgress } from "@/components/budgets/budget-progress";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Panel } from "@/components/shared/panel";
@@ -42,27 +49,99 @@ function greeting() {
 
 export default async function DashboardPage() {
   const now = new Date();
+  const preferences = await getPreferences();
   const { start, end } = monthRange(now);
 
   const [
     stats,
     recentExpenses,
     categories,
-    overallBudget,
     monthAnalytics,
     upcomingBills,
     name,
     incomeStats,
+    flow,
+    investments,
+    sips,
+    lendingRecords,
   ] = await Promise.all([
     getDashboardStats(now),
     getRecentExpenses(6),
     getExpenseCategories(),
-    getOverallBudget(now),
     getAnalytics(start, end),
-    listUpcomingBills(),
+    listUpcomingBills(preferences.billReminderDays),
     getGreetingName(),
     getIncomeStats(),
+    getMoneyFlow(now),
+    // Savings and lending need 0003_money_flows.sql; without it they drop out.
+    listInvestments(100).catch(() => null),
+    listRecurringInvestments().catch(() => []),
+    listLendingRecords().catch(() => null),
   ]);
+
+  const people = lendingRecords ? groupByPerson(lendingRecords) : null;
+  const monthInvestments = (investments ?? []).filter((i) => {
+    const at = new Date(i.invested_at);
+    return at >= start && at <= end;
+  });
+  const nextBill = upcomingBills[0]
+    ? {
+        description: upcomingBills[0].description,
+        amountPaise: upcomingBills[0].amountPaise,
+        daysUntil: daysUntil(new Date(`${upcomingBills[0].nextDueDate}T00:00:00`)),
+      }
+    : null;
+
+  const highlights = buildHighlights({
+    monthSpentPaise: stats.monthPaise,
+    previousMonthSpentPaise: stats.previousMonthPaise,
+    categoryBreakdown: monthAnalytics.categoryBreakdown,
+    flow,
+    monthInvestments: monthInvestments.map((i) => ({ name: i.name, paise: i.amount_paise })),
+    hasSips: sips.some((s) => s.is_active),
+    people,
+    billsDueCount: upcomingBills.length,
+    nextBill,
+    savingsRatePercent: incomeStats.savingsRatePercent,
+  });
+
+  const owedToYou = (people ?? []).reduce((sum, p) => sum + Math.max(0, p.netPaise), 0);
+  const youOwe = (people ?? []).reduce((sum, p) => sum + Math.max(0, -p.netPaise), 0);
+  const activeSips = sips.filter((s) => s.is_active).length;
+  const tiles = [
+    {
+      href: "/income",
+      label: "Earned",
+      value: formatINR(incomeStats.monthIncomePaise, { decimals: false }),
+      hint: incomeStats.monthIncomePaise > 0 ? "this month" : "Add your salary",
+      icon: TILE_ICONS.income,
+      color: "var(--success)",
+    },
+    {
+      href: "/savings",
+      label: "Invested",
+      value: formatINR(flow?.investedPaise ?? 0, { decimals: false }),
+      hint: activeSips > 0 ? `${activeSips} SIP${activeSips === 1 ? "" : "s"} running` : "Set up a SIP",
+      icon: TILE_ICONS.savings,
+      color: "var(--cat-groceries)",
+    },
+    {
+      href: "/lending",
+      label: owedToYou >= youOwe ? "To get back" : "You owe",
+      value: formatINR(owedToYou >= youOwe ? owedToYou : youOwe, { decimals: false }),
+      hint: people && people.length > 0 ? `${people.filter((p) => p.netPaise !== 0).length} people open` : "Track money lent",
+      icon: TILE_ICONS.lending,
+      color: "var(--cat-entertainment)",
+    },
+    {
+      href: "/recurring",
+      label: "Bills due",
+      value: String(upcomingBills.length),
+      hint: nextBill ? `Next: ${nextBill.description}` : `None in ${preferences.billReminderDays} days`,
+      icon: TILE_ICONS.bills,
+      color: "var(--warning)",
+    },
+  ];
 
   const percentChange = momChangePercent(
     stats.monthPaise,
@@ -75,13 +154,15 @@ export default async function DashboardPage() {
     <div className="mx-auto max-w-6xl space-y-5">
       <PageHeader
         title="Dashboard"
-        description="Your spending this month, at a glance."
+        description="Your money this month, at a glance."
         actions={
           <div className="hidden md:block">
             <AddExpenseDialog categories={categories} />
           </div>
         }
       />
+
+      <WhatsNew />
 
       <div className="grid gap-5 lg:grid-cols-3">
         <div className="space-y-5 lg:col-span-2">
@@ -92,6 +173,12 @@ export default async function DashboardPage() {
             name={name}
             monthRef={now}
           />
+
+          <Highlights items={highlights} />
+
+          <FeatureTiles tiles={tiles} />
+
+          {flow && <MoneyFlowStrip flow={flow} monthRef={now} />}
 
           <BillRemindersBanner bills={upcomingBills} />
 
@@ -121,28 +208,6 @@ export default async function DashboardPage() {
               icon={Flame}
             />
           </div>
-
-          {overallBudget && (
-            <Panel>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2.5 text-base">
-                  <IconChip
-                    icon={Target}
-                    color="var(--cat-healthcare)"
-                    size="sm"
-                  />
-                  Monthly Budget
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <BudgetProgress
-                  label=""
-                  spentPaise={stats.monthPaise}
-                  budgetPaise={overallBudget.amount_paise}
-                />
-              </CardContent>
-            </Panel>
-          )}
         </div>
 
         <div className="space-y-5">

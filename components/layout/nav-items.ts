@@ -1,20 +1,53 @@
-import { LayoutDashboard, Receipt, PieChart, Wallet, Repeat, Settings, TrendingUp } from "lucide-react";
+import {
+  CalendarClock,
+  Ellipsis,
+  HandCoins,
+  LayoutDashboard,
+  PieChart,
+  Receipt,
+  Settings,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
-export const NAV_ITEMS = [
+export interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  /** Extra path prefixes that should light this item up. */
+  match?: readonly string[];
+}
+
+/** Income, Savings and Lending live together under one "Money" entry. */
+const MONEY: NavItem = {
+  href: "/income",
+  label: "Money",
+  icon: HandCoins,
+  match: ["/income", "/savings", "/lending"],
+};
+
+export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/expenses", label: "Expenses", icon: Receipt },
-  { href: "/income", label: "Income", icon: TrendingUp },
+  MONEY,
   { href: "/analytics", label: "Analytics", icon: PieChart },
-  { href: "/budgets", label: "Budgets", icon: Wallet },
-  { href: "/recurring", label: "Recurring", icon: Repeat },
+  { href: "/recurring", label: "Bills", icon: CalendarClock },
   { href: "/settings", label: "Settings", icon: Settings },
-] as const;
+];
 
-/** Subset shown in the mobile bottom bar. Budgets stays reachable from Settings. */
-export const MOBILE_NAV_ITEMS = [
-  NAV_ITEMS[0], // Dashboard
-  NAV_ITEMS[1], // Expenses
-  NAV_ITEMS[2], // Income
-  NAV_ITEMS[3], // Analytics
-  NAV_ITEMS[6], // Settings
-] as const;
+/** Mobile bottom bar. Everything else is one tap away under "More". */
+export const MOBILE_NAV_ITEMS: readonly NavItem[] = [
+  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { href: "/expenses", label: "Expenses", icon: Receipt },
+  MONEY,
+  { href: "/analytics", label: "Analytics", icon: PieChart },
+  {
+    href: "/more",
+    label: "More",
+    icon: Ellipsis,
+    match: ["/more", "/recurring", "/settings", "/categories"],
+  },
+];
+
+export function isNavItemActive(item: NavItem, pathname: string): boolean {
+  return (item.match ?? [item.href]).some((prefix) => pathname.startsWith(prefix));
+}

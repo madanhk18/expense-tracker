@@ -3,17 +3,27 @@ import { CardContent } from "@/components/ui/card";
 import { Panel } from "@/components/shared/panel";
 import { IconChip } from "@/components/shared/icon-chip";
 
-const STEPS = [
-  "Open your project in Supabase, then SQL Editor → New query.",
-  "Paste the whole contents of supabase/migrations/0002_income.sql and run it.",
-  "Come back and reload this page.",
-];
+interface SetupNoticeProps {
+  /** Migration file the user has to run, relative to the repo root. */
+  migration?: string;
+  /** What the migration switches on, in one sentence. */
+  blurb?: string;
+}
 
 /**
- * Shown when the income table isn't there yet — the 0002 migration has to be
- * run by hand in Supabase, so this explains exactly how rather than failing.
+ * Shown when a feature's table isn't there yet — migrations have to be run by
+ * hand in Supabase, so this explains exactly how rather than failing.
  */
-export function IncomeSetupNotice() {
+export function IncomeSetupNotice({
+  migration = "supabase/migrations/0002_income.sql",
+  blurb = "Income tracking stores entries in a new table. Run its migration once and this page turns on.",
+}: SetupNoticeProps = {}) {
+  const steps = [
+    "Open your project in Supabase, then SQL Editor → New query.",
+    `Paste the whole contents of ${migration} and run it.`,
+    "Come back and reload this page.",
+  ];
+
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-lg items-center">
       <Panel className="w-full">
@@ -24,14 +34,11 @@ export function IncomeSetupNotice() {
 
           <div className="space-y-1.5">
             <h2 className="text-xl font-bold tracking-tight">One setup step left</h2>
-            <p className="text-sm text-muted-foreground">
-              Income tracking stores entries in a new table. Run its migration once and this page
-              turns on.
-            </p>
+            <p className="text-sm text-muted-foreground">{blurb}</p>
           </div>
 
           <ol className="space-y-2.5 text-left">
-            {STEPS.map((step, i) => (
+            {steps.map((step, i) => (
               <li key={step} className="flex gap-3 text-sm">
                 <span className="btn-solid grid size-6 shrink-0 place-items-center rounded-full text-xs font-semibold">
                   {i + 1}
@@ -42,7 +49,7 @@ export function IncomeSetupNotice() {
           </ol>
 
           <p className="rounded-xl border border-border bg-card px-3 py-2 font-mono text-xs break-all">
-            supabase/migrations/0002_income.sql
+            {migration}
           </p>
         </CardContent>
       </Panel>

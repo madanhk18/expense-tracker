@@ -13,6 +13,23 @@ export type PaymentMethod = (typeof PAYMENT_METHODS)[number];
 export const RECURRING_FREQUENCIES = ["weekly", "monthly", "yearly"] as const;
 export type RecurringFrequency = (typeof RECURRING_FREQUENCIES)[number];
 
+/** Kept in sync with the investment_type check in 0003_money_flows.sql. */
+export const INVESTMENT_TYPES = [
+  "SIP",
+  "Mutual Fund",
+  "Stocks",
+  "FD",
+  "RD",
+  "Gold",
+  "PPF / EPF",
+  "NPS",
+  "Other",
+] as const;
+export type InvestmentType = (typeof INVESTMENT_TYPES)[number];
+
+export const LENDING_DIRECTIONS = ["lent", "borrowed"] as const;
+export type LendingDirection = (typeof LENDING_DIRECTIONS)[number];
+
 /** Default system categories, seeded once via migration. Kept in sync with 0001_init.sql. */
 export const DEFAULT_CATEGORIES = [
   { name: "Food", icon: "Utensils" },
@@ -29,11 +46,3 @@ export const DEFAULT_CATEGORIES = [
   { name: "Personal", icon: "User" },
   { name: "Other", icon: "MoreHorizontal" },
 ] as const;
-
-/** Budget usage thresholds — used to color-code progress bars. */
-export const BUDGET_THRESHOLDS = {
-  normal: 70, // < 70% used
-  warning: 90, // 70-90% used
-  high: 100, // 90-100% used
-  // >= 100% => exceeded
-} as const;

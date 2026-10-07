@@ -5,9 +5,13 @@ import type { Database } from "@/types/database.types";
 const PROTECTED_PREFIXES = [
   "/dashboard",
   "/expenses",
+  "/income",
+  "/savings",
+  "/lending",
   "/analytics",
-  "/budgets",
   "/recurring",
+  "/categories",
+  "/more",
   "/settings",
 ];
 

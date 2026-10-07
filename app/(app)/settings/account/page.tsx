@@ -35,7 +35,7 @@ export default function AccountSettingsPage() {
         </CardHeader>
         <CardContent>
           <p className="mb-4 text-sm text-muted-foreground">
-            Deleting your account permanently removes all your expenses, budgets, and recurring rules. This cannot be undone.
+            Deleting your account permanently removes all your expenses, income, savings, lending and recurring rules. This cannot be undone.
           </p>
           <DeleteAccountDialog
             onConfirm={async () => {

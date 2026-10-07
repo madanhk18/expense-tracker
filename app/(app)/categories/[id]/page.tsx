@@ -5,7 +5,6 @@ import { ChevronLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { listExpenses } from "@/lib/queries/expenses";
 import { getAnalytics } from "@/lib/queries/analytics";
-import { getCategoryBudgets } from "@/lib/queries/budgets";
 import { getExpenseCategories } from "@/lib/queries/categories";
 import { monthRange, monthLabel } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
@@ -21,7 +20,7 @@ interface PageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-/** One category, one month: its share of the month, its budget, its expenses. */
+/** One category, one month: its share of the month and its expenses. */
 export default async function CategoryMonthPage({ params, searchParams }: PageProps) {
   const { id } = await params;
   const sp = await searchParams;
@@ -34,7 +33,7 @@ export default async function CategoryMonthPage({ params, searchParams }: PagePr
   const { data: category } = await supabase.from("categories").select("*").eq("id", id).maybeSingle();
   if (!category) notFound();
 
-  const [{ expenses }, analytics, budgets, categories] = await Promise.all([
+  const [{ expenses }, analytics, categories] = await Promise.all([
     listExpenses({
       categoryId: id,
       dateFrom: start.toISOString(),
@@ -42,12 +41,10 @@ export default async function CategoryMonthPage({ params, searchParams }: PagePr
       pageSize: 100,
     }),
     getAnalytics(start, end),
-    getCategoryBudgets(monthRef),
     getExpenseCategories(),
   ]);
 
   const spentPaise = expenses.reduce((sum, e) => sum + e.amount_paise, 0);
-  const budget = budgets.find((b) => b.category_id === id);
   const share = analytics.totalPaise > 0 ? (spentPaise / analytics.totalPaise) * 100 : 0;
   const { color } = categoryStyle(category.name, category.icon);
 
@@ -90,12 +87,6 @@ export default async function CategoryMonthPage({ params, searchParams }: PagePr
                 Actual spent <strong className="text-foreground">{Math.round(share)}%</strong>
               </span>
               <span className="font-semibold tabular-nums">{formatINR(spentPaise)}</span>
-            </div>
-            <div className="flex items-baseline justify-between gap-3 text-sm">
-              <span className="text-muted-foreground">Allocated budget</span>
-              <span className="font-semibold tabular-nums">
-                {budget ? formatINR(budget.amount_paise) : "Not set"}
-              </span>
             </div>
           </div>
         </CardContent>

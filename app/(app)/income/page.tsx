@@ -10,6 +10,9 @@ import { Panel } from "@/components/shared/panel";
 import { IconChip } from "@/components/shared/icon-chip";
 import { SavingsRateCard } from "@/components/dashboard/savings-rate-card";
 import { IncomeSetupNotice } from "@/components/income/income-setup-notice";
+import { MoneyTabs } from "@/components/money/money-tabs";
+import { MoneyFlowStrip } from "@/components/money/money-flow-strip";
+import { getMoneyFlow } from "@/lib/queries/money-flow";
 import { CardContent } from "@/components/ui/card";
 
 interface PageProps {
@@ -22,18 +25,26 @@ export default async function IncomePage({ searchParams }: PageProps) {
 
   // Before 0002_income.sql has been run there is no income table yet, so the
   // page explains that instead of throwing.
-  const [listed, categories, stats] = await Promise.all([
+  const [listed, categories, stats, flow] = await Promise.all([
     listIncome({ page, pageSize: 50, sort: "newest" }).catch(() => null),
     getIncomeCategories().catch(() => []),
     getIncomeStats(),
+    getMoneyFlow(),
   ]);
 
-  if (!listed) return <IncomeSetupNotice />;
+  if (!listed)
+    return (
+      <div className="mx-auto max-w-5xl space-y-5">
+        <MoneyTabs />
+        <IncomeSetupNotice />
+      </div>
+    );
 
   const { income, total } = listed;
 
   return (
     <div className="mx-auto max-w-5xl space-y-5">
+      <MoneyTabs />
       <PageHeader
         title="Income"
         description={`${total} ${total === 1 ? "entry" : "entries"} logged`}
@@ -43,6 +54,8 @@ export default async function IncomePage({ searchParams }: PageProps) {
           </div>
         }
       />
+
+      {flow && <MoneyFlowStrip flow={flow} />}
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="space-y-5 lg:order-1">

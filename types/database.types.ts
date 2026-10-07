@@ -1,5 +1,5 @@
 /**
- * Hand-authored to match supabase/migrations/0001_init.sql.
+ * Hand-authored to match supabase/migrations/0001–0003.
  * Once the Supabase project exists, regenerate the authoritative version with:
  *   npx supabase gen types typescript --project-id <project-ref> > types/database.types.ts
  *
@@ -22,6 +22,18 @@ export type PaymentMethod =
 export type RecurringFrequency = "weekly" | "monthly" | "yearly";
 export type CategoryType = "expense" | "income";
 export type Theme = "light" | "dark" | "system";
+export type InvestmentType =
+  | "SIP"
+  | "Mutual Fund"
+  | "Stocks"
+  | "FD"
+  | "RD"
+  | "Gold"
+  | "PPF / EPF"
+  | "NPS"
+  | "Other";
+export type LendingDirection = "lent" | "borrowed";
+export type LendingStatus = "open" | "partially_settled" | "settled";
 
 export interface Database {
   public: {
@@ -147,12 +159,120 @@ export interface Database {
         Update: Partial<Database["public"]["Tables"]["recurring_expenses"]["Row"]>;
         Relationships: [];
       };
+      recurring_investments: {
+        Row: {
+          id: string;
+          user_id: string;
+          amount_paise: number;
+          investment_type: InvestmentType;
+          name: string;
+          frequency: RecurringFrequency;
+          interval_count: number;
+          start_date: string;
+          next_due_date: string;
+          is_active: boolean;
+          last_generated_date: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["recurring_investments"]["Row"]> & {
+          user_id: string;
+          amount_paise: number;
+          investment_type: InvestmentType;
+          name: string;
+          frequency: RecurringFrequency;
+          start_date: string;
+          next_due_date: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["recurring_investments"]["Row"]>;
+        Relationships: [];
+      };
+      investments: {
+        Row: {
+          id: string;
+          user_id: string;
+          amount_paise: number;
+          investment_type: InvestmentType;
+          name: string;
+          invested_at: string;
+          invested_date: string;
+          notes: string | null;
+          recurring_investment_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["investments"]["Row"]> & {
+          user_id: string;
+          amount_paise: number;
+          investment_type: InvestmentType;
+          name: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["investments"]["Row"]>;
+        Relationships: [];
+      };
+      lending_records: {
+        Row: {
+          id: string;
+          user_id: string;
+          person_name: string;
+          direction: LendingDirection;
+          amount_paise: number;
+          description: string | null;
+          lent_at: string;
+          due_date: string | null;
+          status: LendingStatus;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["lending_records"]["Row"]> & {
+          user_id: string;
+          person_name: string;
+          direction: LendingDirection;
+          amount_paise: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["lending_records"]["Row"]>;
+        Relationships: [];
+      };
+      lending_settlements: {
+        Row: {
+          id: string;
+          user_id: string;
+          lending_record_id: string;
+          amount_paise: number;
+          settled_at: string;
+          note: string | null;
+          created_at: string;
+        };
+        Insert: Partial<Database["public"]["Tables"]["lending_settlements"]["Row"]> & {
+          user_id: string;
+          lending_record_id: string;
+          amount_paise: number;
+        };
+        Update: Partial<Database["public"]["Tables"]["lending_settlements"]["Row"]>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
       generate_due_recurring_expenses: {
         Args: Record<PropertyKey, never>;
         Returns: number;
+      };
+      generate_due_recurring_investments: {
+        Args: Record<PropertyKey, never>;
+        Returns: number;
+      };
+      get_money_flow: {
+        Args: { ref_date?: string };
+        Returns: {
+          earned_paise: number;
+          spent_paise: number;
+          invested_paise: number;
+          lent_paise: number;
+          borrowed_paise: number;
+          repaid_to_you_paise: number;
+          repaid_by_you_paise: number;
+        }[];
       };
       get_income_stats: {
         Args: { ref_date?: string };
