@@ -96,7 +96,7 @@ Before considering a change complete, verify:
 - [ ] No upcoming/overdue bills → the "Upcoming Bills" card doesn't render at all (not an empty card)
 - [ ] A second test account never sees the first account's recurring expenses in their banner (RLS via existing `recurring_select_own` policy)
 - [ ] Add / edit / delete an income entry; it appears on /income grouped by day
-- [ ] Savings rate on the dashboard equals (income − spending) ÷ income for the current month
+- [ ] The "You kept X%" line in the money-flow strip equals (income − spending) ÷ income for the current month
 - [ ] With no income logged this month, the savings-rate card invites you to add income instead of showing 0%
 - [ ] Spending more than you earned shows a negative rate in the destructive colour
 - [ ] Income categories (Salary, Freelance…) never appear in the expense form's category picker, and vice versa

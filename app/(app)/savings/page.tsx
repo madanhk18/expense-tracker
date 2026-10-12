@@ -1,10 +1,8 @@
 import { CalendarClock, PiggyBank, Plus, Repeat, TrendingUp } from "lucide-react";
 import { listInvestments, getInvestmentSummary, listRecurringInvestments } from "@/lib/queries/investments";
-import { getMoneyFlow } from "@/lib/queries/money-flow";
 import { formatINR } from "@/lib/money";
 import { monthLabel } from "@/lib/dates";
 import { MoneyTabs } from "@/components/money/money-tabs";
-import { MoneyFlowStrip } from "@/components/money/money-flow-strip";
 import { InvestmentList } from "@/components/savings/investment-list";
 import { SipList } from "@/components/savings/sip-list";
 import { SavingsMixChart } from "@/components/savings/savings-mix-chart";
@@ -20,11 +18,10 @@ export default async function SavingsPage() {
 
   // Before 0003_money_flows.sql has been run there are no tables yet, so the
   // page explains the setup step instead of throwing.
-  const [investments, summary, sips, flow] = await Promise.all([
+  const [investments, summary, sips] = await Promise.all([
     listInvestments().catch(() => null),
     getInvestmentSummary(now).catch(() => null),
     listRecurringInvestments().catch(() => []),
-    getMoneyFlow(now),
   ]);
 
   if (!investments || !summary) {
@@ -58,8 +55,6 @@ export default async function SavingsPage() {
           </div>
         }
       />
-
-      {flow && <MoneyFlowStrip flow={flow} monthRef={now} />}
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="space-y-5">

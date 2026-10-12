@@ -1,16 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  CalendarClock,
-  HandCoins,
-  Layers,
-  PiggyBank,
-  Sparkles,
-  Sprout,
-  TrendingDown,
-  TrendingUp,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowRight, HandCoins, Sparkles, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Panel } from "@/components/shared/panel";
 import { IconChip } from "@/components/shared/icon-chip";
@@ -18,14 +7,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Highlight, HighlightIcon, HighlightTone } from "@/lib/highlights";
 
 const ICONS: Record<HighlightIcon, LucideIcon> = {
-  category: Layers,
-  "trend-up": TrendingUp,
-  "trend-down": TrendingDown,
-  invest: Sprout,
-  "invest-empty": PiggyBank,
   lending: HandCoins,
-  bill: CalendarClock,
-  savings: PiggyBank,
 };
 
 const TONES: Record<HighlightTone, string> = {
@@ -34,7 +16,7 @@ const TONES: Record<HighlightTone, string> = {
   info: "var(--chart-1)",
 };
 
-/** "This month" — the few things worth knowing, each one tappable. */
+/** Who owes whom — each one tappable. */
 export function Highlights({ items }: { items: Highlight[] }) {
   if (items.length === 0) return null;
 
@@ -43,7 +25,7 @@ export function Highlights({ items }: { items: Highlight[] }) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2.5 text-base">
           <IconChip icon={Sparkles} color="var(--cat-subscriptions)" size="sm" />
-          This month at a glance
+          To settle
         </CardTitle>
       </CardHeader>
       <CardContent>

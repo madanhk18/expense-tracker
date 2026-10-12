@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, HandCoins, PiggyBank, Wallet } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { formatINR } from "@/lib/money";
@@ -12,20 +13,36 @@ interface Bucket {
   paise: number;
   color: string;
   icon: LucideIcon;
+  href?: string;
 }
 
 /**
  * This month in one line: what came in, and where it went — spent, invested,
  * lent — with what's left. The bar splits the money that came in by bucket.
+ * Also carries the savings rate (earned − spent) ÷ earned, so no separate card
+ * has to repeat the same numbers. `linked` makes each figure open its page;
+ * `spentShownAbove` drops the Spent amount where the page already headlines it.
  */
-export function MoneyFlowStrip({ flow, monthRef = new Date() }: { flow: MoneyFlow; monthRef?: Date }) {
+export function MoneyFlowStrip({
+  flow,
+  monthRef = new Date(),
+  linked = false,
+  spentShownAbove = false,
+}: {
+  flow: MoneyFlow;
+  monthRef?: Date;
+  linked?: boolean;
+  spentShownAbove?: boolean;
+}) {
   const inflowPaise = flow.earnedPaise + flow.borrowedPaise + flow.repaidToYouPaise;
   const lentOutPaise = flow.lentPaise + flow.repaidByYouPaise;
+  const savingsRate =
+    flow.earnedPaise > 0 ? Math.round(((flow.earnedPaise - flow.spentPaise) / flow.earnedPaise) * 100) : null;
 
   const buckets: Bucket[] = [
-    { label: "Spent", paise: flow.spentPaise, color: "var(--chart-4)", icon: ArrowUpRight },
-    { label: "Invested", paise: flow.investedPaise, color: "var(--cat-groceries)", icon: PiggyBank },
-    { label: "Lent / repaid", paise: lentOutPaise, color: "var(--cat-entertainment)", icon: HandCoins },
+    { label: "Spent", paise: flow.spentPaise, color: "var(--chart-4)", icon: ArrowUpRight, href: "/expenses" },
+    { label: "Invested", paise: flow.investedPaise, color: "var(--cat-groceries)", icon: PiggyBank, href: "/savings" },
+    { label: "Lent / repaid", paise: lentOutPaise, color: "var(--cat-entertainment)", icon: HandCoins, href: "/lending" },
   ];
   const leftPaise = flow.leftPaise;
   const scale = Math.max(1, inflowPaise, buckets.reduce((s, b) => s + b.paise, 0));
@@ -66,7 +83,12 @@ export function MoneyFlowStrip({ flow, monthRef = new Date() }: { flow: MoneyFlo
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4">
           {buckets.map((b) => (
-            <FlowFigure key={b.label} label={b.label} paise={b.paise} color={b.color} icon={b.icon} />
+            <FlowFigure
+              key={b.label}
+              {...b}
+              href={linked ? b.href : undefined}
+              note={spentShownAbove && b.label === "Spent" ? "shown above" : undefined}
+            />
           ))}
           <FlowFigure
             label={leftPaise < 0 ? "Short by" : "Left"}
@@ -77,6 +99,22 @@ export function MoneyFlowStrip({ flow, monthRef = new Date() }: { flow: MoneyFlo
             negative={leftPaise < 0}
           />
         </div>
+
+        {savingsRate !== null && (
+          <p
+            className={cn(
+              "border-t border-border pt-3 text-sm font-medium",
+              savingsRate < 0 ? "text-destructive" : savingsRate >= 20 ? "text-[var(--success)]" : "text-[var(--warning)]"
+            )}
+          >
+            {savingsRate < 0
+              ? "You spent more than you earned this month"
+              : `You kept ${savingsRate}% of what you earned`}
+            <span className="font-normal text-muted-foreground">
+              {savingsRate >= 20 ? " · nice, keep it above 20%" : " · aim to keep at least 20%"}
+            </span>
+          </p>
+        )}
       </CardContent>
     </Panel>
   );
@@ -89,23 +127,36 @@ function FlowFigure({
   icon: Icon,
   emphasise,
   negative,
-}: Bucket & { emphasise?: boolean; negative?: boolean }) {
-  return (
-    <div className="min-w-0">
+  href,
+  note,
+}: Bucket & { emphasise?: boolean; negative?: boolean; note?: string }) {
+  const body = (
+    <>
       <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <span className="size-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
         {label}
         <Icon className="size-3 opacity-60" />
       </p>
-      <p
-        className={cn(
-          "truncate text-sm font-semibold tabular-nums",
-          emphasise && "text-base",
-          negative && "text-destructive"
-        )}
-      >
-        {formatINR(paise, { decimals: false })}
-      </p>
-    </div>
+      {note ? (
+        <p className="truncate text-sm text-muted-foreground">{note}</p>
+      ) : (
+        <p
+          className={cn(
+            "truncate text-sm font-semibold tabular-nums",
+            emphasise && "text-base",
+            negative && "text-destructive"
+          )}
+        >
+          {formatINR(paise, { decimals: false })}
+        </p>
+      )}
+    </>
+  );
+
+  if (!href) return <div className="min-w-0">{body}</div>;
+  return (
+    <Link href={href} className="-m-1.5 min-w-0 rounded-lg p-1.5 transition-colors hover:bg-muted">
+      {body}
+    </Link>
   );
 }

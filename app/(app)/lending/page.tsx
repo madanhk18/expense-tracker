@@ -1,9 +1,7 @@
 import { ArrowDownLeft, ArrowUpRight, Handshake, Plus } from "lucide-react";
 import { listLendingRecords, groupByPerson } from "@/lib/queries/lending";
-import { getMoneyFlow } from "@/lib/queries/money-flow";
 import { formatINR } from "@/lib/money";
 import { MoneyTabs } from "@/components/money/money-tabs";
-import { MoneyFlowStrip } from "@/components/money/money-flow-strip";
 import { PersonCard } from "@/components/lending/person-card";
 import { AddLendingDialog } from "@/components/lending/add-lending-dialog";
 import { IncomeSetupNotice } from "@/components/income/income-setup-notice";
@@ -14,8 +12,7 @@ import { IconChip } from "@/components/shared/icon-chip";
 import { CardContent } from "@/components/ui/card";
 
 export default async function LendingPage() {
-  const now = new Date();
-  const [records, flow] = await Promise.all([listLendingRecords().catch(() => null), getMoneyFlow(now)]);
+  const records = await listLendingRecords().catch(() => null);
 
   if (!records) {
     return (
@@ -48,8 +45,6 @@ export default async function LendingPage() {
           </div>
         }
       />
-
-      {flow && <MoneyFlowStrip flow={flow} monthRef={now} />}
 
       <div className="grid grid-cols-2 gap-3">
         <Panel size="sm">

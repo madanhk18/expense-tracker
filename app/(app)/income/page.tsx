@@ -1,3 +1,4 @@
+import { subMonths } from "date-fns";
 import { TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import { listIncome, getIncomeStats } from "@/lib/queries/income";
 import { getIncomeCategories } from "@/lib/queries/categories";
@@ -8,7 +9,6 @@ import { AddIncomeDialog } from "@/components/income/add-income-dialog";
 import { PageHeader } from "@/components/shared/page-header";
 import { Panel } from "@/components/shared/panel";
 import { IconChip } from "@/components/shared/icon-chip";
-import { SavingsRateCard } from "@/components/dashboard/savings-rate-card";
 import { IncomeSetupNotice } from "@/components/income/income-setup-notice";
 import { MoneyTabs } from "@/components/money/money-tabs";
 import { MoneyFlowStrip } from "@/components/money/money-flow-strip";
@@ -41,6 +41,7 @@ export default async function IncomePage({ searchParams }: PageProps) {
     );
 
   const { income, total } = listed;
+  const incomeChange = stats.monthIncomePaise - stats.previousMonthIncomePaise;
 
   return (
     <div className="mx-auto max-w-5xl space-y-5">
@@ -74,57 +75,29 @@ export default async function IncomePage({ searchParams }: PageProps) {
         </div>
 
         <aside className="space-y-3 lg:sticky lg:top-24 lg:self-start">
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <Panel size="sm">
-              <CardContent className="space-y-1">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-xs font-medium tracking-wide text-muted-foreground">
-                    Earned in {monthLabel(new Date())}
-                  </p>
-                  <IconChip
-                    icon={TrendingUp}
-                    color="var(--success)"
-                    size="sm"
-                  />
-                </div>
-                <p className="text-2xl font-semibold tabular-nums">
-                  {formatINR(stats.monthIncomePaise)}
+          <Panel size="sm">
+            <CardContent className="space-y-1">
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-xs font-medium tracking-wide text-muted-foreground">
+                  Earned vs last month
                 </p>
-                <p className="text-xs text-muted-foreground">
-                  Last month {formatINR(stats.previousMonthIncomePaise)}
-                </p>
-              </CardContent>
-            </Panel>
-
-            <Panel size="sm">
-              <CardContent className="space-y-1">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-xs font-medium tracking-wide text-muted-foreground">
-                    Spent this month
-                  </p>
-                  <IconChip
-                    icon={TrendingDown}
-                    color="var(--chart-4)"
-                    size="sm"
-                  />
-                </div>
-                <p className="text-2xl font-semibold tabular-nums">
-                  {formatINR(stats.monthExpensePaise)}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {formatINR(
-                    Math.max(
-                      0,
-                      stats.monthIncomePaise - stats.monthExpensePaise,
-                    ),
-                  )}{" "}
-                  kept
-                </p>
-              </CardContent>
-            </Panel>
-          </div>
-
-          {stats.monthIncomePaise > 0 && <SavingsRateCard stats={stats} />}
+                <IconChip
+                  icon={incomeChange < 0 ? TrendingDown : TrendingUp}
+                  color={incomeChange < 0 ? "var(--chart-4)" : "var(--success)"}
+                  size="sm"
+                />
+              </div>
+              <p className="text-2xl font-semibold tabular-nums">
+                {incomeChange === 0
+                  ? "Same"
+                  : `${incomeChange > 0 ? "+" : "−"}${formatINR(Math.abs(incomeChange), { decimals: false })}`}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {formatINR(stats.previousMonthIncomePaise, { decimals: false })} in{" "}
+                {monthLabel(subMonths(new Date(), 1))}
+              </p>
+            </CardContent>
+          </Panel>
         </aside>
       </div>
     </div>
