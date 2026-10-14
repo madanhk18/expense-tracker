@@ -6,12 +6,12 @@ import { investmentStyle } from "@/lib/category-style";
 import { TOOLTIP_STYLE } from "@/components/analytics/chart-colors";
 import { IconChip } from "@/components/shared/icon-chip";
 
-/** Donut of all-time savings by type, with a legend of chips. */
+/** Donut of all-time savings by type, legend underneath — it lives in a narrow sidebar. */
 export function SavingsMixChart({ data }: { data: { name: string; paise: number }[] }) {
   const total = data.reduce((sum, d) => sum + d.paise, 0);
 
   return (
-    <div className="grid items-center gap-4 sm:grid-cols-[minmax(0,180px)_1fr]">
+    <div className="grid items-center gap-4">
       <div className="relative mx-auto w-full max-w-[200px]">
         <ResponsiveContainer width="100%" height={180}>
           <PieChart>
@@ -39,7 +39,7 @@ export function SavingsMixChart({ data }: { data: { name: string; paise: number 
           </div>
         </div>
       </div>
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-1">
+      <ul className="grid grid-cols-1 gap-2 min-[360px]:grid-cols-2">
         {data.map((slice) => {
           const style = investmentStyle(slice.name);
           return (

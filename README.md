@@ -61,13 +61,13 @@ Open [http://localhost:3000](http://localhost:3000). Register an account (check 
 ```
 app/
   (auth)/        Login, register, forgot/reset password
-  (app)/         Protected routes: dashboard, expenses, income, savings, lending, analytics, budgets, recurring, more, settings
+  (app)/         Protected routes: dashboard, expenses, income, savings, lending, analytics, more, settings
   auth/callback/ Exchanges Supabase auth codes for a session
 components/      UI components, grouped by feature
 lib/
   supabase/      Browser/server/middleware Supabase clients
   queries/       Server-side data access (one file per domain)
-  actions/       Server Actions (budgets, account settings)
+  actions/       Server Actions (income, savings, lending, account settings)
   validations/   Zod schemas
   money.ts       Paise <-> rupee conversion helpers (the only place this happens)
 supabase/migrations/0001_init.sql     Full schema, indexes, RLS policies, RPC functions
@@ -88,20 +88,13 @@ Before considering a change complete, verify:
 - [ ] Editing/deleting an expense updates the dashboard and analytics immediately
 - [ ] Search, category/payment/date filters, and sort all work and combine
 - [ ] Monthly analytics, category breakdown, and month-over-month % are correct
-- [ ] Budget progress thresholds (70/90/100%) show the right color/warning
-- [ ] A recurring expense generates on schedule and never duplicates (reload repeatedly to confirm)
-- [ ] A recurring expense due within 3 days shows on the dashboard's "Upcoming Bills" banner
-- [ ] A recurring expense past its due date (not yet generated) shows as "Overdue by N days" in the destructive color, not a negative day count
-- [ ] Deactivating a recurring expense (`is_active = false`) immediately removes it from the banner on next dashboard load
-- [ ] No upcoming/overdue bills → the "Upcoming Bills" card doesn't render at all (not an empty card)
-- [ ] A second test account never sees the first account's recurring expenses in their banner (RLS via existing `recurring_select_own` policy)
 - [ ] Add / edit / delete an income entry; it appears on /income grouped by day
 - [ ] The "You kept X%" line in the money-flow strip equals (income − spending) ÷ income for the current month
 - [ ] With no income logged this month, the savings-rate card invites you to add income instead of showing 0%
 - [ ] Spending more than you earned shows a negative rate in the destructive colour
 - [ ] Income categories (Salary, Freelance…) never appear in the expense form's category picker, and vice versa
 - [ ] A second test account cannot see the first account's income (RLS)
-- [ ] Add / edit / delete an investment on /savings; it never changes expense totals, budgets or the savings rate
+- [ ] Add / edit / delete an investment on /savings; it never changes expense totals or the savings rate
 - [ ] A SIP starting today appears in the history immediately; reloading repeatedly never duplicates it
 - [ ] Pausing a SIP stops new entries; resuming continues from its next date
 - [ ] Lending: "I gave ₹500 to Ravi" shows Ravi as "Owes you ₹500"; a ₹200 repayment leaves ₹300 and 40% back
@@ -109,7 +102,10 @@ Before considering a change complete, verify:
 - [ ] Deleting a repayment puts the balance back; same name in different case stays one person
 - [ ] Money strip: Left = earned + borrowed + repaid to you − spent − invested − lent − repaid by you
 - [ ] Before 0003 is run, /savings and /lending show the setup steps and every other page still loads
-- [ ] Mobile bottom bar: Home · Expenses · Money · Analytics · More; More lists Bills, Budgets, Savings, Lending, Settings
+- [ ] Mobile bottom bar: Home · Expenses · Money · Analytics · More; More lists Savings, Lending, Settings
+- [ ] Setting up a SIP when the same amount was logged by hand within 3 days asks whether that was its first payment; "Yes" links it (shows Auto) and starts the SIP from the next date
+- [ ] Logging an investment that matches an active SIP due within 3 days asks before adding it twice
+- [ ] Expenses → Insights shows the heat calendar, no-spend days, small spends, weekday bars and biggest expenses (not the Analytics charts)
 - [ ] A second test account cannot see the first account's investments, SIPs or lending (RLS)
 - [ ] Works on a real mobile viewport — bottom nav, FAB, no horizontal scroll
 - [ ] Dark mode, light mode, and system preference all render correctly

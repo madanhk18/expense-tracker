@@ -1,16 +1,15 @@
 import { subDays, parseISO } from "date-fns";
 import { listExpenses } from "@/lib/queries/expenses";
 import { getExpenseCategories } from "@/lib/queries/categories";
-import { todayRange, thisWeekRange, monthRange, previousMonthRange, monthLabel } from "@/lib/dates";
-import { formatINR } from "@/lib/money";
+import { todayRange, thisWeekRange, monthRange, previousMonthRange } from "@/lib/dates";
 import { ExpenseFilters } from "@/components/expenses/expense-filters";
 import { MonthSwitcher } from "@/components/expenses/month-switcher";
 import { ExpensesSearch } from "@/components/expenses/expenses-search";
 import { ViewToggle } from "@/components/expenses/view-toggle";
-import { CategoryPieChart } from "@/components/analytics/category-pie-chart";
-import { getAnalytics } from "@/lib/queries/analytics";
-import { Panel } from "@/components/shared/panel";
-import { CardContent } from "@/components/ui/card";
+import { getExpenseInsights } from "@/lib/queries/expense-insights";
+import { ExpenseHero } from "@/components/expenses/insights/expense-hero";
+import { ExpenseInsightsView } from "@/components/expenses/insights/expense-insights-view";
+import { format } from "date-fns";
 import { ExpenseList } from "@/components/expenses/expense-list";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { Button } from "@/components/ui/button";
@@ -65,13 +64,16 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
   };
 
   const view = params.view === "insights" ? "insights" : "list";
-  const [{ expenses, total }, categories, analytics] = await Promise.all([
+  const [{ expenses, total }, categories, insights] = await Promise.all([
     listExpenses(filters),
     getExpenseCategories(),
-    getAnalytics(range.start, range.end),
+    getExpenseInsights(monthRef),
   ]);
   const totalPages = Math.max(1, Math.ceil(total / 50));
-  const shownPaise = expenses.reduce((sum, e) => sum + e.amount_paise, 0);
+  // With a search, filter or date preset the month's total no longer matches
+  // the list, so the card shows the matching rows instead.
+  const filtered = Boolean(filters.search || filters.categoryId || filters.paymentMethod || preset);
+  const shownPaise = filtered ? expenses.reduce((sum, e) => sum + e.amount_paise, 0) : insights.totalPaise;
 
   return (
     <div className="mx-auto max-w-4xl space-y-4">
@@ -87,28 +89,24 @@ export default async function ExpensesPage({ searchParams }: PageProps) {
         </div>
       </div>
 
-      <div className="space-y-5 pt-2 text-center">
-        <div>
-          <p className="text-sm text-muted-foreground">Total expenses</p>
-          <p className="mt-1 text-4xl font-bold tracking-tight tabular-nums">{formatINR(shownPaise)}</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {total} {total === 1 ? "expense" : "expenses"} in {monthLabel(monthRef)}
-          </p>
-        </div>
-        <ViewToggle view={view} />
-      </div>
+      <ExpenseHero
+        monthRef={monthRef}
+        totalPaise={shownPaise}
+        count={filtered ? total : insights.count}
+        previousMonthPaise={insights.previousMonthPaise}
+        daysElapsed={insights.daysElapsed}
+        daysInMonth={insights.daysInMonth}
+        cumulative={insights.cumulative}
+        projectedPaise={insights.projectedPaise}
+        filtered={filtered}
+      />
+
+      <ViewToggle view={view} />
 
       {view === "list" ? (
         <ExpenseList expenses={expenses} categories={categories} />
       ) : (
-        <Panel>
-          <CardContent>
-            <CategoryPieChart
-              data={analytics.categoryBreakdown}
-              transactionCount={analytics.transactionCount}
-            />
-          </CardContent>
-        </Panel>
+        <ExpenseInsightsView insights={insights} monthKey={format(monthRef, "yyyy-MM")} />
       )}
 
       {totalPages > 1 && (

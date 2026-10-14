@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { generateDueRecurringExpenses } from "@/lib/queries/dashboard";
 import { generateDueRecurringInvestments } from "@/lib/queries/investments";
 import { getExpenseCategories } from "@/lib/queries/categories";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -20,9 +19,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!user) redirect("/login");
 
   // Idempotent + dedup-safe at the DB level — safe to call on every layout render.
-  // Non-fatal: recurring generation failing (or 0003 not run yet for SIPs)
+  // Non-fatal: SIP generation failing (or 0003 not run yet)
   // shouldn't block the whole app from loading.
-  await Promise.allSettled([generateDueRecurringExpenses(), generateDueRecurringInvestments()]);
+  await Promise.allSettled([generateDueRecurringInvestments()]);
 
   // Powers the mobile add-expense button.
   const categories = await getExpenseCategories();

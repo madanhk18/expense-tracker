@@ -2,9 +2,7 @@ import Link from "next/link";
 import {
   ArrowLeft,
   ArrowRight,
-  CalendarClock,
   Check,
-  Download,
   EyeOff,
   HandCoins,
   LayoutDashboard,
@@ -23,7 +21,6 @@ import { getFeatureUsage } from "@/lib/queries/onboarding";
 import { getExpenseCategories, getIncomeCategories } from "@/lib/queries/categories";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { AddIncomeDialog } from "@/components/income/add-income-dialog";
-import { RecurringForm } from "@/components/recurring/recurring-form";
 import { AddInvestmentDialog, AddSipDialog } from "@/components/savings/savings-dialogs";
 import { AddLendingDialog } from "@/components/lending/add-lending-dialog";
 import { Panel } from "@/components/shared/panel";
@@ -63,13 +60,13 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     title: "Dashboard",
-    line: "This month in one screen — highlights, money in and out, bills due.",
+    line: "This month in one screen — money in and out, who owes whom, top categories.",
     href: "/dashboard",
     icon: LayoutDashboard,
     color: "var(--chart-1)",
     details: [
-      "\"This month at a glance\" picks out what matters: your biggest category, spending vs last month, what you invested, who owes you, the next bill.",
-      "The tiles under it jump straight to Income, Savings, Lending and Bills.",
+      "The \"where it went\" strip splits this month's money into spent, invested, lent and what's left.",
+      "\"This month at a glance\" reminds you who owes you money and whom you owe.",
     ],
   },
   {
@@ -104,19 +101,8 @@ const FEATURES: Feature[] = [
     details: ["Pick any month or a custom range. Each category opens its own breakdown."],
   },
   {
-    title: "Bills & recurring",
-    line: "Rent, EMIs, subscriptions — added for you on their due date.",
-    href: "/recurring",
-    icon: CalendarClock,
-    color: "var(--warning)",
-    details: [
-      "Set it once; it's never added twice for the same day.",
-      "Bills due soon show on the dashboard. Choose how many days ahead in Settings.",
-    ],
-  },
-  {
     title: "Settings",
-    line: "Default payment method, bill reminder window, theme, export.",
+    line: "Default payment method, theme, hide amounts.",
     href: "/settings",
     icon: Settings,
     color: "var(--cat-subscriptions)",
@@ -127,7 +113,6 @@ const FEATURES: Feature[] = [
 const TIPS = [
   { icon: Search, text: "Search any expense from the bar at the top." },
   { icon: EyeOff, text: "The eye button blurs every amount — handy in public." },
-  { icon: Download, text: "Settings → Export gives you a CSV for Excel." },
 ];
 
 export default async function HelpPage() {
@@ -157,16 +142,6 @@ export default async function HelpPage() {
       done: usage.income > 0,
       action: (t) => <AddIncomeDialog categories={incomeCategories} trigger={t} />,
       href: "/income",
-    },
-    {
-      id: "bill",
-      title: "Add a bill that repeats",
-      why: "Rent, Netflix, EMI — added automatically, reminded before it's due.",
-      icon: CalendarClock,
-      color: "var(--warning)",
-      done: usage.bills > 0,
-      action: (t) => <RecurringForm categories={expenseCategories} trigger={t} />,
-      href: "/recurring",
     },
     {
       id: "invest",

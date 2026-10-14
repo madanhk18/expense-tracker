@@ -1,5 +1,4 @@
 import {
-  CalendarClock,
   Ellipsis,
   HandCoins,
   LayoutDashboard,
@@ -30,7 +29,6 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/expenses", label: "Expenses", icon: Receipt },
   MONEY,
   { href: "/analytics", label: "Analytics", icon: PieChart },
-  { href: "/recurring", label: "Bills", icon: CalendarClock },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -44,7 +42,7 @@ export const MOBILE_NAV_ITEMS: readonly NavItem[] = [
     href: "/more",
     label: "More",
     icon: Ellipsis,
-    match: ["/more", "/recurring", "/settings", "/categories"],
+    match: ["/more", "/settings", "/categories"],
   },
 ];
 

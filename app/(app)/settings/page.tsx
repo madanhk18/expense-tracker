@@ -1,18 +1,12 @@
 import Link from "next/link";
 import {
-  CalendarClock,
   ChevronRight,
-  Download,
   EyeOff,
-  HandCoins,
   HelpCircle,
   Palette,
-  PiggyBank,
-  Receipt,
   ShieldCheck,
   SlidersHorizontal,
   Tags,
-  TrendingUp,
   UserRound,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -30,17 +24,9 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/shared/page-header";
 
 const LINKS = [
-  { href: "/recurring", label: "Bills & recurring", icon: CalendarClock, color: "var(--warning)" },
   { href: "/settings/categories", label: "Manage categories", icon: Tags, color: "var(--cat-shopping)" },
   { href: "/settings/account", label: "Account & security", icon: ShieldCheck, color: "var(--cat-bills)" },
   { href: "/settings/help", label: "How to use this app", icon: HelpCircle, color: "var(--cat-entertainment)" },
-];
-
-const EXPORTS = [
-  { kind: "expenses", label: "Expenses", icon: Receipt, color: "var(--chart-4)" },
-  { kind: "income", label: "Income", icon: TrendingUp, color: "var(--success)" },
-  { kind: "savings", label: "Savings", icon: PiggyBank, color: "var(--cat-groceries)" },
-  { kind: "lending", label: "Lending", icon: HandCoins, color: "var(--cat-entertainment)" },
 ];
 
 export default async function SettingsPage() {
@@ -62,21 +48,21 @@ export default async function SettingsPage() {
     .slice(0, 2)
     .map((p) => p[0]!.toUpperCase())
     .join("");
-  // Seven things the "Get started" checklist tracks (see settings/help).
+  // What the "Get started" checklist tracks (see settings/help).
   const tried = [
     usage.expenses,
     usage.income,
-    usage.bills,
     usage.investments,
     usage.sips,
     usage.lending,
     usage.customCategories,
   ].filter((n) => n > 0).length;
+  const CHECKLIST_SIZE = 6;
   const stats = [
     { label: "Expenses", value: usage.expenses },
     { label: "Income", value: usage.income },
     { label: "Investments", value: usage.investments },
-    { label: "Bills", value: usage.bills },
+    { label: "SIPs", value: usage.sips },
   ];
 
   return (
@@ -111,10 +97,10 @@ export default async function SettingsPage() {
           className="flex items-center gap-3 border-t border-primary-foreground/15 px-5 py-3 text-sm transition-colors hover:bg-primary-foreground/10"
         >
           <span className="min-w-0 flex-1">
-            {tried === 7 ? "You've tried every feature" : `You've tried ${tried} of 7 features — see what's left`}
+            {tried === CHECKLIST_SIZE ? "You've tried every feature" : `You've tried ${tried} of ${CHECKLIST_SIZE} features — see what's left`}
           </span>
           <span className="h-1.5 w-20 overflow-hidden rounded-full bg-primary-foreground/20">
-            <span className="block h-full rounded-full bg-[var(--success)]" style={{ width: `${(tried / 7) * 100}%` }} />
+            <span className="block h-full rounded-full bg-[var(--success)]" style={{ width: `${(tried / CHECKLIST_SIZE) * 100}%` }} />
           </span>
           <ChevronRight className="size-4 opacity-70" />
         </Link>
@@ -176,31 +162,6 @@ export default async function SettingsPage() {
               </p>
             </div>
             <PrivacySwitch />
-          </div>
-        </CardContent>
-      </Panel>
-
-      <Panel>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2.5 text-base">
-            <IconChip icon={Download} color="var(--chart-2)" size="sm" />
-            Export your data
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p className="text-sm text-muted-foreground">Download a CSV — opens in Excel, Numbers or Google Sheets.</p>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            {EXPORTS.map((item) => (
-              <a
-                key={item.kind}
-                href={`/api/export?kind=${item.kind}`}
-                download
-                className="surface surface-hover flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium"
-              >
-                <IconChip icon={item.icon} color={item.color} size="sm" />
-                {item.label}
-              </a>
-            ))}
           </div>
         </CardContent>
       </Panel>

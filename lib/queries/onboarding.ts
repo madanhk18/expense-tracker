@@ -13,7 +13,6 @@ export interface FeatureUsage {
   investments: number;
   sips: number;
   lending: number;
-  bills: number;
   customCategories: number;
 }
 
@@ -23,7 +22,6 @@ type Table =
   | "investments"
   | "recurring_investments"
   | "lending_records"
-  | "recurring_expenses"
   | "categories";
 
 export async function getFeatureUsage(): Promise<FeatureUsage> {
@@ -37,15 +35,14 @@ export async function getFeatureUsage(): Promise<FeatureUsage> {
     return error ? 0 : (n ?? 0);
   }
 
-  const [expenses, income, investments, sips, lending, bills, customCategories] = await Promise.all([
+  const [expenses, income, investments, sips, lending, customCategories] = await Promise.all([
     count("expenses"),
     count("income"),
     count("investments"),
     count("recurring_investments"),
     count("lending_records"),
-    count("recurring_expenses"),
     count("categories", true),
   ]);
 
-  return { expenses, income, investments, sips, lending, bills, customCategories };
+  return { expenses, income, investments, sips, lending, customCategories };
 }

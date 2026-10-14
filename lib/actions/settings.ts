@@ -33,7 +33,7 @@ export async function updatePreferencesAction(change: Partial<Preferences>) {
   const { error } = await supabase.auth.updateUser({ data: { preferences: next } });
   if (error) throw error;
 
-  // Preferences shape the whole app (bill window, form defaults).
+  // Preferences shape the whole app (form defaults).
   revalidatePath("/", "layout");
 }
 

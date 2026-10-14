@@ -11,7 +11,9 @@ import {
   formToInvestmentInsertValues,
   type InvestmentFormValues,
 } from "@/lib/validations/investment.schema";
-import { createInvestmentAction, updateInvestmentAction } from "@/lib/actions/investments";
+import { createInvestmentAction, updateInvestmentAction, type PossibleDuplicate } from "@/lib/actions/investments";
+import { parseISO } from "date-fns";
+import { formatINR } from "@/lib/money";
 import { paiseToRupeeInput } from "@/lib/money";
 import { toFriendlyMessage, logError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
@@ -28,6 +30,8 @@ interface InvestmentFormProps {
 export function InvestmentForm({ investment, onSuccess }: InvestmentFormProps) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  // Set when this looks like a payment a SIP already adds; the user decides.
+  const [duplicate, setDuplicate] = useState<{ values: InvestmentFormValues; info: PossibleDuplicate } | null>(null);
 
   const defaults: InvestmentFormValues = investment
     ? {
@@ -55,7 +59,7 @@ export function InvestmentForm({ investment, onSuccess }: InvestmentFormProps) {
     defaultValues: defaults,
   });
 
-  async function onSubmit(values: InvestmentFormValues) {
+  async function onSubmit(values: InvestmentFormValues, confirmed = false) {
     if (submitting) return;
     setSubmitting(true);
     try {
@@ -64,7 +68,11 @@ export function InvestmentForm({ investment, onSuccess }: InvestmentFormProps) {
         await updateInvestmentAction(investment.id, wire);
         toast.success("Investment updated");
       } else {
-        await createInvestmentAction(wire);
+        const result = await createInvestmentAction(wire, confirmed);
+        if (result?.duplicate) {
+          setDuplicate({ values, info: result.duplicate });
+          return;
+        }
         toast.success("Investment added");
       }
       router.refresh();
@@ -77,8 +85,48 @@ export function InvestmentForm({ investment, onSuccess }: InvestmentFormProps) {
     }
   }
 
+  if (duplicate) {
+    const { values, info } = duplicate;
+    return (
+      <div className="space-y-4">
+        <div className="rounded-xl border border-[var(--warning)]/40 bg-[var(--warning)]/10 p-4 text-sm">
+          <p className="font-semibold">This looks like your SIP payment</p>
+          <p className="mt-1 text-muted-foreground">
+            Your SIP <strong className="text-foreground">{info.name}</strong> already adds{" "}
+            {formatINR(formToInvestmentInsertValues(values).amount_paise)} automatically on{" "}
+            {format(parseISO(info.date), "d MMM")}. Adding this too would count it twice.
+          </p>
+        </div>
+        <Button
+          type="button"
+          size="lg"
+          className="w-full"
+          onClick={() => {
+            toast.success("Not added — your SIP covers it");
+            onSuccess();
+          }}
+        >
+          It&apos;s the SIP — don&apos;t add it
+        </Button>
+        <Button
+          type="button"
+          size="lg"
+          variant="outline"
+          className="w-full"
+          disabled={submitting}
+          onClick={() => {
+            setDuplicate(null);
+            void onSubmit(values, true);
+          }}
+        >
+          {submitting ? "Saving…" : "It's extra — add it anyway"}
+        </Button>
+      </div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit((v) => onSubmit(v))} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="investment-amount">Amount invested</Label>
         <div className="flex items-stretch gap-2">

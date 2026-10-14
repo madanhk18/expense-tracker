@@ -9,7 +9,6 @@ const PROTECTED_PREFIXES = [
   "/savings",
   "/lending",
   "/analytics",
-  "/recurring",
   "/categories",
   "/more",
   "/settings",

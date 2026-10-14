@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  CalendarClock,
   ChevronRight,
   HandCoins,
   HelpCircle,
@@ -9,7 +8,6 @@ import {
   ShieldCheck,
   Tags,
 } from "lucide-react";
-import { listUpcomingBills } from "@/lib/queries/recurring";
 import { PageHeader } from "@/components/shared/page-header";
 import { Panel } from "@/components/shared/panel";
 import { IconChip } from "@/components/shared/icon-chip";
@@ -17,20 +15,11 @@ import { CardContent } from "@/components/ui/card";
 import { LogoutButton } from "@/components/layout/logout-button";
 
 /** Mobile catch-all for everything that doesn't fit in the bottom bar. */
-export default async function MorePage() {
-  const dueSoon = await listUpcomingBills(7).catch(() => []);
-
+export default function MorePage() {
   const groups = [
     {
       title: "Plan",
       links: [
-        {
-          href: "/recurring",
-          label: "Bills & recurring",
-          hint: dueSoon.length > 0 ? `${dueSoon.length} due this week` : "Rent, subscriptions, EMIs",
-          icon: CalendarClock,
-          color: "var(--warning)",
-        },
         { href: "/savings", label: "Savings & SIPs", hint: "Money put aside", icon: PiggyBank, color: "var(--cat-groceries)" },
         { href: "/lending", label: "Lending", hint: "Who owes whom", icon: HandCoins, color: "var(--cat-entertainment)" },
       ],

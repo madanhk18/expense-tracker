@@ -13,8 +13,6 @@ import { getRecentExpenses } from "@/lib/queries/expenses";
 import { getExpenseCategories } from "@/lib/queries/categories";
 import { getGreetingName } from "@/lib/queries/profile";
 import { getAnalytics } from "@/lib/queries/analytics";
-import { listUpcomingBills } from "@/lib/queries/recurring";
-import { getPreferences } from "@/lib/queries/preferences";
 import { getMoneyFlow } from "@/lib/queries/money-flow";
 import { listLendingRecords, groupByPerson } from "@/lib/queries/lending";
 import { buildHighlights } from "@/lib/highlights";
@@ -25,7 +23,6 @@ import { monthRange, formatTime } from "@/lib/dates";
 import { formatINR } from "@/lib/money";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { SpendSummary } from "@/components/dashboard/spend-summary";
-import { BillRemindersBanner } from "@/components/dashboard/bill-reminders-banner";
 import { AddExpenseDialog } from "@/components/expenses/add-expense-dialog";
 import { EmptyState } from "@/components/shared/empty-state";
 import { Panel } from "@/components/shared/panel";
@@ -44,7 +41,6 @@ function greeting() {
 
 export default async function DashboardPage() {
   const now = new Date();
-  const preferences = await getPreferences();
   const { start, end } = monthRange(now);
 
   const [
@@ -52,7 +48,6 @@ export default async function DashboardPage() {
     recentExpenses,
     categories,
     monthAnalytics,
-    upcomingBills,
     name,
     flow,
     lendingRecords,
@@ -61,7 +56,6 @@ export default async function DashboardPage() {
     getRecentExpenses(6),
     getExpenseCategories(),
     getAnalytics(start, end),
-    listUpcomingBills(preferences.billReminderDays),
     getGreetingName(),
     getMoneyFlow(now),
     // Lending needs 0003_money_flows.sql; without it the highlights drop out.
@@ -106,8 +100,6 @@ export default async function DashboardPage() {
           <Highlights items={highlights} />
 
           {flow && <MoneyFlowStrip flow={flow} monthRef={now} linked spentShownAbove />}
-
-          <BillRemindersBanner bills={upcomingBills} />
 
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
             <StatCard

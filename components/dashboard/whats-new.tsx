@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarClock, Download, EyeOff, HandCoins, PiggyBank, Sparkles, X } from "lucide-react";
+import { EyeOff, HandCoins, PiggyBank, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 /** Bump when a new batch of features ships so the card shows again. */
@@ -11,9 +11,7 @@ const KEY = "whats-new-dismissed:2026-10";
 const ITEMS = [
   { href: "/savings", label: "Savings & SIPs", icon: PiggyBank },
   { href: "/lending", label: "Lending (Udhaar)", icon: HandCoins },
-  { href: "/recurring", label: "Bill reminders", icon: CalendarClock },
   { href: "/settings", label: "Hide amounts", icon: EyeOff },
-  { href: "/settings", label: "Export to Excel", icon: Download },
 ];
 
 /** A dismissible "what's new" strip so new features don't go unnoticed. */

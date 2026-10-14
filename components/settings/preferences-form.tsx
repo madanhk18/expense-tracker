@@ -3,10 +3,9 @@
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { PAYMENT_METHODS } from "@/lib/constants";
-import { BILL_REMINDER_DAYS, type Preferences } from "@/lib/preferences";
+import type { Preferences } from "@/lib/preferences";
 import { updatePreferencesAction } from "@/lib/actions/settings";
 import { toFriendlyMessage, logError } from "@/lib/errors";
-import { cn } from "@/lib/utils";
 import { PaymentIcon } from "@/components/shared/category-icon";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -57,29 +56,6 @@ export function PreferencesForm({ initial }: { initial: Preferences }) {
         </Select>
       </Row>
 
-      <Row title="Bill reminders" hint="How far ahead bills show on your dashboard.">
-        <div className="flex rounded-full bg-muted p-1">
-          {BILL_REMINDER_DAYS.map((days) => (
-            <button
-              key={days}
-              type="button"
-              disabled={pending}
-              aria-pressed={prefs.billReminderDays === days}
-              onClick={() =>
-                save({ billReminderDays: days }, `Bills now show ${days} ${days === 1 ? "day" : "days"} ahead`)
-              }
-              className={cn(
-                "rounded-full px-3 py-1.5 text-xs font-medium tabular-nums transition-colors",
-                prefs.billReminderDays === days
-                  ? "bg-card text-foreground shadow-[var(--shadow-card)]"
-                  : "text-muted-foreground hover:text-foreground"
-              )}
-            >
-              {days}d
-            </button>
-          ))}
-        </div>
-      </Row>
     </div>
   );
 }

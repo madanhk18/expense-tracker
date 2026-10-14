@@ -1,4 +1,6 @@
+import { addDays, addMonths, addWeeks, addYears, format, parseISO } from "date-fns";
 import { createClient } from "@/lib/supabase/server";
+import type { RecurringFrequency } from "@/lib/constants";
 import type { InvestmentInsertValues, SipInsertValues } from "@/lib/validations/investment.schema";
 import type { Investment, RecurringInvestment } from "@/types/domain";
 
@@ -92,17 +94,21 @@ export async function listRecurringInvestments() {
   return (data ?? []) as RecurringInvestment[];
 }
 
-export async function createRecurringInvestment(input: SipInsertValues) {
+/** Creates the rule and returns its id. `nextDueDate` defaults to the start date. */
+export async function createRecurringInvestment(input: SipInsertValues, nextDueDate = input.start_date) {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) throw new Error("Not authenticated");
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("recurring_investments")
-    .insert({ ...input, user_id: user.id, next_due_date: input.start_date, is_active: true });
+    .insert({ ...input, user_id: user.id, next_due_date: nextDueDate, is_active: true })
+    .select("id")
+    .single();
   if (error) throw error;
+  return data.id as string;
 }
 
 export async function setRecurringInvestmentActive(id: string, isActive: boolean) {
@@ -123,4 +129,70 @@ export async function generateDueRecurringInvestments(): Promise<number> {
   const { data, error } = await supabase.rpc("generate_due_recurring_investments");
   if (error) throw error;
   return data ?? 0;
+}
+
+/* --------------------------- Double-entry guard --------------------------- */
+
+/** How close (in days) two same-amount payments must be to look like one. */
+const SAME_PAYMENT_WINDOW_DAYS = 3;
+
+/** The due date after `date` for a rule of this frequency (yyyy-MM-dd in, out). */
+export function nextDueAfter(date: string, frequency: RecurringFrequency, intervalCount = 1): string {
+  const d = parseISO(date);
+  const next =
+    frequency === "weekly"
+      ? addWeeks(d, intervalCount)
+      : frequency === "yearly"
+        ? addYears(d, intervalCount)
+        : addMonths(d, intervalCount);
+  return format(next, "yyyy-MM-dd");
+}
+
+/**
+ * A manually logged investment of the same amount within a few days of
+ * `date` — probably the same payment a new SIP is about to generate.
+ */
+export async function findManualPaymentNear(amountPaise: number, date: string) {
+  const supabase = await createClient();
+  const d = parseISO(date);
+  const { data, error } = await supabase
+    .from("investments")
+    .select("id, name, invested_at")
+    .is("recurring_investment_id", null)
+    .eq("amount_paise", amountPaise)
+    .gte("invested_at", addDays(d, -SAME_PAYMENT_WINDOW_DAYS).toISOString())
+    .lte("invested_at", addDays(d, SAME_PAYMENT_WINDOW_DAYS + 1).toISOString())
+    .order("invested_at")
+    .limit(1);
+  if (error) throw error;
+  return data?.[0] ?? null;
+}
+
+/**
+ * An active SIP of the same amount whose next payment falls within a few
+ * days of `investedAt` — logging this by hand would count it twice.
+ */
+export async function findSipDueNear(amountPaise: number, investedAt: string) {
+  const supabase = await createClient();
+  const d = new Date(investedAt);
+  const { data, error } = await supabase
+    .from("recurring_investments")
+    .select("id, name, next_due_date")
+    .eq("is_active", true)
+    .eq("amount_paise", amountPaise)
+    .gte("next_due_date", format(addDays(d, -SAME_PAYMENT_WINDOW_DAYS), "yyyy-MM-dd"))
+    .lte("next_due_date", format(addDays(d, SAME_PAYMENT_WINDOW_DAYS), "yyyy-MM-dd"))
+    .limit(1);
+  if (error) throw error;
+  return data?.[0] ?? null;
+}
+
+/** Mark a hand-logged payment as the SIP's own (so it shows as Auto). */
+export async function linkPaymentToSip(investmentId: string, ruleId: string) {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("investments")
+    .update({ recurring_investment_id: ruleId })
+    .eq("id", investmentId);
+  if (error) throw error;
 }
