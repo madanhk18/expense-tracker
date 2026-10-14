@@ -60,92 +60,167 @@ const CONNECTORS = new Set(["for", "on", "at", "by", "with", "to", "in", "the", 
 
 /** Brand → [display name, default category]. */
 const MERCHANTS: Record<string, [string, string]> = {
+  // Food delivery & eating out
   swiggy: ["Swiggy", "Food"],
   zomato: ["Zomato", "Food"],
   dominos: ["Domino's", "Food"],
+  pizzahut: ["Pizza Hut", "Food"],
+  mcdonalds: ["McDonald's", "Food"],
+  mcd: ["McDonald's", "Food"],
+  kfc: ["KFC", "Food"],
+  burgerking: ["Burger King", "Food"],
+  subway: ["Subway", "Food"],
   starbucks: ["Starbucks", "Food"],
+  chaayos: ["Chaayos", "Food"],
+  haldiram: ["Haldiram's", "Food"],
+  haldirams: ["Haldiram's", "Food"],
+  // Groceries
   blinkit: ["Blinkit", "Groceries"],
   zepto: ["Zepto", "Groceries"],
   instamart: ["Instamart", "Groceries"],
   bigbasket: ["BigBasket", "Groceries"],
+  bbdaily: ["BB Daily", "Groceries"],
   dmart: ["DMart", "Groceries"],
+  jiomart: ["JioMart", "Groceries"],
+  // Getting around
   uber: ["Uber", "Transportation"],
   ola: ["Ola", "Transportation"],
   rapido: ["Rapido", "Transportation"],
+  namma: ["Namma Yatri", "Transportation"],
+  bmtc: ["BMTC", "Transportation"],
+  fastag: ["FASTag", "Transportation"],
+  // Trips
+  irctc: ["IRCTC", "Travel"],
+  redbus: ["redBus", "Travel"],
+  makemytrip: ["MakeMyTrip", "Travel"],
+  mmt: ["MakeMyTrip", "Travel"],
+  goibibo: ["Goibibo", "Travel"],
+  ixigo: ["ixigo", "Travel"],
+  oyo: ["OYO", "Travel"],
+  airbnb: ["Airbnb", "Travel"],
+  indigo: ["IndiGo", "Travel"],
+  // Shopping
   amazon: ["Amazon", "Shopping"],
   flipkart: ["Flipkart", "Shopping"],
   myntra: ["Myntra", "Shopping"],
   ajio: ["Ajio", "Shopping"],
   meesho: ["Meesho", "Shopping"],
+  nykaa: ["Nykaa", "Shopping"],
+  decathlon: ["Decathlon", "Shopping"],
+  croma: ["Croma", "Shopping"],
+  ikea: ["IKEA", "Shopping"],
+  // Subscriptions & fun
   netflix: ["Netflix", "Subscriptions"],
   spotify: ["Spotify", "Subscriptions"],
   hotstar: ["Hotstar", "Subscriptions"],
+  jiohotstar: ["JioHotstar", "Subscriptions"],
   prime: ["Prime", "Subscriptions"],
   youtube: ["YouTube", "Subscriptions"],
+  chatgpt: ["ChatGPT", "Subscriptions"],
+  icloud: ["iCloud", "Subscriptions"],
   bookmyshow: ["BookMyShow", "Entertainment"],
+  bms: ["BookMyShow", "Entertainment"],
   pvr: ["PVR", "Entertainment"],
-  irctc: ["IRCTC", "Travel"],
-  makemytrip: ["MakeMyTrip", "Travel"],
+  inox: ["INOX", "Entertainment"],
+  // Health & self-care
   apollo: ["Apollo", "Healthcare"],
   pharmeasy: ["PharmEasy", "Healthcare"],
+  netmeds: ["Netmeds", "Healthcare"],
+  "1mg": ["Tata 1mg", "Healthcare"],
+  practo: ["Practo", "Healthcare"],
+  cult: ["cult.fit", "Personal"],
+  cultfit: ["cult.fit", "Personal"],
+  urbancompany: ["Urban Company", "Personal"],
+  // Bills
   airtel: ["Airtel", "Bills"],
   jio: ["Jio", "Bills"],
+  vi: ["Vi", "Bills"],
+  bsnl: ["BSNL", "Bills"],
+  bescom: ["BESCOM", "Bills"],
+  tatasky: ["Tata Play", "Bills"],
+  tataplay: ["Tata Play", "Bills"],
+  // Learning
+  udemy: ["Udemy", "Education"],
+  coursera: ["Coursera", "Education"],
 };
 
-/** Everyday words → default category name. */
-const KEYWORDS: Record<string, string> = {
-  petrol: "Transportation",
-  diesel: "Transportation",
-  fuel: "Transportation",
-  auto: "Transportation",
-  cab: "Transportation",
-  taxi: "Transportation",
-  metro: "Transportation",
-  bus: "Transportation",
-  train: "Travel",
-  flight: "Travel",
-  hotel: "Travel",
-  trip: "Travel",
-  lunch: "Food",
-  dinner: "Food",
-  breakfast: "Food",
-  snacks: "Food",
-  coffee: "Food",
-  tea: "Food",
-  chai: "Food",
-  food: "Food",
-  biryani: "Food",
-  pizza: "Food",
-  grocery: "Groceries",
-  groceries: "Groceries",
-  vegetables: "Groceries",
-  veggies: "Groceries",
-  milk: "Groceries",
-  fruits: "Groceries",
-  rent: "Rent",
-  electricity: "Bills",
-  recharge: "Bills",
-  wifi: "Bills",
-  internet: "Bills",
-  water: "Bills",
-  gas: "Bills",
-  emi: "Bills",
-  movie: "Entertainment",
-  movies: "Entertainment",
-  medicine: "Healthcare",
-  medicines: "Healthcare",
-  doctor: "Healthcare",
-  pharmacy: "Healthcare",
-  hospital: "Healthcare",
-  gym: "Personal",
-  haircut: "Personal",
-  salon: "Personal",
-  clothes: "Shopping",
-  shoes: "Shopping",
-  books: "Education",
-  course: "Education",
-  fees: "Education",
+/**
+ * Everyday words → default category. Groceries = things bought to cook or
+ * use at home; Food = eating out or ready to eat; Transportation = daily
+ * commute; Travel = trips. Plurals are handled automatically.
+ */
+const CATEGORY_WORDS: Record<string, string[]> = {
+  Food: [
+    "food", "lunch", "dinner", "breakfast", "brunch", "snack", "meal", "tiffin", "canteen", "mess",
+    "restaurant", "cafe", "dhaba", "takeaway", "parcel", "coffee", "tea", "chai", "juice", "lassi",
+    "milkshake", "shake", "smoothie", "biryani", "pizza", "burger", "sandwich", "dosa", "idli", "vada",
+    "upma", "poori", "puri", "samosa", "kachori", "chaat", "panipuri", "golgappa", "pakoda", "pakora",
+    "momo", "noodle", "maggi", "pasta", "roll", "shawarma", "kebab", "paratha", "thali", "chole",
+    "bhature", "pavbhaji", "vadapav", "frankie", "fries", "omelette", "tikka", "curry", "manchurian", "cake", "pastry", "dessert", "icecream",
+    "kulfi", "sweet", "mithai", "chocolate", "softdrink", "colddrink", "cooldrink", "coke", "pepsi",
+    "soda", "bakery", "treat",
+  ],
+  Groceries: [
+    "grocery", "groceries", "kirana", "provisions", "ration", "vegetable", "veggie", "veg", "sabzi",
+    "sabji", "onion", "tomato", "potato", "aloo", "carrot", "beans", "spinach", "palak", "coriander",
+    "fruit", "banana", "apple", "mango", "orange", "grapes", "papaya", "watermelon", "milk", "doodh",
+    "curd", "dahi", "yogurt", "buttermilk", "paneer", "butter", "ghee", "cheese", "cream", "bread",
+    "egg", "anda", "rice", "chawal", "atta", "aata", "flour", "maida", "rava", "sooji", "poha", "dal",
+    "daal", "pulses", "oil", "sugar", "salt", "jaggery", "spices", "masala", "biscuit", "namkeen",
+    "cereal", "oats", "chicken", "mutton", "fish", "prawns", "meat", "detergent", "soap", "shampoo",
+    "toothpaste", "toiletries", "cleaning", "tissue", "household",
+  ],
+  Transportation: [
+    "petrol", "diesel", "fuel", "cng", "ev", "charging", "auto", "rickshaw", "cab", "taxi", "metro",
+    "bus", "local", "commute", "parking", "toll", "bike", "scooter", "puncture", "carwash", "ride",
+  ],
+  Travel: [
+    "train", "railway", "flight", "airport", "airline", "hostel", "stay", "resort", "trip",
+    "tour", "travel", "holiday", "vacation", "visa", "luggage", "booking", "tickets",
+  ],
+  Bills: [
+    "bill", "electricity", "current", "power", "water", "gas", "cylinder", "lpg", "recharge", "prepaid",
+    "postpaid", "wifi", "broadband", "internet", "fiber", "dth", "emi", "loan", "insurance",
+    "premium", "maintenance", "society", "tax",
+  ],
+  Rent: ["rent", "pg", "deposit", "brokerage", "lease"],
+  Shopping: [
+    "shopping", "clothes", "shirt", "tshirt", "jeans", "trouser", "dress", "kurta", "saree",
+    "jacket", "shoe", "sandal", "chappal", "slipper", "watch", "bag", "wallet", "jewellery", "ring",
+    "gift", "electronics", "headphone", "earphone", "earbuds", "charger", "cable", "laptop", "gadget",
+    "cosmetics", "makeup", "perfume", "furniture", "decor", "utensils",
+  ],
+  Entertainment: [
+    "movie", "cinema", "film", "show", "concert", "game", "gaming", "party", "pub", "bar", "beer",
+    "drinks", "outing", "bowling", "amusement", "event",
+  ],
+  Healthcare: [
+    "medicine", "meds", "tablet", "pill", "syrup", "doctor", "clinic", "hospital", "pharmacy",
+    "chemist", "medical", "lab", "test", "checkup", "dentist", "dental", "scan", "xray", "physio",
+    "vaccine", "spectacles", "glasses", "lens",
+  ],
+  Personal: [
+    "gym", "haircut", "hair", "salon", "parlour", "barber", "spa", "massage", "grooming", "laundry",
+    "dryclean", "ironing", "tailor", "skincare", "yoga",
+  ],
+  Education: [
+    "book", "course", "fees", "fee", "tuition", "coaching", "school", "college", "exam", "stationery",
+    "pen", "notebook", "class", "workshop", "certification",
+  ],
+  Subscriptions: ["subscription", "membership", "renewal", "ott"],
 };
+
+/** A grocery word gives way to any other category word in the same note. */
+const WEAK_CATEGORY = "Groceries";
+
+const KEYWORDS: Record<string, string> = Object.fromEntries(
+  Object.entries(CATEGORY_WORDS).flatMap(([category, words]) => words.map((w) => [w, category]))
+);
+
+/** Try the word as typed, then without a plural ending ("fruits" → "fruit", "tomatoes" → "tomato"). */
+function lookup<T>(table: Record<string, T>, word: string): T | undefined {
+  return table[word] ?? (word.endsWith("es") ? table[word.slice(0, -2)] : undefined) ?? (word.endsWith("s") ? table[word.slice(0, -1)] : undefined);
+}
 
 function parseAmount(token: string): number | null {
   const t = token.toLowerCase().replace(/^(₹|rs\.?|inr)/, "").replace(/(rs|₹|\/-)$/, "").replace(/,/g, "");
@@ -217,11 +292,16 @@ export function parseQuickAdd(text: string, categories: QuickAddCategory[]): Qui
     if (own) category = own;
 
     const brand = MERCHANTS[word];
+    const keyword = lookup(KEYWORDS, word);
     if (brand && !merchant) {
       merchant = brand[0];
       guessedCategory ??= findCategory(brand[1], categories);
-    } else if (KEYWORDS[word]) {
-      guessedCategory ??= findCategory(KEYWORDS[word]!, categories);
+    } else if (keyword) {
+      // Ingredient words are weak: "masala dosa" and "chicken biryani" are Food.
+      const weakSoFar = !guessedCategory || guessedCategory.name.toLowerCase() === WEAK_CATEGORY.toLowerCase();
+      if (weakSoFar && (keyword !== WEAK_CATEGORY || !guessedCategory)) {
+        guessedCategory = findCategory(keyword, categories) ?? guessedCategory;
+      }
     }
     rest.push(raw);
   }
