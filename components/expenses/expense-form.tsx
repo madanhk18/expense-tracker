@@ -23,6 +23,7 @@ import { usePreferences } from "@/components/preferences-provider";
 import { QuickAddInput } from "./quick-add-input";
 import { paiseToRupeeInput } from "@/lib/money";
 import type { QuickAddResult } from "@/lib/quick-add";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 interface ExpenseFormProps {
   categories: Category[];
@@ -234,7 +235,7 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
       </div>
 
       <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-        {submitting ? "Saving…" : expense ? "Save changes" : "Add expense"}
+        {submitting ? <BusyLabel>Saving…</BusyLabel> : expense ? "Save changes" : "Add expense"}
       </Button>
     </form>
   );

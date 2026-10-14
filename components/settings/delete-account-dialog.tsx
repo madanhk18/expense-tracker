@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toFriendlyMessage, logError } from "@/lib/errors";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 const CONFIRM_TEXT = "DELETE";
 
@@ -51,7 +52,7 @@ export function DeleteAccountDialog({ onConfirm }: { onConfirm: () => Promise<vo
             onClick={handleDelete}
             className="w-full"
           >
-            {deleting ? "Deleting…" : "Permanently delete my account"}
+            {deleting ? <BusyLabel>Deleting…</BusyLabel> : "Permanently delete my account"}
           </Button>
         </DialogContent>
       </Dialog>

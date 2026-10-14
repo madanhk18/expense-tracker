@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { FloatField } from "@/components/ui/float-field";
 import { CardContent } from "@/components/ui/card";
 import { Panel } from "@/components/shared/panel";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function LoginForm() {
   const router = useRouter();
@@ -100,7 +101,7 @@ export function LoginForm() {
 
             <Button type="submit" size="lg" className="group w-full rounded-xl" disabled={submitting}>
               {submitting ? (
-                "Signing in…"
+                <BusyLabel>Signing in…</BusyLabel>
               ) : (
                 <>
                   Sign in

@@ -25,6 +25,7 @@ import { CategoryIcon } from "@/components/shared/category-icon";
 import { ExpenseDetail } from "./expense-detail";
 import { ExpenseForm } from "./expense-form";
 import type { Category, ExpenseWithCategory } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCategory; categories: Category[] }) {
   const router = useRouter();
@@ -137,7 +138,7 @@ export function ExpenseRow({ expense, categories }: { expense: ExpenseWithCatego
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction variant="danger" onClick={handleDelete} disabled={deleting}>
-              {deleting ? "Deleting…" : "Delete"}
+              {deleting ? <BusyLabel>Deleting…</BusyLabel> : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

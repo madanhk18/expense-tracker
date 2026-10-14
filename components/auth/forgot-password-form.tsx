@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Panel } from "@/components/shared/panel";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function ForgotPasswordForm() {
   const [submitting, setSubmitting] = useState(false);
@@ -76,7 +77,7 @@ export function ForgotPasswordForm() {
             {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
           </div>
           <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-            {submitting ? "Sending…" : "Send reset link"}
+            {submitting ? <BusyLabel>Sending…</BusyLabel> : "Send reset link"}
           </Button>
         </form>
         <p className="mt-4 text-center text-sm text-muted-foreground">

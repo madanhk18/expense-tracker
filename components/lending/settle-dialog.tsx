@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import type { LendingRecordWithSettlements } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 /** Record all or part of a repayment against one lending entry. */
 export function SettleDialog({
@@ -101,7 +102,7 @@ export function SettleDialog({
             <Input id="settle-note" placeholder="e.g. via UPI" value={note} onChange={(e) => setNote(e.target.value)} />
           </div>
           <Button type="submit" className="w-full" disabled={submitting || paise === null}>
-            {submitting ? "Saving…" : isFull ? "Mark as settled" : "Record repayment"}
+            {submitting ? <BusyLabel>Saving…</BusyLabel> : isFull ? "Mark as settled" : "Record repayment"}
           </Button>
         </form>
       </DialogContent>

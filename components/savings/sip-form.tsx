@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { InvestmentTypePicker } from "./investment-type-picker";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 /** A repeating investment — logged automatically on every due date. */
 export function SipForm({ onSuccess }: { onSuccess: () => void }) {
@@ -165,7 +166,7 @@ export function SipForm({ onSuccess }: { onSuccess: () => void }) {
       </p>
 
       <Button type="submit" size="lg" className="btn-income w-full" disabled={submitting}>
-        {submitting ? "Saving…" : "Start SIP"}
+        {submitting ? <BusyLabel>Saving…</BusyLabel> : "Start SIP"}
       </Button>
     </form>
   );

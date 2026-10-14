@@ -29,6 +29,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { CategoryIcon } from "@/components/shared/category-icon";
 import { IncomeForm } from "./income-form";
 import type { Category, IncomeWithCategory } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function IncomeRow({ income, categories }: { income: IncomeWithCategory; categories: Category[] }) {
   const router = useRouter();
@@ -123,7 +124,7 @@ export function IncomeRow({ income, categories }: { income: IncomeWithCategory; 
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction variant="danger" onClick={handleDelete} disabled={deleting}>
-              {deleting ? "Deleting…" : "Delete"}
+              {deleting ? <BusyLabel>Deleting…</BusyLabel> : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

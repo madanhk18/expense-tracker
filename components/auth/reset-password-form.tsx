@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Panel } from "@/components/shared/panel";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function ResetPasswordForm() {
   const router = useRouter();
@@ -62,7 +63,7 @@ export function ResetPasswordForm() {
             )}
           </div>
           <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-            {submitting ? "Updating…" : "Update password"}
+            {submitting ? <BusyLabel>Updating…</BusyLabel> : "Update password"}
           </Button>
         </form>
       </CardContent>

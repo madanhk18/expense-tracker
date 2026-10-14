@@ -10,6 +10,7 @@ import { toFriendlyMessage, logError } from "@/lib/errors";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function ChangePasswordForm() {
   const [submitting, setSubmitting] = useState(false);
@@ -49,7 +50,7 @@ export function ChangePasswordForm() {
         {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}
       </div>
       <Button type="submit" disabled={submitting}>
-        {submitting ? "Updating…" : "Update password"}
+        {submitting ? <BusyLabel>Updating…</BusyLabel> : "Update password"}
       </Button>
     </form>
   );

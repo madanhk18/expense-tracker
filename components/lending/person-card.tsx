@@ -30,6 +30,7 @@ import {
 import { SettleDialog } from "./settle-dialog";
 import { AddLendingDialog } from "./add-lending-dialog";
 import type { LendingPerson, LendingRecordWithSettlements } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 function initials(name: string) {
   return name
@@ -239,7 +240,7 @@ function RecordItem({ record }: { record: LendingRecordWithSettlements }) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction variant="danger" disabled={busy} onClick={() => run(() => deleteLendingAction(record.id), "Entry deleted")}>
-              {busy ? "Deleting…" : "Delete"}
+              {busy ? <BusyLabel>Deleting…</BusyLabel> : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

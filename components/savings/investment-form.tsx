@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { InvestmentTypePicker } from "./investment-type-picker";
 import type { Investment } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 interface InvestmentFormProps {
   investment?: Investment;
@@ -119,7 +120,7 @@ export function InvestmentForm({ investment, onSuccess }: InvestmentFormProps) {
             void onSubmit(values, true);
           }}
         >
-          {submitting ? "Saving…" : "It's extra — add it anyway"}
+          {submitting ? <BusyLabel>Saving…</BusyLabel> : "It's extra — add it anyway"}
         </Button>
       </div>
     );
@@ -171,7 +172,7 @@ export function InvestmentForm({ investment, onSuccess }: InvestmentFormProps) {
       </div>
 
       <Button type="submit" size="lg" className="btn-income w-full" disabled={submitting}>
-        {submitting ? "Saving…" : investment ? "Save changes" : "Add investment"}
+        {submitting ? <BusyLabel>Saving…</BusyLabel> : investment ? "Save changes" : "Add investment"}
       </Button>
     </form>
   );

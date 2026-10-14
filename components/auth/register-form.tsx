@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { FloatField } from "@/components/ui/float-field";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Panel } from "@/components/shared/panel";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function RegisterForm() {
   const [submitting, setSubmitting] = useState(false);
@@ -97,7 +98,7 @@ export function RegisterForm() {
           </FloatField>
           <div className="flex justify-center pt-1">
             <Button type="submit" size="lg" className="w-40 rounded-full" disabled={submitting}>
-              {submitting ? "Creating…" : "Register"}
+              {submitting ? <BusyLabel>Creating…</BusyLabel> : "Register"}
             </Button>
           </div>
         </form>

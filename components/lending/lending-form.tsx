@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { LendingDirection } from "@/lib/constants";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 const DIRECTIONS: { value: LendingDirection; label: string; hint: string; icon: typeof ArrowUpRight }[] = [
   { value: "lent", label: "I gave", hint: "They owe me", icon: ArrowUpRight },
@@ -150,7 +151,7 @@ export function LendingForm({ people, defaultPerson, defaultDirection = "lent", 
       </div>
 
       <Button type="submit" size="lg" className="w-full" disabled={submitting}>
-        {submitting ? "Saving…" : "Save"}
+        {submitting ? <BusyLabel>Saving…</BusyLabel> : "Save"}
       </Button>
     </form>
   );

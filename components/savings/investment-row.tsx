@@ -30,6 +30,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { IconChip } from "@/components/shared/icon-chip";
 import { InvestmentForm } from "./investment-form";
 import type { Investment } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 export function InvestmentRow({ investment }: { investment: Investment }) {
   const router = useRouter();
@@ -115,7 +116,7 @@ export function InvestmentRow({ investment }: { investment: Investment }) {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction variant="danger" onClick={handleDelete} disabled={deleting}>
-              {deleting ? "Deleting…" : "Delete"}
+              {deleting ? <BusyLabel>Deleting…</BusyLabel> : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

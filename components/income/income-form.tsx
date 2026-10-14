@@ -20,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CategoryIcon } from "@/components/shared/category-icon";
 import type { Category, IncomeWithCategory } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 interface IncomeFormProps {
   categories: Category[];
@@ -162,7 +163,7 @@ export function IncomeForm({ categories, income, onSuccess }: IncomeFormProps) {
       />
 
       <Button type="submit" size="lg" className="btn-income w-full" disabled={submitting}>
-        {submitting ? "Saving…" : income ? "Save changes" : "Add income"}
+        {submitting ? <BusyLabel>Saving…</BusyLabel> : income ? "Save changes" : "Add income"}
       </Button>
     </form>
   );

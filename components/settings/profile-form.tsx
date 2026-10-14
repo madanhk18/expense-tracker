@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { Profile } from "@/types/domain";
+import { BusyLabel } from "@/components/ui/cli-spinner";
 
 const DATE_FORMATS = ["dd/MM/yyyy", "MM/dd/yyyy", "yyyy-MM-dd"] as const;
 
@@ -82,7 +83,7 @@ export function ProfileForm({
         />
       </div>
       <Button type="submit" disabled={submitting}>
-        {submitting ? "Saving…" : "Save changes"}
+        {submitting ? <BusyLabel>Saving…</BusyLabel> : "Save changes"}
       </Button>
     </form>
   );
