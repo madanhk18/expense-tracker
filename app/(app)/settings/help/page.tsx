@@ -11,6 +11,7 @@ import {
   Receipt,
   Repeat,
   Search,
+  Sparkles,
   Settings,
   Tags,
   TrendingUp,
@@ -111,6 +112,7 @@ const FEATURES: Feature[] = [
 ];
 
 const TIPS = [
+  { icon: Sparkles, text: "Quick add: type \"450 petrol upi\" in the Add expense box and press Enter." },
   { icon: Search, text: "Search any expense from the bar at the top." },
   { icon: EyeOff, text: "The eye button blurs every amount — handy in public." },
 ];

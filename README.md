@@ -82,6 +82,7 @@ Before considering a change complete, verify:
 
 - [ ] Register, confirm email, log in, log out, forgot/reset password
 - [ ] Add / edit / delete an expense; duplicate-submit is prevented
+- [ ] Quick add: "450 petrol upi" fills ₹450, the Petrol (or Transportation) category and UPI; "1.2k swiggy dinner card yesterday" fills ₹1,200, Food, Credit Card, merchant Swiggy and yesterday's date; Enter saves
 - [ ] Expenses persist after a page refresh and after logging out and back in
 - [ ] A second test account cannot see the first account's expenses (RLS)
 - [ ] Dashboard totals (today/week/month/avg/highest) match manual sums

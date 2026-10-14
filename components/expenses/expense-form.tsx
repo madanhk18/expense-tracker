@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { addDays, format } from "date-fns";
 import { expenseFormSchema, formToInsertValues, type ExpenseFormValues } from "@/lib/validations/expense.schema";
 import { createClient } from "@/lib/supabase/client";
 import { toFriendlyMessage, logError } from "@/lib/errors";
@@ -20,6 +20,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CategoryIcon } from "@/components/shared/category-icon";
 import type { Category, ExpenseWithCategory } from "@/types/domain";
 import { usePreferences } from "@/components/preferences-provider";
+import { QuickAddInput } from "./quick-add-input";
+import { paiseToRupeeInput } from "@/lib/money";
+import type { QuickAddResult } from "@/lib/quick-add";
 
 interface ExpenseFormProps {
   categories: Category[];
@@ -59,6 +62,7 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
   } = useForm<ExpenseFormValues>({
     resolver: zodResolver(expenseFormSchema),
@@ -98,8 +102,27 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
     }
   }
 
+  /** Quick add rewrites the fields on every keystroke; edit any field after to override it. */
+  function applyQuickAdd(result: QuickAddResult | null) {
+    const opts = { shouldDirty: true } as const;
+    setValue("amount", result?.amountPaise ? paiseToRupeeInput(result.amountPaise) : "", opts);
+    setValue("description", result?.description ?? "", opts);
+    setValue("categoryId", result?.categoryId ?? undefined, opts);
+    setValue("paymentMethod", result?.paymentMethod ?? defaultPaymentMethod, opts);
+    setValue("merchant", result?.merchant ?? "", opts);
+    setValue("date", format(addDays(new Date(), result?.dayOffset ?? 0), "yyyy-MM-dd"), opts);
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {!expense && (
+        <QuickAddInput
+          categories={categories}
+          onParsed={applyQuickAdd}
+          onSubmit={() => void handleSubmit(onSubmit)()}
+        />
+      )}
+
       <div className="space-y-2">
         <Label htmlFor="amount">Amount</Label>
         <div className="flex items-stretch gap-2">
@@ -111,7 +134,7 @@ export function ExpenseForm({ categories, expense, onSuccess }: ExpenseFormProps
             inputMode="decimal"
             placeholder="0"
             className="h-16 rounded-xl text-3xl font-bold tabular-nums md:text-3xl"
-            autoFocus
+            autoFocus={Boolean(expense)}
             {...register("amount")}
           />
         </div>
